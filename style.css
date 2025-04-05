@@ -1,0 +1,20 @@
+body {
+    font-family: 'Berlin Sans FB', Arial, sans-serif; /* Normal text */
+    font-size: 1.3rem;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+pre, code {
+    font-family: 'Cascadia Code Light', 'Courier New', Courier, monospace;
+    font-size: 1rem;
+
+    /*
+    Styles to use horizontal scrollbar for long lines, avoiding
+    wrapping onto the beginning of the next line
+    */
+    overflow-x: auto;
+    white-space: pre;
+}
