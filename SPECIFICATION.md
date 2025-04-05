@@ -188,11 +188,59 @@ $age <- INPUT AN Integer  // Waits until the user inputs an integer
 ```
 
 ## Output to user
-The `OUTPUT` statement is all about showing something to the user, without any assumption regarding the communication channel (device):
+The `OUTPUT` statement is used to show a textual data to the user, without any assumption regarding the communication channel (device):
 
-### Syntax
+#### Syntax
+In this statement, it is possible to provide a comma-separated sequence of expressions to evaluate before outputing. The value of each expression (string, number, boolean) must be converted to text brfore outputing. Numbers, booleans, objects are typically shown in their standard textual representation.
 ```
-OUTPUT <literal_or_variable>, <literal_or_variable>, ...
+OUTPUT <expression1>, <expression2>, ...
+```
+
+#### Characteristics:
+* Primarily text-based.
+* Generally sequential; one output follows the previous one.
+* Does not typically imply graphical elements like dialog boxes or status bars.
+
+#### Example
+```
+OUTPUT "Starting process..." // Display initial message
+
+DO: do some processing
+
+OUTPUT "\nProcess finished." // Display final summary
+```
+
+## User Notifications
+This statement actively communicates information, status, or alerts directly to the user through a mechanism designed to get their attention, distinct from a simple text stream.
+
+It usually abstracts away specific methods like:
+* Dialog boxes
+* Pop-up alerts
+* GUI changes like status bars, notification panels etc.
+* Sounds
+
+For reporting status or erros during API calls, `RETURN $STATUS_CODE` or `RAISE ErrorType` must be used. `NOTIFY` is all about hiding the complexity of notifying the end user.
+
+#### Characteristics
+* Intended to actively inform or alert the user.
+* Abstracts the specific UI implementation (could be graphical, audible, etc.).
+* Used for important events: task completion, errors needing user attention and/or intervention, confirmations, warnings.
+* Distinct from `RETURN` (data back to caller) and `RAISE` (exceptions for caller).
+
+#### Examples
+```
+$serviceUrl AS String <- "server.example.com"
+
+TRY
+   OUTPUT "Attempting connection to " + $serviceAddress + "..."
+   $conn <- DO: connecting to the $serviceUrl & returning the connection
+      object
+CATCH connection failure
+   NOTIFY connection failure
+ELSE
+    // Connection succeeded, letting the user know clearly...
+    NOTIFY successfully connection to the endpoint
+ENDTRY
 ```
 
 # The Flow of Execution
@@ -245,11 +293,30 @@ Control flow statements have their own internal logic that determines how execut
 * Understanding this distinction between the overall sequential flow and the internal flow directed by control statements is key to writing effective pseudocode!
 
 # Procedures, Functions, and Streams
+In this chapter we are going to introduce ways to structure and reuse code by encapsulating logic into callable units. All involve defining a named block of code that can be called, potentially take inputs (**parameters**), and execute a sequence of steps. All involve defining a named block of code that can be called, potentially take inputs (parameters), and execute a sequence of steps.
+
 ## Procedures
+Procedures perform actions, cause side effects, possibly modifying state.
+
+#### Syntax
+```
+PROCEDURE DoSomething
+   ARGS
+      IN $arg1 AS DataType1
+      OUT $arg2 AS DataType2
+      INOUT $arg3 AS DataType3
+      ...
+      IN $argn AS DataTypeN
+   ENDARGS
+   // Body
+ENDPROCEDURE
+```
 
 ## Functions
+Functions compute and **return** a single value based on inputs. They usually pursue minimal side effects, though not always strictly enforced.
 
 ## Streams
+Streams produce a sequence of values over time, often lazily. They **yield** values one by one, maintaining their internal state between calls.
 
 
 
@@ -339,12 +406,34 @@ Code inside the `TRY` block executes in its usual flow of execution. There are t
       * Execution continues after `ENDTRY`.
 2.	If an error occurs:
       * The `TRY` block stops immediately at the point of error.
-      * The system looks for a matching `CATCH` block (first specific, then generic).
+      * The system looks for a matching `CATCH` block from more specific, to more generic, the writing order is not respected.
       * If a matching `CATCH` is found, its code executes.
       * The `ELSE` block is SKIPPED.
       * The `FINALLY` block executes (if present).
       * Execution continues after `ENDTRY`.
 3.	If NO matching `CATCH` is found, the error might propagate outwards (or crash the program, depending on higher-level handling). The `FINALLY` block still runs.
+
+
+#### Examples
+
+```
+$pthLog <- DO: read the the log file path from settings
+
+TRY
+   $log AS File OR NULL <- NULL
+   $LOG <- DO: open $pthLog in read/write, text mode
+CATCH file does not exist
+   NOTIFY the log path does not exist
+CATCH some other file system error
+   NOTIFY the probability of issues in the file system
+CATCH
+   NOTIFY an error occurred
+FINALLY
+   IF $log IS NULL THEN
+      DO: exit the program with a suitable return code
+   ENDIF 
+ENDTRY
+```
 
 
 
