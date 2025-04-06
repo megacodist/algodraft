@@ -55,6 +55,9 @@ $configFile <- DO: open the file $filePath in text, read mode
 DO: close $configFile
 ```
 
+## Function
+Any defined procedure and function name is of `Function` type. This is particularly useful for callbacks.
+
 # Basic syntax
 ## Variables
 All variables must start with `$` character and adhere to [camelCase convention](#camelcase).
@@ -292,28 +295,115 @@ Control flow statements have their own internal logic that determines how execut
 
 * Understanding this distinction between the overall sequential flow and the internal flow directed by control statements is key to writing effective pseudocode!
 
-# Procedures, Functions, and Streams
-In this chapter we are going to introduce ways to structure and reuse code by encapsulating logic into callable units. All involve defining a named block of code that can be called, potentially take inputs (**parameters**), and execute a sequence of steps. All involve defining a named block of code that can be called, potentially take inputs (parameters), and execute a sequence of steps.
-
-## Procedures
-Procedures perform actions, cause side effects, possibly modifying state.
-
-#### Syntax
-```
-PROCEDURE DoSomething
-   ARGS
-      IN $arg1 AS DataType1
-      OUT $arg2 AS DataType2
-      INOUT $arg3 AS DataType3
-      ...
-      IN $argn AS DataTypeN
-   ENDARGS
-   // Body
-ENDPROCEDURE
-```
+# Functions and Streams
+In this chapter we are going to introduce ways to structure and reuse code by encapsulating logic into callable units. All involve defining a named block of code that can be called, potentially take inputs (**parameters**), and execute a sequence of steps. 
 
 ## Functions
-Functions compute and **return** a single value based on inputs. They usually pursue minimal side effects, though not always strictly enforced.
+Functions compute and **return** a single value based on inputs or perform actions, cause side effects, possibly modifying state.
+
+#### Syntax
+Functions are defined using the `FUNCTION` keyword, followed by a name, an argument block (`ARGS`/`ENDARGS`), an optional return type declaration, the body of the routine, and finally `ENDFUNCTION`.
+```
+FUNCTION FunctionName [RETURNS DataType]
+   ARGS
+      <arg_definition_1>
+      <arg_definition_2>
+      ...
+      <arg_definition_n>
+   ENDARGS
+   // Body
+ENDFUNCTION
+```
+Argument definition:
+```
+[MUTABLE] $argName AS DataType [<- <value>]
+```
+
+### Procedures: no return value
+A procedure is a routine that primarily performs actions or causes side effects (like printing to the screen, modifying a file, updating a global variable, or modifying a `MUTABLE` argument). It doesn't return a computed value back to the caller. To define a procedure, simply omit the `[RETURNS DataType]` part.
+
+#### Example
+```
+FUNCTION LogMessage
+   ARGS
+      $message AS String     // The text to log
+      $level AS Integer <- 0 // Optional log level, defaults to 0
+   ENDARGS
+
+   // Body: Performs the action
+   OUTPUT "LOG Level ", $level, ": ", $message
+   // No RETURN statement needed, or use a bare RETURN for early exit
+
+ENDFUNCTION // No "RETURNS" clause was specified
+```
+
+### Functions with only one return value
+A function is a routine whose primary purpose is to compute a value and return it to the caller. To define a function, you must include the `RETURNS DataType` part, specifying the type of the value that will be returned. Inside the function's body, you use the `RETURN` statement followed by the value (or expression) to send the result back.
+
+#### Example
+```
+FUNCTION AddNumbers RETURNS Integer // Specifies that an Integer value will be returned
+   ARGS
+      $num1 AS Integer
+      $num2 AS Integer
+   ENDARGS
+
+   // Body: Computes the value
+   $sum AS Integer
+   $sum <- $num1 + $num2
+   RETURN $sum // Returning the computed value
+
+ENDFUNCTION
+```
+
+### Functions with multiple return values
+If you need to return multiple values, you typically return them packaged in a structured type like a `Tuple`, `RECORD`, or `List`.
+
+### Understanding Argument Definitions
+The `ARGS`/`ENDARGS` block defines the inputs to your routine. Each argument has the following structure:
+
+```
+[MUTABLE] $argName AS DataType [<- DefaultValue]
+```
+
+Let's break it down:
+* `[MUTABLE]` (Optional Keyword):
+   * If **present**, any change to this parameter inside the function will be reflected to the caller's argument. The corresponding argument must be a variable, neither a literal nor a value evaluated from an expresiion is accepted. Use this when the routine needs to change the state of the input data itself (e.g., sorting a list in place, incrementing a counter passed in).
+   * If **absent**, the argument is primarily for input. The routine can read it, but any modifications made to the argument within the routine (if even possible based on the type) does not affect the original variable passed by the caller. This implies pass-by-value or pass-by-constant-reference.
+* `$argName`:
+   * The name you use to refer to the argument inside the routine.
+* `AS DataType`:
+   * Specifies the expected type of data for this argument (e.g., `Integer`, `String`, `Boolean`, `List<String>`, `UserRecord`). This is mandatory and helps ensure clarity and correctness.
+* `[<- defaultValue]` (Optional Default Value):
+   * If **present**, this argument becomes optional for the caller. If the caller doesn't provide a value for this argument, it will automatically be initialized with the `defaultValue`.
+   * Arguments with default values must come after arguments without default values in the list.
+
+#### Example
+```
+FUNCTION ProcessData RETURNS Boolean // Returns TRUE on success, FALSE on failure
+   ARGS
+      MUTABLE $dataList AS List<Record> // REQUIRED: This list might be modified
+      $logFile AS String                // REQUIRED: Path to log file
+      $filter AS String <- ""           // OPTIONAL: Filter criteria, defaults to empty
+      $strictMode AS Boolean <- FALSE   // OPTIONAL: Flag, defaults to FALSE
+   ENDARGS
+
+   // ... body uses $dataList, $filter, $strictMode, $logFile ...
+   // ... potentially modifies $dataList because it's MUTABLE ...
+
+   RETURN TRUE // Example return
+ENDFUNCTION
+
+
+// Assuming myList exists and is a List<Record>
+// Assuming logPath exists and is a String
+$success AS Boolean
+
+$success <- ProcessData($myList, $logPath) // $filter defaults "", $strictMode defaults FALSE
+$success <- ProcessData($myList, $logFile <- $logPath, $filter <- "active") // OK, $strictMode defaults FALSE
+$success <- ProcessData($myList, $logFile <- $logPath, filter: "active", strictMode: TRUE) // All specified
+```
+
 
 ## Streams
 Streams produce a sequence of values over time, often lazily. They **yield** values one by one, maintaining their internal state between calls.
@@ -326,6 +416,8 @@ Streams produce a sequence of values over time, often lazily. They **yield** val
 
 
 # Data Structures
+
+## Tuples
 
 ## String
 
