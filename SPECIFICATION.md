@@ -295,58 +295,107 @@ Control flow statements have their own internal logic that determines how execut
 
 * Understanding this distinction between the overall sequential flow and the internal flow directed by control statements is key to writing effective pseudocode!
 
+## IF-THEN
+
+### Compactness
+In the case of simple `IF` and `THEN` clauses, we can compact the whole statement in a single line.
+```
+// Finding the minimum & maximum in a user-provided list of integers...
+
+$numbers AS List<Integer>
+$numbers <- INPUT A List<Integer>
+
+IF ($numbers IS EMPTY) THEN
+   NOTIFY the list is empty as error
+   DO exit with a suitable return code
+ENDIF
+
+$min AS Integer <- $numbers[0]
+$max AS Integer <- $numbers[0]
+FOR EACH $num IN $numbers DO
+   IF $num < $min THEN $min <- $num ENDIF
+   IF $num > $max THEN $max <- $num ENDIF
+ENDFOR
+
+OUTPUT "Max number: ", $max
+OUTPUT "Min number: ", $min
+```
+
 # Functions and Streams
 In this chapter we are going to introduce ways to structure and reuse code by encapsulating logic into callable units. All involve defining a named block of code that can be called, potentially take inputs (**parameters**), and execute a sequence of steps. 
 
 ## Functions
 Functions compute and **return** a single value based on inputs or perform actions, cause side effects, possibly modifying state.
 
-#### Syntax
-Functions are defined using the `FUNCTION` keyword, followed by a name, an argument block (`ARGS`/`ENDARGS`), an optional return type declaration, the body of the routine, and finally `ENDFUNCTION`.
+#### Declaration Syntax
+Functions are defined using the `FUNCTION` keyword, followed by a name, an argument block (`PARAMS`/`ENDPARAMS`), an optional return type declaration, the body of the routine, and finally `ENDFUNCTION`.
 ```
-FUNCTION FunctionName [RETURNS DataType]
-   ARGS
-      <arg_definition_1>
-      <arg_definition_2>
+FUNCTION FunctionName [RETURNS ReturnType]
+   PARAMS
+      <param1>
+      <param2>
       ...
-      <arg_definition_n>
-   ENDARGS
+      <paramN>
+   ENDPARAMS
    // Body
 ENDFUNCTION
 ```
-Argument definition:
+
+* `FUNCTION`: Begins the definition of any routine (whether it acts as a mathematical-like function or a procedure).
+* `FunctionName`: The identifier (name) you give to the routine. This name is used to call the routine later.
+* `[RETURNS ReturnType]` (Optional clause): The key difference between a value-returning function and an action-performing procedure lies in the optional `RETURNS` clause:
+   * If present, this clause specifies that the routine is a function designed to return a value.
+   * If absent, the routine is a procedure designed primarily for its actions/side effects.
+* `PARAMS`: The keyword that begins the parameters block where all the routine's parameters (arguments it accepts) are defined.
+* `ENDPARAMS`: The keyword that marks the end of the parameter definition block.
+* `// Body`: A placeholder representing the sequence of statements and logic that make up the routine's implementation. This is where computations happen, actions are performed.
+* `ENDFUNCTION`: The keyword that marks the end of the entire function definition block.
+
+#### Parameters syntax
+One or more parameters can be declared using the following syntax. If function does not take any parameter, the whole `PARAMS`/`ENDPARAMS` block must be omitted.
 ```
-[MUTABLE] $argName AS DataType [<- <value>]
+[IN | OUT | INOUT] $argName AS DataType [<- <defaultValue>]
 ```
+* `[IN | OUT | INOUT]`: Optional [Parameter Directionality](#parameter-directionality-in-out-inout)
+* `$argName`: The identifier (name) used to refer to this parameter inside the body of the routine.
+* `AS DataType` (mandatory): Declares the expected data type for the parameter.
+* `[<- defaultValue]` (Optional default value):
+   * If **present**, this argument becomes optional for the caller. If the caller doesn't provide a value/argument for this parameter, it will automatically be initialized with the `defaultValue`.
+   * Arguments with default values must come after arguments without default values in the list.
 
 ### Procedures: no return value
-A procedure is a routine that primarily performs actions or causes side effects (like printing to the screen, modifying a file, updating a global variable, or modifying a `MUTABLE` argument). It doesn't return a computed value back to the caller. To define a procedure, simply omit the `[RETURNS DataType]` part.
+A procedure is a routine that primarily performs actions or causes side effects (like printing to the screen, modifying a file, updating a global variable), or modifying an `OUT`/`INOUT` argument. It doesn't return a computed value back to the caller. To define a procedure, simply omit the `[RETURNS DataType]` part.
+
+It is forbidden to return a value in a procedure using `RETURN $value` but it is possible to employ `RETURN` to exit the peocedure any time.
 
 #### Example
 ```
-FUNCTION LogMessage
-   ARGS
-      $message AS String     // The text to log
-      $level AS Integer <- 0 // Optional log level, defaults to 0
-   ENDARGS
+// Example: Procedure to display a formatted message
+FUNCTION ShowMessage
+   PARAMS
+      IN $message AS String         // Input: The text to show
+      IN $prefix AS String <- "[INFO]" // Optional input: A prefix, defaults to "[INFO]"
+   ENDPARAMS
 
    // Body: Performs the action
-   OUTPUT "LOG Level ", $level, ": ", $message
-   // No RETURN statement needed, or use a bare RETURN for early exit
+   OUTPUT $prefix + " " + $message
+   // No RETURN statement needed (or use bare RETURN for early exit)
 
-ENDFUNCTION // No "RETURNS" clause was specified
+ENDFUNCTION // No RETURNS clause
 ```
 
 ### Functions with only one return value
-A function is a routine whose primary purpose is to compute a value and return it to the caller. To define a function, you must include the `RETURNS DataType` part, specifying the type of the value that will be returned. Inside the function's body, you use the `RETURN` statement followed by the value (or expression) to send the result back.
+A function is a routine whose primary purpose is to compute a value and return it to the caller. The name "function" and invocation syntax is inspired by mathematics.
+
+To define a function, you must include the `RETURNS ReturnType` part, specifying the type of the value that will be returned. Inside the function's body, the flow of execution must always reach to a `RETURN` statement followed by the value (or an expression) of `ReturnType` in declaration to send the result back.
 
 #### Example
 ```
 FUNCTION AddNumbers RETURNS Integer // Specifies that an Integer value will be returned
-   ARGS
+   PARAMS
       $num1 AS Integer
-      $num2 AS Integer
-   ENDARGS
+      IN $num2 AS Integer
+   ENDPARAMS
 
    // Body: Computes the value
    $sum AS Integer
@@ -359,34 +408,133 @@ ENDFUNCTION
 ### Functions with multiple return values
 If you need to return multiple values, you typically return them packaged in a structured type like a `Tuple`, `RECORD`, or `List`.
 
-### Understanding Argument Definitions
-The `ARGS`/`ENDARGS` block defines the inputs to your routine. Each argument has the following structure:
+```
+// Example: Function returning both min and max of a list
+FUNCTION FindMinMax RETURNS Tuple<Integer, Integer>  // Specifies returning a pair
+   ARGS
+      IN $numbers AS List<Integer> // Input: List to search
+   ENDARGS
+
+   // Assume list is not empty for simplicity
+   $min AS Integer <- $numbers[0]
+   $max AS Integer <- $numbers[0]
+   FOR EACH $num IN $numbers DO
+      IF $num < $min THEN $min <- $num ENDIF
+      IF $num > $max THEN $max <- $num ENDIF
+   ENDFOR
+
+   RETURN ($min, $max) // Returning a 2-tuple (pair)...
+ENDFUNCTION
+```
+
+### Default-Valued Parameters
+In the function definition, you can make a parameter optional by providing a default value using the `<- defaultValue` syntax.
 
 ```
-[MUTABLE] $argName AS DataType [<- DefaultValue]
+FUNCTION Connect
+   PARAMS
+      IN $host AS String           // Required parameter
+      IN $port AS Integer <- 8080  // Optional parameter, defaults to 8080
+      IN $timeout AS Integer <- 5000 // Optional parameter, defaults to 5000ms
+   ENDPARAMS
+   // ... function body ...
+ENDFUNCTION
 ```
 
-Let's break it down:
-* `[MUTABLE]` (Optional Keyword):
-   * If **present**, any change to this parameter inside the function will be reflected to the caller's argument. The corresponding argument must be a variable, neither a literal nor a value evaluated from an expresiion is accepted. Use this when the routine needs to change the state of the input data itself (e.g., sorting a list in place, incrementing a counter passed in).
-   * If **absent**, the argument is primarily for input. The routine can read it, but any modifications made to the argument within the routine (if even possible based on the type) does not affect the original variable passed by the caller. This implies pass-by-value or pass-by-constant-reference.
-* `$argName`:
-   * The name you use to refer to the argument inside the routine.
-* `AS DataType`:
-   * Specifies the expected type of data for this argument (e.g., `Integer`, `String`, `Boolean`, `List<String>`, `UserRecord`). This is mandatory and helps ensure clarity and correctness.
-* `[<- defaultValue]` (Optional Default Value):
-   * If **present**, this argument becomes optional for the caller. If the caller doesn't provide a value for this argument, it will automatically be initialized with the `defaultValue`.
-   * Arguments with default values must come after arguments without default values in the list.
+* If the caller does not provide an argument corresponding to `$port` or `$timeout` when calling Connect, the function will automatically use `8080` for `$port` and `5000` for `$timeout` internally.
+* Parameters with default values must be listed after parameters without default values in the `PARAMS` block for clarity, especially when using positional arguments.
+
+### Function Invocation
+The basics of function invocation syntax is inspired by mathematics. To call a function; we must put a comma-separated list of literals, variables, or anything that is evaluated to a value; in a pair of paranthesis just in front of function name.
 
 #### Example
 ```
+FUNCTION Connect
+   PARAMS
+      IN $host AS String           // Required parameter
+      IN $port AS Integer <- 8080  // Optional parameter, defaults to 8080
+      IN $timeout AS Integer <- 5000 // Optional parameter, defaults to 5000ms
+   ENDPARAMS
+   // ... function body ...
+ENDFUNCTION
+
+Connect("example.com")
+Connect("example.com", 443)
+Connect("example.com", 443, 1000)
+```
+
+#### Parameters vs. Arguments
+These terms are related but distinct:
+* **Parameter**: A variable declared within the `PARAMS`/`ENDPARAMS` block of a function definition. It's a placeholder defining the name, expected data type, and directionality (`IN`, `OUT`, `INOUT`) of an expected input or output. In the above example `$host`, `$port`, and `$timeout` are parameters.
+* **Argument**: The actual value (literal or evaluation of an expression) or variable supplied by the caller when the function is invoked. Arguments provide the concrete data that the parameters will hold during the function's execution. In the above example `"example.com"`, `443`, and `1000` are arguments.
+
+There are three methods for correspondence between arguments and methods:
+* Calling functions using positional arguments
+* Calling functions using named arguments
+* Calling functions using both positional and named arguments (mixed call)
+
+### Calling Functions using Positional Arguments
+This is the simplest invocation method, mirroring mathematical notation. Arguments are matched to parameters based strictly on their order. The first argument in the call corresponds to the first parameter in the definition, the second argument to the second parameter, and so on.
+
+### Parameter Directionality (`IN`, `OUT`, `INOUT`)
+When defining an argument within the `PARAMS`/`ENDPARAMS` block, you can specify its **Parameter Directionality**. This is an optional keyword (`IN`, `OUT`, or `INOUT`) that declares the intended direction of data flow for that parameter between the caller's argument and the routine's parameter. It defaults to `IN`.
+
+* `IN` Directionality:
+   * Data is conceptually transferred from the caller's argument to the routine's parameter at the start of the call.
+   * Any change made to the parameter, remains inside of the routine and is NOT reflected back to the caller.
+   * The caller's argument can be a literal, a variable, an expresison, or anything else that is evaluated to a value.
+   * Use cases include passing values needed for computation, configuration settings, or data to be read without modification.
+
+   ```
+   PARAMS
+      IN $config1 AS String // Input configuration #1
+      $config2 AS String // Input configuration #2
+   ENDPARAMS
+   ```
+
+* `OUT` Directionality:
+   * Data is conceptually transferred from routine's parameter to the the caller's argument at the end of the call.
+   * The caller's argument must only be a variable and the initial value of the caller's variable is generally disregarded; the routine is responsible for assigning the output value.
+   * Use cases include returning secondary results, status indicators, or outputs when a primary `RETURN $value` is not used or insufficient.
+
+   ```
+   PARAMS
+      OUT $statusMessage AS String // Output status description
+      OUT $resultCode AS Integer  // Output numerical result code
+   ENDPARAMS
+   ```
+
+* `INOUT` Directionality:
+   *  Data is initially transferred from the caller's argument to the routine's parameter. The routine can then read this value and modify it. Upon completion, the final value of the parameter is transferred back to the caller's argument.
+   * The caller's argument must only be a variable.
+   * Use cases include modifying data structures passed by the caller (e.g., sorting a list in place), updating counters or state variables provided by the caller.
+
+   ```
+   PARAMS
+      INOUT $dataList AS List<Person> // Input data, potentially modified by routine
+   ENDPARAMS
+   ```
+
+#### Summary
+| Mode | Purpose | Data Flow Direction | Initial Value Usage | Caller Variable Effect |
+|------|---------|---------------------|---------------------|-----------------| 
+| IN |Input Only | Caller -> Routine | Read by Routine | Not Affected |
+|OUT | Output Only | Routine -> Caller | Ignored by Routine | Updated on Exit |
+| INOUT | Input and Output | Caller <-> Routine | Read by Routine | Updated on Exit |
+
+
+
+
+
+### Example
+```
 FUNCTION ProcessData RETURNS Boolean // Returns TRUE on success, FALSE on failure
-   ARGS
+   PARAMS
       MUTABLE $dataList AS List<Record> // REQUIRED: This list might be modified
       $logFile AS String                // REQUIRED: Path to log file
       $filter AS String <- ""           // OPTIONAL: Filter criteria, defaults to empty
       $strictMode AS Boolean <- FALSE   // OPTIONAL: Flag, defaults to FALSE
-   ENDARGS
+   ENDPARAMS
 
    // ... body uses $dataList, $filter, $strictMode, $logFile ...
    // ... potentially modifies $dataList because it's MUTABLE ...
