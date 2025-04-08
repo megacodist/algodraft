@@ -58,6 +58,8 @@ DO: close $configFile
 ## Function
 Any defined procedure and function name is of `Function` type. This is particularly useful for callbacks.
 
+## Stream Data Type
+
 # Basic syntax
 ## Variables
 All variables must start with `$` character and adhere to [camelCase convention](#camelcase).
@@ -469,12 +471,145 @@ These terms are related but distinct:
 * **Argument**: The actual value (literal or evaluation of an expression) or variable supplied by the caller when the function is invoked. Arguments provide the concrete data that the parameters will hold during the function's execution. In the above example `"example.com"`, `443`, and `1000` are arguments.
 
 There are three methods for correspondence between arguments and methods:
-* Calling functions using positional arguments
-* Calling functions using named arguments
-* Calling functions using both positional and named arguments (mixed call)
+* [Calling functions using positional arguments](#calling-functions-using-positional-arguments)
+* [Calling functions using named arguments](#calling-functions-using-named-arguments)
+* [Calling functions using both positional and named arguments (mixed call)](#calling-functions-using-both-positional-and-named-arguments-mixed-call)
 
 ### Calling Functions using Positional Arguments
 This is the simplest invocation method, mirroring mathematical notation. Arguments are matched to parameters based strictly on their order. The first argument in the call corresponds to the first parameter in the definition, the second argument to the second parameter, and so on.
+
+#### Syntax
+```
+DoSomething(arg1, arg2, ...)
+```
+
+* Concise
+* familiar
+* Requires remembering the exact parameter order.
+* It can become unclear with many parameters or boolean flags.
+* It is difficult to skip optional arguments unless they are the last ones.
+
+#### Examples
+```
+FUNCTION Calculate RETURNS Integer
+   PARAMS
+      IN $a AS Integer
+      IN $b AS Integer
+      IN $op AS String <- "+"
+   ENDPARAMS
+
+   // Body
+ENDFUNCTION
+
+$result AS Integer
+$result <- Calculate(10, 5)      // $a=10, $b=5, $op uses default "+"
+$result <- Calculate(20, 7, "*") // $a=20, $b=7, $op="*"
+```
+
+```
+FUNCTION UpdateStatus
+   PARAMS
+      OUT $msg AS String
+      IN $code AS Integer
+   ENDPARAMS
+
+   // Updating $msg in here...
+ENDFUNCTION
+
+$statusMessage AS String
+UpdateStatus($statusMessage, 0) // $statusMessage is the variable argument for $msg, 0 for $code
+                                // $statusMessage will be updated by the function
+```
+
+###  Calling Functions using Named Arguments
+This method explicitly matches arguments to parameters by name, making calls clearer and more robust. Arguments are specified using the parameter name (including the `$`), followed by assignment operator (`<-`), and then the value/variable. The order in which named arguments are listed does not matter.
+
+#### Syntax
+
+```
+DoSomething($param1Name <- value1, $param2Name <- value2, ...)
+```
+
+* Highly readable and self-documenting
+* Order independence prevents errors
+* Easy to specify only certain optional arguments regardless of their position
+* More verbose than positional arguments.
+
+#### Examples
+
+```
+FUNCTION Calculate RETURNS Integer
+   PARAMS
+      IN $a AS Integer
+      IN $b AS Integer
+      IN $op AS String <- "+"
+   ENDPARAMS
+
+   // Body
+ENDFUNCTION
+
+$result AS Integer
+$result <- Calculate($a <- 10, $b <- 5)              // $op uses default "+"
+$result <- Calculate($b <- 7, $a <- 20, $op <- "*")  // Order doesn't matter
+$result <- Calculate($a <- 15, $op <- "/", $b <- 3)  // Order doesn't matter
+```
+
+```
+FUNCTION Connect
+   PARAMS
+      IN $host AS String             // Required parameter
+      IN $port AS Integer <- 8080    // Optional parameter, defaults to 8080
+      IN $timeout AS Integer <- 5000 // Optional parameter, defaults to 5000ms
+   ENDPARAMS
+   // ... function body ...
+ENDFUNCTION
+
+Connect($host <- "api.server.net") // $port and $timeout use defaults
+Connect($host <- "db.server.local", $timeout <- 10000) // $port uses default
+Connect($port <- 9001, $host <- "backup.server")     // $timeout uses default, order doesn't matter
+```
+
+### Calling Functions using Both Positional and Named Arguments (Mixed Call)
+
+You can combine both styles in a single function call for flexibility, that is provide some initial arguments positionally, then switch to named arguments for the remainder.
+
+**Positional-before-named rule**: All positional arguments **MUST** come **BEFORE** all named arguments. You cannot place a positional argument after a named argument in the same call.
+
+#### Syntax
+
+```
+DoSomething(posArg1, posArg2, $namedArgN <- valueN, $namedArgM <- valueM, ...)
+```
+
+* Offers flexibility: uses concise positional style for required initial parameters and clear named style for optional or later parameters.
+* Requires adherence to the **positional-before-named rule**.
+
+#### Example
+
+```
+FUNCTION Connect
+   PARAMS
+      IN $host AS String             // Required parameter
+      IN $port AS Integer <- 8080    // Optional parameter, defaults to 8080
+      IN $timeout AS Integer <- 5000 // Optional parameter, defaults to 5000ms
+   ENDPARAMS
+   // ... function body ...
+ENDFUNCTION
+
+// VALID Mixed Calls:
+Connect("main.server.com", $timeout <- 15000)
+// $host gets "main.server.com" (positional)
+// $port uses default 8080 (skipped positionally, not specified by name)
+// $timeout gets 15000 (named)
+
+Connect("backup.server", $port <- 8081, $timeout <- 2000)
+// $host gets "backup.server" (positional)
+// $port gets 8081 (named)
+// $timeout gets 2000 (named)
+
+// INVALID Mixed Call:
+// Connect($port <- 9000, "fails.com") // ERROR: Positional argument after named argument
+```
 
 ### Parameter Directionality (`IN`, `OUT`, `INOUT`)
 When defining an argument within the `PARAMS`/`ENDPARAMS` block, you can specify its **Parameter Directionality**. This is an optional keyword (`IN`, `OUT`, or `INOUT`) that declares the intended direction of data flow for that parameter between the caller's argument and the routine's parameter. It defaults to `IN`.
@@ -522,41 +657,57 @@ When defining an argument within the `PARAMS`/`ENDPARAMS` block, you can specify
 |OUT | Output Only | Routine -> Caller | Ignored by Routine | Updated on Exit |
 | INOUT | Input and Output | Caller <-> Routine | Read by Routine | Updated on Exit |
 
+## Streams
 
+Beyond regular functions that compute a single result or perform a distinct action, AlgoDraft supports **Streams**. Streams are used to define routines that can **yield** a sequence of values over time based on initial configuration or internal logic, producing each value only when requested (lazy generation).
 
+#### Syntax
 
+The definition structure of streams shares similarities with function definitions regarding the overall block structure and parameter list.
 
-### Example
 ```
-FUNCTION ProcessData RETURNS Boolean // Returns TRUE on success, FALSE on failure
+STREAM StreamName YIELDS YieldType // MANDATORY: Declares the type of items yielded
    PARAMS
-      MUTABLE $dataList AS List<Record> // REQUIRED: This list might be modified
-      $logFile AS String                // REQUIRED: Path to log file
-      $filter AS String <- ""           // OPTIONAL: Filter criteria, defaults to empty
-      $strictMode AS Boolean <- FALSE   // OPTIONAL: Flag, defaults to FALSE
+      $param1 AS DataType1       // Parameter definitions
+      IN $param2 AS DataType2 <- defaultValue
+      // ... Only IN parameters are allowed for Streams ...
    ENDPARAMS
 
-   // ... body uses $dataList, $filter, $strictMode, $logFile ...
-   // ... potentially modifies $dataList because it's MUTABLE ...
+   // Body: Contains logic, local variables, and YIELD statements
+   // ... Code executes incrementally ...
 
-   RETURN TRUE // Example return
-ENDFUNCTION
+   YIELD valueOfTypeYieldType // Produces the next value and pauses
 
+   // ... More code ...
 
-// Assuming myList exists and is a List<Record>
-// Assuming logPath exists and is a String
-$success AS Boolean
+   RAISE EXHAUSTION // Optional: Manually terminate the stream
 
-$success <- ProcessData($myList, $logPath) // $filter defaults "", $strictMode defaults FALSE
-$success <- ProcessData($myList, $logFile <- $logPath, $filter <- "active") // OK, $strictMode defaults FALSE
-$success <- ProcessData($myList, $logFile <- $logPath, filter: "active", strictMode: TRUE) // All specified
+   // ... More code ...
+
+   // Reaching ENDSTREAM or a bare RETURN also terminates the stream
+
+ENDSTREAM
 ```
 
+#### Note
 
-## Streams
-Streams produce a sequence of values over time, often lazily. They **yield** values one by one, maintaining their internal state between calls.
+Only `IN` [Parameter Directionality](#parameter-directionality-in-out-inout) is permitted for parameters defined within a stream's `PARAMS` block. The multi-stage, suspend/resume nature of streams makes the semantics of `OUT` and `INOUT` parameters (which typically relate to the single completion state of a routine) complex and counter-intuitive in this context. Inputs configure the stream's generation process; outputs are exclusively handled via `YIELD`.
 
+#### Semantics: Lazy Evaluation and State
 
+The behavior of streams differs significantly from regular functions:
+
+1. **Stream Object Creation**: Calling a stream definition (e.g., `myStream <- StreamName(arg1, ...)`) does not execute the code inside the `STREAM` body immediately. Instead, it creates and returns a special [`Stream` object](#stream-data-type). This object represents the paused, ready-to-run generator and encapsulates its internal state.
+2. **Lazy Execution**: The code inside the stream body only starts running when the first request for a value is made from its `Stream` object.
+3. **`YIELD` Keyword**: When the `YIELD $value` statement is encountered inside the stream's body:
+   * The stream's execution is paused immediately after the `YIELD`.
+   * The specified value (which must match the `YieldType`) is sent back as the result of the request that resumed the stream.
+   * The stream's internal state is preserved.
+4. **Resumption**: The next request for a value will resume the stream's execution right after the `YIELD` statement where it last paused, with its preserved state intact.
+5. **Exhaustion**: The stream becomes "exhausted" (finished) when:
+   * It reaches the `ENDSTREAM` keyword naturally.
+   * A bare `RETURN` statement is executed within its body.
+   * A `RAISE EXHAUSTION` statement is explicitly executed.
 
 
 
