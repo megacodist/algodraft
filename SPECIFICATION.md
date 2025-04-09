@@ -89,26 +89,18 @@ Constants help:
 CONST $CONSTANT_NAME AS DataType <- value
 ```
 Let's break that down:
-
 * `CONST`: This keyword signals that you are defining a constant.
-
 * `$CONSTANT_NAME`: This is the identifier (name) you give your constant.
 It must start with `$`. The part after the $ should follow the [SCREAMING_SNAKE_CASE convention](#screaming_snake_case-upper_snake_case-or-macro_case).
-
 * `AS DataType`: Defines the type of the constant.
-
 * `<-`: The assignment operator. You're assigning the value on the right to the name on the left.
-
 * `value`: This is the actual fixed value the constant will hold. It can be a number, text (usually in quotes), a boolean (`TRUE`/`FALSE`), etc.
-
 ## Comments
 We are using `//` or `ℹ️` to start comments.
-
 ## Keywords
 This version of pseudocode has lots of keywords and they must be typed in all uppercase. All uppercase is reserved for keywords.
-
-## Natural Language Instructions
-Sometimes we need to describe an action rather than imperatively coding it. In such cases we use Natural Language Instructions (NLIs) which consist of all-lower-case text right after `DO:` keyword. 
+## Natural Language Statements
+Sometimes we need to describe an action rather than imperatively coding it. In such cases we use **Natural Language Statements** (NLSes) which consist of all-lower-case text right after `DO:` keyword. 
 #### Examples
 ```
 DO: validate the order items for stock availability
@@ -716,6 +708,64 @@ The behavior of streams differs significantly from regular functions:
 
 # Data Structures
 
+## Understanding Data Structures in AlgoDraft
+
+In AlgoDraft, data structures are fundamental ways to organize, manage, and store data effectively. They are built using basic data types (like `Integer`, `String`, `Boolean`) and provide a blueprint for how data relates and how it can be accessed or manipulated.
+
+To better understand and choose the right data structure for a task, we categorize them based on several key properties or characteristics:
+
+* **Homogeneity**: Does the structure typically hold elements of the same data type (**homogeneous**) or can it hold elements of different types (**heterogeneous**)? [Generics](#generics) should be used to emphasize homogeneity `$list <- CREATE List<Integer>`.
+* **Sequentiality**: Do the elements have a defined order or follow a specific processing sequence (like First-In-First-Out)? Can you predictably move from one element to the next logical one in a sequence? (Yes/No). Structures where elements don't have a defined positional or processing order are **non-sequential**.
+* **Linearity**: Do the elements form a single, non-branching sequence? (Yes/No). In a linear structure, each element (except ends) connects to at most one predecessor and one successor. Trees and Graphs are examples of non-linear structures. All linear structures are inherently sequential.
+* **Mutability**: Can the structure be changed after creation? Can elements be added, removed, or modified (Mutable)? Or is the structure fixed once created (Immutable)?
+* **Iterability**: Is it possible to systematically visit or process each element contained within the structure (e.g., using a `FOR EACH` loop)? (Yes/No). This applies even to non-linear structures, though the traversal method might be more complex (like Depth-First or Breadth-First). Structures like Records, which group named fields, are typically not considered iterable in this sense (you access fields by name, not by iterating over values as members of a collection).
+* **Uniqueness**: Does the structure enforce uniqueness for its elements or in some way? (e.g., sets contain unique elements, mappings have unique keys).
+
+#### **AlgoDraft Data Structure Characteristics**
+
+| Data Structure | Sequentiality                 | Linearity        | Homogeneity                   | Mutability                                             | Iterability | Uniqueness                                         | Primary Use Case                                     |
+| :------------- | :---------------------------- | :--------------- | :---------------------------- | :----------------------------------------------------- | :---------- | :------------------------------------------------- | :--------------------------------------------------- |
+| **Tuple**      | Yes                           | Yes              | **Not Enforced²**   | Immutable                                              | Yes         | Duplicates Allowed                                 | Grouping a fixed number of related, ordered items.   |
+| **String**     | Yes (Sequence of chars)       | Yes              | **Yes (Characters)**          | **Immutable**                                          | Yes         | Duplicates Allowed (Characters)                    | Representing textual data.                           |
+| **List**       | Yes                           | Yes              | **Not Enforced²**             | Mutable                                                | Yes         | Duplicates Allowed                                 | Storing sequences where order matters, random access.|
+| **Set**        | No                            | No               | **Not Enforced²**             | Mutable                                                | Yes         | **Elements Unique**                                | Storing unique items, checking membership quickly.   |
+| **Mapping**    | **Not Enforced³**             | No               | **Not Enforced²** (Values)    | Mutable                                                | Yes⁴        | **Keys Unique**, Values can duplicate              | Associating unique keys with arbitrary values.       |
+| **Stack**      | Yes (LIFO - Last-In First-Out)| Yes              | **Not Enforced²**             | Mutable                                                | Yes⁵        | Duplicates Allowed                                 | Processing items in reverse order of arrival.        |
+| **Queue**      | Yes (FIFO - First-In First-Out)| Yes              | **Not Enforced²**             | Mutable                                                | Yes⁵        | Duplicates Allowed                                 | Processing items in order of arrival.                |
+| **Record**     | No (Fields have names)        | No               | **Not Enforced²**     | Fields names/number fixed; field values often mutable⁶ | No⁷         | **Field Names Unique**, Values can duplicate       | Grouping related data under specific names.          |
+| **Tree**       | No (Hierarchical)             | **No (Hierarchical)** | **Not Enforced²** (Node Data) | Varies (Structure/Nodes can be mutable)                | Yes⁸        | Varies (Depends on specific tree type/rules)       | Representing hierarchical relationships.             |
+| **Graph**      | No (Network)                  | **No (Network)** | **Not Enforced²** (Node/Edge Data) | Varies (Structure/Nodes/Edges can be mutable)        | Yes⁸        | Varies (Nodes/Edges might be unique depending on use)| Representing complex relationships and networks.     |
+
+**Footnotes:**
+
+² **Homogeneity:** For structures marked `Not Enforced`, homogeneity is not strictly required by AlgoDraft. Instances can contain elements of a single type (homogeneous) or mixed types (heterogeneous), depending on usage. This contrasts with `String`.
+
+³ **Sequentiality:** For Mappings, sequentiality (order of keys/elements during iteration) is `Not Enforced` in AlgoDraft. While some underlying implementations might preserve order (e.g., insertion order), it should not be relied upon by default in algorithms unless explicitly stated for a specific AlgoDraft Mapping type.
+
+⁴ **Iterability (Mapping):** Mappings are iterable, typically allowing iteration over keys, values, or key-value pairs. The iteration order is subject to footnote 3.
+
+⁵ **Iterability (Stack/Queue):** Stacks and Queues are iterable, though primary interaction is often via `Push/Pop` or `Enqueue/Dequeue`. Iteration usually reflects the processing order (LIFO for Stacks, FIFO for Queues).
+
+⁶ **Mutability (Record):** The *structure* of a Record (its fields and their names) is fixed after declaration, but the *values* held in those fields are typically mutable unless the field type itself is immutable (like a String or Tuple in AlgoDraft).
+
+⁷ **Iterability (Record):** Records are not typically iterated over like collections. You access fields by name (`myRecord.fieldName`). Mechanisms might exist to reflect on fields, but that's different from iterating over contained elements.
+
+⁸ **Iterability (Tree/Graph):** Trees and Graphs are iterable using specific traversal algorithms (e.g., Depth-First Search (DFS), Breadth-First Search (BFS)) which define the order elements (nodes/edges) are visited.
+
+
+#### **Why This Matters in AlgoDraft**
+
+Understanding these categories helps you write better pseudocode:
+
+*   **Iterability:** Determines if you can use constructs like `FOR EACH element IN structure`.
+*   **Sequentiality/Linearity:** Influences how you think about accessing elements (e.g., by index `list[i]`, by position `stack.Pop()`, or by relationships `node.LeftChild`).
+*   **Mutability:** Tells you whether you can modify the structure in place or if operations create new structures.
+*   **Non-Iterable Structures (like Record):** Require different access patterns, typically using dot notation (`record.field`).
+
+By choosing a data structure whose properties match your needs, you can express your algorithms more clearly and efficiently in AlgoDraft.
+
+---
+
 ## Tuples
 
 ## String
@@ -743,6 +793,53 @@ OUTPUT $myString(1 .. 4)
 // "amp"
 OUTPUT $myString(1 .. 4]
 ```
+
+## Sets
+Sets are mutable, iterable, non-sequential collection of unique elements.
+
+#### Constructing
+```
+// Defining a set using literal notation...
+$mySet <- {1, 5, 2, 5} // Becomes {1, 2, 5}
+
+// Defining an empty set...
+$empty1 <- CREATE AN EMPTY Set<SomeType>
+$empty2 <- {}
+$empty3 <- ∅
+```
+
+#### Membership Testing
+Checks if a given element is present within the set.
+
+```
+$numbers <- {10, 20, 30}
+
+IF 30 IN $numbers THEN
+   OUTPUT "Found 30"   // Prints "Found 30"
+ENDIF
+
+IF 20 ∈ $numbers THEN
+   OUTPUT "Found 20"   // Prints "Found 20"
+ENDIF
+
+IF 40 NOT IN $numbers THEN
+   OUTPUT "40 is missing" // Prints "40 is missing"
+ENDIF
+
+IF 50 ∉ $numbers THEN
+   OUTPUT "50 is missing" // Prints "50 is missing"
+ENDIF
+
+```
+
+
+## Queue
+
+### Methods
+
+#### Enqueue
+
+#### Dequeue
 
 
 # Intermediate Syntax
