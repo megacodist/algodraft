@@ -1,11 +1,13 @@
 # Introduction
-Humans need to convey their ideas or exchange ideas with other people. If you want to talk about mathematics, you need to know algebra, set theory, their theoroms, gargons among other things. Pseudocode is the language of algorithms.
+Humans need to convey their ideas or exchange ideas with other people. If you want to talk about mathematics, you need to know algebra, set theory, their theoroms, jargons among other things. Pseudocode is the language of algorithms.
 
 It is the general way to express algorithmic ideas.
 
 It is worth mentioning that there is NOT a standard pseudocode that everyone agrees upon.
 
-AlgoDraft is the result of our effort to have the most formal-informal algorithm language: the most formal among all casual contracts and the most informal among all programming langiages.
+AlgoDraft is the result of our effort to have the most formal-informal algorithm language: the most formal among all casual contracts and the most informal among all programming languages.
+
+The primary goal of pseudocode is clear, unambiguous, and easy-to-write/read communication of logic.
 
 ## Characteristics
 Pseudocode ia all about logic not implementation.
@@ -61,51 +63,354 @@ Any defined procedure and function name is of `Function` type. This is particula
 ## Stream Data Type
 
 # Basic syntax
-## Variables
-All variables must start with `$` character and adhere to [camelCase convention](#camelcase).
 
-We use `AS` keyword to specify the type of the variable.
+## Variables, Constants, and Assignment
+To work with data in AlgoDraft, you need places to store it. This is done using **variables** and **constants**. **Assignment** is the process of placing a value into a variable or constant.
+
+### Variables
+Variables are named containers used to store data that might change during the execution of your algorithm. Think of them as labeled boxes where you can put information and update it later. Before you can use a variable, you must declare it.
+
+#### Variable Declaration Syntax
+Declaration specifies the variable's name and the type of data it will hold:
+```
+$variableName AS DataType
+```
+
+* **`$`**: All variable names must start with a dollar sign ($).
+
+* **`variableName`**: The name you choose for the variable. By convention, use [camelCase](#camelcase) (e.g., `userAge`, `firstName`, `totalScore`).
+
+* **`AS DataType`**: Specifies the type of data the variable can store (e.g., `Integer`, `String`, `Boolean`, `List<Real>`). This is mandatory.
+
+#### Example
 
 ```
-$someInt AS Integer
-$anotherIntVar AS Integer
+$counter AS Integer
+$customerName AS String
+$isActive AS Boolean
 ```
 
-## Constants
-Constants must start with `$` as well and follow [UPPER_SNAKE_CASE convention](#upper_snake_case).
+### Assignment
 
-Think of a constant as a named value that never changes while your program (or pseudocode logic) is running. It's like writing down an important number or piece of text on a sticky note and agreeing you'll never scribble it out or change it.
-
-Constants help:
-
-* **Readability**: Using a name like `$MAX_LOGIN_ATTEMPTS` is much clearer than just seeing the number 3 somewhere in your code.
-
-* **Maintainability**: If a value used in many places needs to change (e.g., a tax rate), you only need to change it once where the constant is defined.
-
-* **Preventing Errors**: Clearly marking something as constant helps prevent accidental changes to values that shouldn't be modified.
+The assignment operator `<-` is used to place a value into a declared variable.
 
 #### Syntax
 ```
-CONST $CONSTANT_NAME AS DataType <- value
+$variableName <- <value>
 ```
-Let's break that down:
-* `CONST`: This keyword signals that you are defining a constant.
-* `$CONSTANT_NAME`: This is the identifier (name) you give your constant.
-It must start with `$`. The part after the $ should follow the [SCREAMING_SNAKE_CASE convention](#screaming_snake_case-upper_snake_case-or-macro_case).
-* `AS DataType`: Defines the type of the constant.
-* `<-`: The assignment operator. You're assigning the value on the right to the name on the left.
-* `value`: This is the actual fixed value the constant will hold. It can be a number, text (usually in quotes), a boolean (`TRUE`/`FALSE`), etc.
+
+* **`<-`**: The assignment operator. Read it as "gets" or "is assigned". It takes the value on the right and stores it in the variable on the left.
+
+* **`<value>`**: The data being assigned. This can be a literal value (like `10`, `"Hello"`, `TRUE`), another variable, or the result of an operation. The value must be compatible with the variable's declared DataType.
+
+#### Example
+```
+$counter AS Integer // Declaration
+$counter <- 0       // Assignment
+
+$customerName AS String
+$customerName <- "Bob"
+
+$isActive AS Boolean
+$isActive <- TRUE
+```
+
+#### Declaration with Initialization Syntax
+You can declare a variable and assign its initial value in a single step.
+```
+$variableName AS DataType <- <initialValue>
+```
+
+#### Example
+```
+$score AS Integer <- 0
+$message AS String <- "Welcome!"
+$isComplete AS Boolean <- FALSE
+```
+
+#### Changing Variable Values
+
+The key characteristic of variables is that their value can be updated using the assignment operator again.
+
+```
+$score AS Integer <- 0
+NOTIFY: Initial score is $score as info // Notifies: Initial score is 0...
+
+$score <- $score + 10 // Update the value
+NOTIFY: Score after update is $score as info // Notifies: Score after update is 10...
+```
+
+### Constants
+Constants are named containers used to store data that will not change after it's initially defined. They are useful for fixed values like mathematical constants (Pi), configuration settings (maximum attempts), or status codes. Constants must be defined using the `CONST` keyword and must be assigned a value immediately.
+
+#### Syntax:
+```
+CONST $CONSTANT_NAME AS DataType <- <value>
+```
+* **`CONST`**: The keyword indicating that this is a constant.
+
+* **`$`**: Constant names also start with a dollar sign ($).
+
+* **`CONSTANT_NAME`**: The name you choose for the constant. By convention, use [UPPER_SNAKE_CASE](#screaming_snake_case-upper_snake_case-or-macro_case) (e.g., `MAX_RETRIES`, `PI`, `DEFAULT_TIMEOUT`).
+
+* **`AS DataType`**: Specifies the fixed data type.
+
+* **`<- <value>`**: The assignment operator is used here only to set the constant's initial (and final) value. This value must be provided at definition time.
+
+#### Example
+```
+CONST $PI AS Real <- 3.14159
+CONST $MAX_LOGIN_ATTEMPTS AS Integer <- 3
+CONST $ADMIN_EMAIL AS String <- "admin@example.com"
+```
+
+#### Immutability
+
+Once a constant is defined, you cannot change its value. Attempting to assign a new value to a constant is an error in concept.
+
+```
+CONST $MAX_USERS AS Integer <- 100
+
+// The following would be conceptually WRONG in AlgoDraft:
+// $MAX_USERS <- 101 // ERROR: Cannot assign to a constant
+```
+
+### The Assignment Operator (`<-`)
+The `<-` operator is central to both variables and constants:
+
+* **For Variables**: Used both to set the initial value and to update the value later.
+
+* **For Constants**: Used only to set the initial (and permanent) value during definition with the CONST keyword.
+
+It always means "take the value from the right side and store it into the named container on the left side."
+
+| Feature | Variable ($varName) | Constant (CONST $CONST_NAME) |
+| ------- | ------------------- | ----------------------------- |
+|Purpose | Store changing data | Store fixed data |
+| Keyword | None (just `$`) | `CONST` |
+| Naming | `$camelCase` | `$UPPER_SNAKE_CASE` |
+| Type |	`AS DataType` (Required) | `AS DataType` (Required) |
+| Assignment | `<-` (For initialization & updates) | `<-` (Required only at definition) |
+| Mutability | Mutable (Can change) | Immutable (Cannot change after definition) |
+
 ## Comments
 We are using `//` or `ℹ️` to start comments.
+
 ## Keywords
 This version of pseudocode has lots of keywords and they must be typed in all uppercase. All uppercase is reserved for keywords.
-## Natural Language Statements
-Sometimes we need to describe an action rather than imperatively coding it. In such cases we use **Natural Language Statements** (NLSes) which consist of all-lower-case text right after `DO:` keyword. 
-#### Examples
+
+## Assignments
+Assignment is used to assign a new value to a variable. Any left-pointing character or a combination of two that has the bolder appearance is acceptable:
 ```
-DO: validate the order items for stock availability
+$var AS Integer
+$var <- 2
+$var ◀━ 3
+```
+
+## Natural Language Descriptions (NLD)
+A core feature of AlgoDraft is the use of human language phrases and sentences known as **Natural Language Descriptions (NLDs)**. These are short, descriptive pieces of text, written in plain English (or another natural language), that follow specific AlgoDraft keywords.
+
+NLDs are the points where AlgoDraft explicitly connects the human way of thinking about processes with the structured requirements of algorithm design.
+
+```
+// Example NLDs:
+$userName AS String <- INPUT: the user's full name                         // NLD describing data needed
+$userData AS Person <- DO: read user data named $userName from database    // NLD describing an action
+NOTIFY: $userName data read successfully                                   // NLD describing an event
+```
+
+#### Why Use NLDs?
+
+Humans naturally think and communicate using human languages (like English), often describing processes and steps in a relatively high-level way. Computers, however, operate based on precise, formal programming languages. AlgoDraft aims to reconcile these two worlds, acting as a bridge between human thought and programmable logic.
+
+NLDs are fundamental to this mission. They are the designated places within AlgoDraft where you express parts of the algorithm using natural language. This approach offers several key advantages:
+
+1. **Focus on Logic First**: NLDs allow you to focus on what needs to happen (`DO: sort the list`) before getting bogged down in exactly how it will be coded in a specific programming language (`list.sort()`, `Collections.sort(list)`, etc.).
+
+2. **Abstraction**: They provide a way to abstract complex operations or interactions (like file operations, user input handling, or complex calculations) into simple, understandable descriptions.
+
+3. **Clarity and Readability**: Algorithms written in AlgoDraft using clear NLDs are often easier to read and understand, even for team members who might not be programmers or are unfamiliar with the final implementation language.
+
+4. **Ease of Drafting**: It's often faster and more intuitive to draft the initial steps of an algorithm using natural language descriptions rather than immediately writing formal code.
+
+5. **Structured Bridge to Code**: While flexible, NLDs occur within the structured context of AlgoDraft keywords, making the transition from this pseudocode to actual programming code smoother than starting from pure prose.
+
+In essence, NLDs make AlgoDraft a powerful tool for drafting algorithms in a way that feels natural while still providing the structure needed for eventual implementation.
+
+#### Key Characteristics of NLDs
+
+While NLDs use natural language, they are not completely free-form. They operate within specific guidelines defined by the keyword they follow:
+
+* **No Upper Case**: NLDs must be written in lower case as much as possible. Avoid sentence casing or title casing.
+
+* **Keyword-Driven Context**: An NLD always follows a specific keyword, which dictates the exact purpose, nature, and expected phrasing of the NLD.
+
+* **Integration of Variables**: NLDs can and often should include AlgoDraft variable names (e.g., `$userName`, `$userData`) to clearly link the described action, data, or event to the algorithm's state.
+
+* **Clarity**: An NLD should be unambiguous and clearly convey its intended meaning.
+
+* **Conciseness**: While descriptive, it should be reasonably brief and to the point.
+
+* **Non-Executable Description**: Remember, NLDs are descriptions for humans (and for guiding later coding). They are not directly executable code themselves.
+
+#### Example
+```
+$fileName AS String <- "results.txt"
+$dataList AS List<String>
+// ... $dataList gets populated ...
+
+// NLD using $fileName and $dataList...
+DO: write the contents of $dataList to the file named $fileName
+```
+
+NLDs in this version of AlgoDraft, a cornerstone providing a powerful way to express complex steps understandably, are used in the following statements:
+* `DO: <nld_imperative_sentence>`
+* `INPUT: <nld_data_description`
+* `NOTIFY: <nld_event_description>`
+
+## Performing Natural Language Actions (`DO:`)
+
+Sometimes we need to describe an action rather than imperatively coding it. In such cases we use **Natural Language Statements** (NLSes). The action:
+
+* usually involves complexity better described in natural language than with simple operators.
+
+* must be expressed via an NLD employing imperative language.
+
+* either results in a value that needs to be assigned to a variable or causes side effect.
+
+#### Syntax (Action-Only):
+```
+DO: <nld_imperative_sentence>
+```
+
+```
+DO: sort $mylist
 DO: add 3 to $idx
 ```
+
+#### Syntax (Value-Yielding)
+```
+$variable AS DataType <- DO: <nld_imperative_sentence>
+```
+
+```
+$flag AS Boolean <- DO: check that $list items are in acsending order
+$settFile AS File <- DO: open settings file in read/write, binary mode
+```
+
+## Getting User Input (`INPUT:`)
+When your algorithm needs data from the user during execution, use the `INPUT:` keyword. This keyword:
+* this operation involves external interaction.
+* waits until the user provides the requested input.
+* is followed by a simple natural language description of what you expect the user to provide.
+* The value entered by the user is returned by the statement and usually assigned to a variable.
+
+#### Syntax
+```
+$variable AS DataType <- INPUT <nld_data_description>
+```
+In this syntax, `<nld_data_description>` is the Natural Language Description following `INPUT:`:
+* **Role**: Its primary role is to describe the specific piece of data the user is expected to provide.
+* **Form**: Typically a noun phrase or descriptive sentence fragment identifying the required input (e.g., "the user's age", "a valid email address", "the path to the input file", "'Y' to confirm, 'N' to cancel"). It is not an imperative command like with `DO:`.
+
+#### Examples
+
+```
+$userName AS String
+$userAge AS Integer
+$nums AS List<Integer>
+
+
+$userName <- INPUT: the user's full name    // Waits until the user inputs a string
+$userAge <- INPUT: the user's age as an integer  // Waits until the user inputs an integer
+$nums <- INPUT: get some Integers from user // Waits until the user inputs a list of integers
+$keyPressed AS String <- INPUT any single character  // Waits until the user presses any key
+```
+
+## Notifying the User (`NOTIFY:`)
+In our pseudocode dialect, we need a way to represent the algorithm communicating information outwards to the user. While traditional pseudocode often uses `PRINT`,  `OUTPUT`, or `DISPLAY` (usually implying console output), our dialect uses the more abstract `NOTIFY:` keyword.
+
+The `NOTIFY:` statement signifies that the algorithm should make the user aware of something. It abstracts away the specific method of notification (e.g., printing to a terminal, showing a dialog box, updating a status bar, playing a sound, etc.). It focuses purely on the intent to inform.
+
+#### Characteristics
+* **User-Facing**: It's intended for information directed at the human user.
+* **Non-Interactive**: It's a one-way communication. The algorithm presents the information and continues execution immediately; it does not wait for user acknowledgement or input. (If interaction is needed, use an `INPUT:` statement afterwards).
+* **Abstract**: It describes what the user should be notified about, not how.
+* **Severity Indication**: The description should include an indication of the notification's urgency or type (e.g., info, warning, error).
+
+#### Syntax
+```
+NOTIFY: <nld_event_description> [as <severity_level>]
+```
+
+* **`NOTIFY`**:: The keyword indicating a user notification action.
+
+* **`<nld_event_description>`**: The Natural Language Description following `NOTIFY:`.
+   * **Role**: Its primary role is to describe the event, status, or piece of information the user should be made aware of. It explains what happened or what the current state is.
+   * **Form**: A descriptive phrase or sentence. Can and often should include variable values to provide context.
+
+* **`[as <severity_level>]`**: (Highly Recommended) Specifies the optional nature or urgency of the notification. Common levels include:
+   * **info**: General informational message.
+   * **success**: Confirmation of a successful operation.
+   * **warning**: Indicates a potential issue or something the user should be cautious about.
+   * **error**: Reports that an operation failed or an error occurred.
+   * **critical**: Reports a severe error that might have significant consequences or require immediate attention.
+
+When the pseudocode encounters a `NOTIFY:` statement, it means "At this point, the running program should present the described information to the user, classified by the given severity." The person implementing the pseudocode would then choose the most appropriate mechanism based on the description, the severity level, and the application's context (e.g., a GUI application might use a pop-up for critical, while a command-line tool might print in red text).
+
+#### Examples
+
+```
+NOTIFY: the file processing is starting as info
+// ... processing steps ...
+NOTIFY: file processing completed successfully as success
+
+// Implementation Hint: Could be simple console messages or status bar updates. Success notifications could be silent or a brief status message.
+```
+
+```
+$calculationResult AS Real <- DO: perform complex calculation
+NOTIFY: the final result is $calculationResult as info
+
+// Implementation Hint: Could print to console, update a text field in a GUI.
+
+```
+
+```
+$itemsLeft AS Integer <- DO: get items remaining in stock
+IF $itemsLeft < 10 THEN
+    NOTIFY: inventory level is low ($itemsLeft items remaining) as warning
+ENDIF
+
+// Implementation Hint: Might be a console message, a non-blocking notification pop-up, or changing an indicator icon's color.
+```
+
+```
+$fileHandle AS File <- DO: attempt to open important_data.log for writing
+
+IF $fileHandle IS NULL THEN // Assuming NULL indicates failure
+    NOTIFY: failed to open important_data.log for writing as critical
+    // Algorithm might terminate or take recovery steps here
+ELSE
+    NOTIFY: successfully opened important_data.log as success
+    // ... proceed to write ...
+    DO: close $fileHandle
+ENDIF
+
+// Implementation Hint: critical strongly suggests a very visible notification, perhaps a modal dialog
+// (even though NOTIFY itself isn't blocking, the response to a critical notification might halt further
+// progress), logging, or loud alerts.
+```
+
+#### Contrast with Other Keywords
+* **`NOTIFY:` vs. `INPUT:`**: `NOTIFY:` sends information out non-interactively. `INPUT:` pauses and waits to receive information in.
+* **`NOTIFY:` vs. `DO:`**: `NOTIFY:` is purely for communicating with the user. `DO:` is for describing internal operations or actions the algorithm performs (which might result in a value, assigned using `<- DO:`, or just perform an action). Writing to a log file intended only for developers/debugging would likely use `DO: write ... to log`, whereas `NOTIFY:` is for the end-user.
+
+#### Best Practices:
+* **Always Include Severity**: While optional in the syntax, always try to include `as <severity_level>`. It dramatically improves clarity and guides implementation.
+* **Be Descriptive**: The natural language part should clearly convey the necessary information. Include relevant variable values.
+* **Stay Abstract**: Avoid specifying how to notify (e.g., don't write `NOTIFY: show a blinking red dialog box...`). Let the severity and description guide the implementation.
+* **Define Standard Levels (Optional)**: Consider establishing a standard set of severity levels for consistency within your project or team.
 
 ## Identation
 Indentation visually represents the structure and nesting of your logic. It makes code drastically easier to read and understand by grouping related instructions. We use identation in two scenarios:
@@ -151,7 +456,7 @@ OUTPUT $finalGrade
 
 ```
 
-### Indenting Line Continuations
+#### Indenting Line Continuations
 When a single logical instruction or statement is too long to fit comfortably on one line, subsequent lines belonging to that same instruction should be indented. Every time you continue a long line onto the next, you should ident the continuation line or lines by 3 spaces.
 
 ```
@@ -164,81 +469,6 @@ IF ($conditionA AND $conditionB) OR
 ENDIF
 ```
 
-## Assignments
-Assignment is used to assign a new value to a variable. Any left-pointing character or a combination of two that has the bolder appearance is acceptable:
-```
-$var AS Integer
-$var <- 2
-$var ◀━ 3
-```
-
-## Input from user
-The `INPUT` statement is all about receiving an input from the, without any assumption regarding the communication channel (device):
-```
-$input AS String
-$age AS Integer
-
-
-$input <- INPUT A String  // Waits until the user inputs a string
-$input <- INPUT A CHAR    // Waits until the user presses any key
-$age <- INPUT AN Integer  // Waits until the user inputs an integer
-```
-
-## Output to user
-The `OUTPUT` statement is used to show a textual data to the user, without any assumption regarding the communication channel (device):
-
-#### Syntax
-In this statement, it is possible to provide a comma-separated sequence of expressions to evaluate before outputing. The value of each expression (string, number, boolean) must be converted to text brfore outputing. Numbers, booleans, objects are typically shown in their standard textual representation.
-```
-OUTPUT <expression1>, <expression2>, ...
-```
-
-#### Characteristics:
-* Primarily text-based.
-* Generally sequential; one output follows the previous one.
-* Does not typically imply graphical elements like dialog boxes or status bars.
-
-#### Example
-```
-OUTPUT "Starting process..." // Display initial message
-
-DO: do some processing
-
-OUTPUT "\nProcess finished." // Display final summary
-```
-
-## User Notifications
-This statement actively communicates information, status, or alerts directly to the user through a mechanism designed to get their attention, distinct from a simple text stream.
-
-It usually abstracts away specific methods like:
-* Dialog boxes
-* Pop-up alerts
-* GUI changes like status bars, notification panels etc.
-* Sounds
-
-For reporting status or erros during API calls, `RETURN $STATUS_CODE` or `RAISE ErrorType` must be used. `NOTIFY` is all about hiding the complexity of notifying the end user.
-
-#### Characteristics
-* Intended to actively inform or alert the user.
-* Abstracts the specific UI implementation (could be graphical, audible, etc.).
-* Used for important events: task completion, errors needing user attention and/or intervention, confirmations, warnings.
-* Distinct from `RETURN` (data back to caller) and `RAISE` (exceptions for caller).
-
-#### Examples
-```
-$serviceUrl AS String <- "server.example.com"
-
-TRY
-   OUTPUT "Attempting connection to " + $serviceAddress + "..."
-   $conn <- DO: connecting to the $serviceUrl & returning the connection
-      object
-CATCH connection failure
-   NOTIFY connection failure
-ELSE
-    // Connection succeeded, letting the user know clearly...
-    NOTIFY successfully connection to the endpoint
-ENDTRY
-```
 
 # The Flow of Execution
 In imperative programming, we give the computer a list of instructions, called **statements**, to execute. Understanding the flow of execution – the order in which these statements are run – is crucial to knowing how your program will behave.
@@ -297,11 +527,11 @@ In the case of simple `IF` and `THEN` clauses, we can compact the whole statemen
 // Finding the minimum & maximum in a user-provided list of integers...
 
 $numbers AS List<Integer>
-$numbers <- INPUT A List<Integer>
+$numbers <- DO: get a list of Integers from user
 
 IF ($numbers IS EMPTY) THEN
    NOTIFY the list is empty as error
-   DO exit with a suitable return code
+   DO: exit with a suitable return code
 ENDIF
 
 $min AS Integer <- $numbers[0]
@@ -314,6 +544,14 @@ ENDFOR
 OUTPUT "Max number: ", $max
 OUTPUT "Min number: ", $min
 ```
+
+## IF-THEN-ELSE
+
+## FOR-EACH
+
+## DO-WHILE
+
+## KEEP-DOING
 
 # Functions and Streams
 In this chapter we are going to introduce ways to structure and reuse code by encapsulating logic into callable units. All involve defining a named block of code that can be called, potentially take inputs (**parameters**), and execute a sequence of steps. 
@@ -800,12 +1038,12 @@ Sets are mutable, iterable, non-sequential collection of unique elements.
 #### Constructing
 ```
 // Defining a set using literal notation...
-$mySet <- {1, 5, 2, 5} // Becomes {1, 2, 5}
+$mySet AS Set<Integer> <- {1, 5, 2, 5} // Becomes {1, 2, 5}
 
 // Defining an empty set...
-$empty1 <- CREATE AN EMPTY Set<SomeType>
-$empty2 <- {}
-$empty3 <- ∅
+$empty1 AS Set<SomeType> <- CREATE AN EMPTY Set<SomeType>
+$empty2 AS Set<SomeType> <- CREATE Set<SomeType>
+$empty3 AS Set<SomeType> <- ∅
 ```
 
 #### Membership Testing
