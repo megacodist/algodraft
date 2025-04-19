@@ -11,3 +11,8 @@ This project uses a dual-license approach:
 2.  **Examples and Tools:** All example pseudocode files (e.g., those in the `examples/` directory) and any helper software tools or scripts (e.g., syntax highlighters, linters found in `tools/`) are licensed under the **[MIT License](LICENSE-MIT.txt)** unless otherwise explicitly stated within those files/directories. This is a permissive license allowing broad reuse, modification, and distribution, including in commercial software, provided the license text and copyright notice are included.
 
 Please review the full license texts in the [LICENSE](LICENSE) and [LICENSE-MIT.txt](LICENSE-MIT.txt) files for details.
+
+# Metadata
+
+## Section Statuses
+Each Markdown file representing a section of this tutorial utilizes a `status` field within its YAML frontmatter metadata. This status indicates the current stage of completion for that specific section, helping to track the overall progress of the tutorial development.

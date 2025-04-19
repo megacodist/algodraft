@@ -1,5 +1,5 @@
 # Introduction
-Humans need to convey their ideas or exchange ideas with other people. If you want to talk about mathematics, you need to know algebra, set theory, their theoroms, jargons among other things. Pseudocode is the language of algorithms.
+Humans need to convey their ideas or exchange ideas with other people. If you want to talk about mathematics, you need to know algebra, set theory, their theorems, jargons among other things. Pseudocode is the language of algorithms.
 
 It is the general way to express algorithmic ideas.
 
@@ -9,7 +9,7 @@ AlgoDraft is the result of our effort to have the most formal-informal algorithm
 
 The primary goal of pseudocode is clear, unambiguous, and easy-to-write/read communication of logic.
 
-## Characteristics
+#### Characteristics
 Pseudocode ia all about logic not implementation.
 
 It must be as higher level as possible if we do not want to say the highest level. The ligh level in programming sense means free from any limiting technology, assuming everything is possible.
@@ -20,29 +20,29 @@ Pseudocode's primary goal is clear communication of logic.
 
 Pseudocode must aim at a broad audience or focusing on procedural steps, I would lean towards `$foo AS Integer` because its explicitness prioritizes immediate understanding over symbolic elegance.
 
-With collaboration with Google Gemini, I (Megacodist) managed to outlined this pseudocode named AlgoDraft with file extension of .algod.
+With collaboration with Google Gemini, I (Megacodist) managed to outlined this pseudocode named AlgoDraft with file extension of .`algod`.
 
-## Benefits
+#### Benefits
 1.	Pseudocode is a way to think out of the box.
 2.	It enables everyone to not limit your train of thoughts to any programming language or framework.
 3.	It is possible to employ different levels of abstraction. For example, knowing a prefix in string manipulation is a substring starting from the beginning, we can have all of the following:
 Leading 🡨 Obtain
 
 # Data types
-## Boolean
+## Boolean Type
 Variables of this type can hold only `TRUE` and `FALSE` values.
 
-## Integer
+## Integer Type
 
-## String
+## String Type
 Strings are 0-based-indexed sequences of characters.
 
-## Real
+## Real Type
 
-## FsPath
+## FsPath Type
 Represents a class to instantiate objects to work with file system items.
 
-## File
+## File Type
 An instance of this type represents an opened file ready for I/O operations.
 
 ### Methods
@@ -57,10 +57,10 @@ $configFile <- DO: open the file $filePath in text, read mode
 DO: close $configFile
 ```
 
-## Function
+## Function Type
 Any defined procedure and function name is of `Function` type. This is particularly useful for callbacks.
 
-## Stream Data Type
+## Stream Type
 
 # Basic syntax
 
@@ -194,7 +194,7 @@ It always means "take the value from the right side and store it into the named 
 | Mutability | Mutable (Can change) | Immutable (Cannot change after definition) |
 
 ## Comments
-We are using `//` or `ℹ️` to start comments.
+We are using `//` or `✍` to start comments.
 
 ## Keywords
 This version of pseudocode has lots of keywords and they must be typed in all uppercase. All uppercase is reserved for keywords.
@@ -208,34 +208,57 @@ $var ◀━ 3
 ```
 
 ## Natural Language Descriptions (NLD)
-A core feature of AlgoDraft is the use of human language phrases and sentences known as **Natural Language Descriptions (NLDs)**. These are short, descriptive pieces of text, written in plain English (or another natural language), that follow specific AlgoDraft keywords.
+A core feature of AlgoDraft is the use of human language phrases and sentences known as **Natural Language Descriptions (NLDs)**. These are short, descriptive pieces of text, written in plain English (or another natural language), enclosed in double curly braces `{{ }}` that follow specific AlgoDraft keywords.
 
-NLDs are the points where AlgoDraft explicitly connects the human way of thinking about processes with the structured requirements of algorithm design.
+NLDs are the points where AlgoDraft explicitly connects the human way of thinking about processes with the structured requirements of algorithm design. They act as placeholders for more detailed logic or descriptions of intent.
 
+#### Example
 ```
-// Example NLDs:
-$userName AS String <- INPUT: the user's full name                         // NLD describing data needed
-$userData AS Person <- DO: read user data named $userName from database    // NLD describing an action
-NOTIFY: $userName data read successfully                                   // NLD describing an event
+// Example NLDs using the {{NLD}} syntax:
+
+// NLD describing data needed
+$userName AS String <- INPUT {{the user's full name}}
+
+// NLD describing an action
+$fileHandle AS File <- DO {{open the config file in binary for reading}}
+
+// NLD describing an event
+NOTIFY {{file loaded successfully as success}}
+
+// NLD describing an exception
+RAISE {{required configuration value missing}}
+
+// NLDs describing an action and a placeholder type
+$ast AS {{AST node}} <- DO {{parse the markdown text}}
 ```
 
 #### Why Use NLDs?
 
-Humans naturally think and communicate using human languages (like English), often describing processes and steps in a relatively high-level way. Computers, however, operate based on precise, formal programming languages. AlgoDraft aims to reconcile these two worlds, acting as a bridge between human thought and programmable logic.
+Humans naturally think and communicate using human languages, often describing processes at a high level. Computers, however, operate based on precise, formal programming languages. AlgoDraft aims to *reconcile these two worlds*, acting as a bridge between human thought and programmable logic.
 
-NLDs are fundamental to this mission. They are the designated places within AlgoDraft where you express parts of the algorithm using natural language. This approach offers several key advantages:
+NLDs, enclosed in `{{ }}`, are fundamental to this mission. They are the designated places within AlgoDraft where you express parts of the algorithm using natural language placeholders. In other words, `{{ }}` consistently signals "this is a descriptive, human-readable placeholder/description that needs refinement or interpretation."
 
-1. **Focus on Logic First**: NLDs allow you to focus on what needs to happen (`DO: sort the list`) before getting bogged down in exactly how it will be coded in a specific programming language (`list.sort()`, `Collections.sort(list)`, etc.).
+This approach offers several key advantages:
+1. **Focus on Logic First:** NLDs allow you to focus on what needs to happen (e.g., `DO {{sort the list}}`) before getting bogged down in exactly how it will be coded in a specific programming language.
 
-2. **Abstraction**: They provide a way to abstract complex operations or interactions (like file operations, user input handling, or complex calculations) into simple, understandable descriptions.
+2. **Abstraction:** They provide a way to abstract complex operations (like file I/O, user input, complex calculations, error conditions, or even conditional checks in early drafts) into simple, understandable descriptions.
 
-3. **Clarity and Readability**: Algorithms written in AlgoDraft using clear NLDs are often easier to read and understand, even for team members who might not be programmers or are unfamiliar with the final implementation language.
+3. **Clarity and Readability:** Algorithms using clear NLDs can be easier to read and understand, especially during the initial design phases or for non-programmer stakeholders.
 
-4. **Ease of Drafting**: It's often faster and more intuitive to draft the initial steps of an algorithm using natural language descriptions rather than immediately writing formal code.
+4. **Ease of Drafting:** It's often faster and more intuitive to draft the initial steps of an algorithm using `{{natural language descriptions}} `rather than immediately writing formal code or precise logic.
 
-5. **Structured Bridge to Code**: While flexible, NLDs occur within the structured context of AlgoDraft keywords, making the transition from this pseudocode to actual programming code smoother than starting from pure prose.
+5. **Structured Bridge to Code:** While flexible, NLDs occur within the structured context of AlgoDraft keywords (`DO`, `INPUT`, `NOTIFY`, `RAISE`, `IF`, etc.), making the transition from pseudocode to actual code smoother once the NLDs are sufficiently refined.
 
-In essence, NLDs make AlgoDraft a powerful tool for drafting algorithms in a way that feels natural while still providing the structure needed for eventual implementation.
+In essence, NLDs make AlgoDraft a powerful tool for drafting algorithms in a way that feels natural while still providing the structure needed for eventual implementation.
+
+#### Using NLDs in AlgoDraft
+
+While NLDs use natural language, they function as specific placeholders within the AlgoDraft syntax. NLDs are enclosed in double curly braces: `{{description}}`. They typically follow an AlgoDraft keyword.
+
+```
+KEYWORD {{natural language description}}
+$variable <- KEYWORD {{natural language description yielding a value}}
+```
 
 #### Key Characteristics of NLDs
 
@@ -243,32 +266,33 @@ While NLDs use natural language, they are not completely free-form. They operate
 
 * **No Upper Case**: NLDs must be written in lower case as much as possible. Avoid sentence casing or title casing.
 
-* **Keyword-Driven Context**: An NLD always follows a specific keyword, which dictates the exact purpose, nature, and expected phrasing of the NLD.
-
 * **Integration of Variables**: NLDs can and often should include AlgoDraft variable names (e.g., `$userName`, `$userData`) to clearly link the described action, data, or event to the algorithm's state.
 
-* **Clarity**: An NLD should be unambiguous and clearly convey its intended meaning.
+* **Clarity**: An NLD should be unambiguous and clearly convey its intended meaning to the audience.
 
 * **Conciseness**: While descriptive, it should be reasonably brief and to the point.
 
 * **Non-Executable Description**: Remember, NLDs are descriptions for humans (and for guiding later coding). They are not directly executable code themselves.
 
-#### Example
-```
-$fileName AS String <- "results.txt"
-$dataList AS List<String>
-// ... $dataList gets populated ...
+#### ✍️ When to use natural language conditions
 
-// NLD using $fileName and $dataList...
-DO: write the contents of $dataList to the file named $fileName
-```
+Use them when:
 
-NLDs in this version of AlgoDraft, a cornerstone providing a powerful way to express complex steps understandably, are used in the following statements:
-* `DO: <nld_imperative_sentence>`
-* `INPUT: <nld_data_description`
-* `NOTIFY: <nld_event_description>`
+- You want to **express intent clearly** without diving into implementation details.
 
-## Performing Natural Language Actions (`DO:`)
+- The meaning is **obvious or already explained elsewhere**.
+
+- You're aiming for **readability or teaching purposes**.
+
+#### ❗When to be precise instead:
+
+- If you're refining the algorithm for implementation.
+
+- When the meaning could be **ambiguous** or **context-sensitive**.
+
+- If your pseudocode is meant to be machine-parsable (e.g., for auto-grading tools or interpreters).
+
+## Performing Natural Language Actions (`DO`)
 
 Sometimes we need to describe an action rather than imperatively coding it. In such cases we use **Natural Language Statements** (NLSes). The action:
 
@@ -280,22 +304,22 @@ Sometimes we need to describe an action rather than imperatively coding it. In s
 
 #### Syntax (Action-Only):
 ```
-DO: <nld_imperative_sentence>
+DO {{imperative_nld_sentence}}
 ```
 
 ```
-DO: sort $mylist
-DO: add 3 to $idx
+DO {{sort $mylist}}
+DO {{add 3 to $idx}}
 ```
 
 #### Syntax (Value-Yielding)
 ```
-$variable AS DataType <- DO: <nld_imperative_sentence>
+$variable AS DataType <- DO {{imperative_nld_sentence}}
 ```
 
 ```
-$flag AS Boolean <- DO: check that $list items are in acsending order
-$settFile AS File <- DO: open settings file in read/write, binary mode
+$flag AS Boolean <- DO {{check that $list items are in acsending order}}
+$settFile AS File <- DO {{open settings file in read/write, binary mode}}
 ```
 
 ## Getting User Input (`INPUT:`)
@@ -469,6 +493,18 @@ IF ($conditionA AND $conditionB) OR
 ENDIF
 ```
 
+# Basic Operations
+## Equality
+`=`
+
+## Logical AND
+`∧`
+
+## Logical OR
+`∨`
+
+## Logical NOT
+`¬`
 
 # The Flow of Execution
 In imperative programming, we give the computer a list of instructions, called **statements**, to execute. Understanding the flow of execution – the order in which these statements are run – is crucial to knowing how your program will behave.
@@ -1002,7 +1038,11 @@ Understanding these categories helps you write better pseudocode:
 
 By choosing a data structure whose properties match your needs, you can express your algorithms more clearly and efficiently in AlgoDraft.
 
----
+## Object Instantiation
+```
+$obj AS DataType <- DataType()
+$obj AS {{NLD describing the type}} <- DO {{create instance of the type}}
+```
 
 ## Tuples
 
@@ -1038,7 +1078,9 @@ Sets are mutable, iterable, non-sequential collection of unique elements.
 #### Constructing
 ```
 // Defining a set using literal notation...
-$mySet AS Set<Integer> <- {1, 5, 2, 5} // Becomes {1, 2, 5}
+$set1 AS Set<Integer> <- {1, 5, 2, 5} // Becomes {1, 2, 5}
+$set2 AS Set<Integer OR String> <- {"apple", 3, "apple",} // Becomes {3, "apple",}
+$set3 AS Set <- {1, "hello", TRUE, 1} // Becomes {1, "hello", TRUE}
 
 // Defining an empty set...
 $empty1 AS Set<SomeType> <- CREATE AN EMPTY Set<SomeType>
@@ -1046,30 +1088,159 @@ $empty2 AS Set<SomeType> <- CREATE Set<SomeType>
 $empty3 AS Set<SomeType> <- ∅
 ```
 
-#### Membership Testing
-Checks if a given element is present within the set.
+**Notes**
+* In set literals, trailing comma is allowed and it is a good practice to adding values later easily.
+* `AN EMPTY` although verbose, it is a good practice to emphasize the emptiness of the newly created set.
+
+#### Membership/Containment Operators
+These binary operators perform a check, returning a Boolean value, to determine if the left operand is considered (IN, ∈) or is not considered (NOT IN, ∉) a member (an element) of the right operand, based on mathematical equality. These operators are typically used within conditional statements to control algorithmic flow based on an element's presence or absence in a set.
 
 ```
-$numbers <- {10, 20, 30}
+$numbers AS Set<Integer> <- {10, 20, 30}
 
 IF 30 IN $numbers THEN
-   OUTPUT "Found 30"   // Prints "Found 30"
+   NOTIFY {{30 is found}}
 ENDIF
 
 IF 20 ∈ $numbers THEN
-   OUTPUT "Found 20"   // Prints "Found 20"
+   NOTIFY {{20 is found}}
 ENDIF
 
 IF 40 NOT IN $numbers THEN
-   OUTPUT "40 is missing" // Prints "40 is missing"
+   NOTIFY {{40 is missing}}
 ENDIF
 
 IF 50 ∉ $numbers THEN
-   OUTPUT "50 is missing" // Prints "50 is missing"
+   NOTIFY {{50 is missing}}
 ENDIF
 
 ```
 
+#### Equality/Inequality Operators
+
+These binary operators perform a check, returning a Boolean value, to determine if two sets are considered equal or unequal. Set equality in AlgoDraft, following mathematical convention, means that both sets contain exactly the same elements, irrespective of the order in which elements were added or are internally stored.
+
+AlgoDraft provides multiple syntaxes for expressing equality and inequality:
+* **Equality**:
+	* `=` (Symbolic, mathematical standard)
+	* `EQUALS` (Keyword, for enhanced readability)
+* **Inequality**:
+	* != (Symbolic, common programming standard)
+	* `≠` (Symbolic, mathematical standard)
+	* `NOT EQUALS` (Keyword phrase)
+	* `NOT ($setA EQUALS $setB)` (Negation of the keyword equality check)
+
+While multiple forms exist for flexibility and accommodating different notation preferences, `=`and `≠` directly reflect standard mathematical notation, while **!=** is common in programming. `EQUALS` enhances readability, though `NOT EQUALS` is less conventional as a direct operator phrase compared to negating an equality check or using a dedicated inequality symbol.
+
+```
+// Define some sets for comparison using AlgoDraft syntax
+$set1 AS Set<Integer> <- {10, 20, 30}
+$set2 AS Set<Integer> <- {30, 10, 20} // Same elements, different literal order
+$set3 AS Set<Integer> <- {10, 20, 40} // Different elements
+$set4 AS Set<Integer> <- {10, 20}    // Different elements (subset)
+
+NOTIFY {{Comparing set1 = {10, 20, 30}, set2 = {30, 10, 20}, set3 = {10, 20, 40}, set4 = {10, 20}.}}
+
+// --- Equality Checks ---
+IF $set1 = $set2 THEN
+    NOTIFY {{$set1 is equal to $set2 using the = operator.}} // Expected
+ELSE
+    NOTIFY {{$set1 is not equal to $set2 using the = operator.}}
+ENDIF
+
+IF $set1 = $set3 THEN
+    NOTIFY {{$set1 is equal to $set3 using the = operator.}}
+ELSE
+    NOTIFY {{$set1 is not equal to $set3 using the = operator.}} // Expected
+ENDIF
+
+IF $set1 EQUALS $set2 THEN
+    NOTIFY {{$set1 is equal to $set2 using the EQUALS keyword.}} // Expected
+ELSE
+    NOTIFY {{$set1 is not equal to $set2 using the EQUALS keyword.}}
+ENDIF
+
+IF $set1 EQUALS $set4 THEN
+    NOTIFY {{$set1 is equal to $set4 using the EQUALS keyword.}}
+ELSE
+    NOTIFY {{$set1 is not equal to $set4 using the EQUALS keyword.}} // Expected
+ENDIF
+
+// --- Inequality Checks ---
+IF $set1 != $set3 THEN
+    NOTIFY {{$set1 is not equal to $set3 using the != operator.}} // Expected
+ELSE
+    NOTIFY {{$set1 is equal to $set3 using the != operator.}}
+ENDIF
+
+IF $set1 != $set2 THEN
+    NOTIFY {{$set1 is not equal to $set2 using the != operator.}}
+ELSE
+    NOTIFY {{$set1 is equal to $set2 using the != operator.}} // Expected
+ENDIF
+
+IF $set1 ≠ $set3 THEN
+    NOTIFY {{$set1 is not equal to $set3 using the ≠ symbol.}} // Expected
+ELSE
+    NOTIFY {{$set1 is equal to $set3 using the ≠ symbol.}}
+ENDIF
+
+IF $set1 ≠ $set2 THEN
+    NOTIFY {{$set1 is not equal to $set2 using the ≠ symbol.}}
+ELSE
+    NOTIFY {{$set1 is equal to $set2 using the ≠ symbol.}} // Expected
+ENDIF
+
+IF $set1 NOT EQUALS $set3 THEN
+    NOTIFY {{$set1 is not equal to $set3 using the NOT EQUALS keywords.}} // Expected
+ELSE
+    NOTIFY {{$set1 is equal to $set3 using the NOT EQUALS keywords.}}
+ENDIF
+
+IF $set1 NOT EQUALS $set2 THEN
+    NOTIFY {{$set1 is not equal to $set2 using the NOT EQUALS keywords.}}
+ELSE
+    NOTIFY {{$set1 is equal to $set2 using the NOT EQUALS keywords.}} // Expected
+ENDIF
+
+// --- Negated Equality Check ---
+IF NOT ($set1 EQUALS $set3) THEN
+    NOTIFY {{The negation of ($set1 EQUALS $set3) is true.}} // Expected
+ELSE
+    NOTIFY {{The negation of ($set1 EQUALS $set3) is false.}}
+ENDIF
+
+IF NOT ($set1 EQUALS $set2) THEN
+    NOTIFY {{The negation of ($set1 EQUALS $set2) is true.}}
+ELSE
+    NOTIFY {{The negation of ($set1 EQUALS $set2) is false.}} // Expected
+ENDIF
+```
+
+#### Emptiness Operators
+
+These operators perform a check, returning a Boolean value, to determine if a set is considered empty `(IS EMPTY`, `= ∅`) or not empty (`IS NOT EMPTY`, `≠ ∅`). The keyword forms (`IS EMPTY,` `IS NOT EMPTY`) act as direct unary tests of the set's state, while the symbolic forms (`= ∅,` `≠ ∅`) act as binary comparisons between the set variable operand and the empty set (`∅`) value/literal.
+
+```
+$setA <- ∅   // Or $setA <- CREATE Set<Integer>()
+$setB AS Set<Integer> <- {1, 2, 3,}
+
+IF $setA IS EMPTY THEN
+   NOTIFY {{$setA is empty}}
+ENDIF
+
+IF $setA = ∅ THEN
+   NOTIFY {{$setA is empty}}
+ENDIF
+
+IF $setB IS NOT EMPTY THEN
+   NOTIFY {{$setB is not empty}}
+ENDIF
+
+IF $setB ≠ ∅ THEN
+   NOTIFY {{$setB is not empty}}
+ENDIF
+```
 
 ## Queue
 
@@ -1079,8 +1250,12 @@ ENDIF
 
 #### Dequeue
 
+# User-Defined Types
+
+
 
 # Intermediate Syntax
+
 ## Error handling
 The `TRY-CATCH-ELSE-FINALLY` statement allows you to gracefully handle errors (exceptions) that might occur during the execution of a specific block of code. It prevents your program/algorithm from crashing unexpectedly and lets you define specific recovery actions, logging, or cleanup procedures.
 
@@ -1091,11 +1266,11 @@ TRY
    // This is the code you want to "protect".
    <block_0: potentially problematic instructions>
 
-CATCH <ErrorType1> [AS $errorInfo1] // Optional: Catch a specific error type
+CATCH <error1> [AS $errorInfo1] // Optional: Catch a specific error type
    // Block 1: Executes ONLY if ErrorType1 occurred in Block 0.
    <block_1: handling instructions for ErrorType1>
 
-CATCH <ErrorType2> [AS $errorInfo2] // Optional: Catch another specific error
+CATCH <error2> [AS $errorInfo2] // Optional: Catch another specific error
    // Block 2: Executes ONLY if ErrorType2 occurred in Block 0.
    <block_2: handling instructions for ErrorType2>
 
@@ -1116,7 +1291,7 @@ ENDTRY // Marks the end of the error handling structure.
 
 #### Caluses and Keywords
 * `TRY`: Identifies the block of code under observation for errors.
-* `CATCH <ErrorType> [AS $errorInfo]` (specific): Defines a handler for a specific type of error. If that error occurs in the `TRY` block, the corresponding `CATCH` block executes. The optional `AS $errorInfo` part lets you capture details about the error into a variable (if needed). You can have multiple specific `CATCH` blocks.
+* `CATCH <error> [AS $errorInfo]` (specific): Defines a handler for a specific type of error. This can be an error type (like `FileNotFoundError`) or an NLD describing the error. If that error occurs in the `TRY` block, the corresponding `CATCH` block executes. The optional `AS $errorInfo` part lets you capture details about the error into a variable (if needed). You can have multiple specific `CATCH` blocks.
 * `CATCH` (Generic): Catches any error not handled by preceding specific `CATCH` blocks.
 * `ELSE`: Defines a block that runs only if the `TRY` block completes successfully without raising any errors.
 * `FINALLY`: Defines a block that always runs after the `TRY` block and any executed `CATCH` or `ELSE` block. It runs whether an error occurred or not, whether it was caught or not. Essential for cleanup.
@@ -1148,15 +1323,15 @@ $pthLog <- DO: read the the log file path from settings
 TRY
    $log AS File OR NULL <- NULL
    $LOG <- DO: open $pthLog in read/write, text mode
-CATCH file does not exist
-   NOTIFY the log path does not exist
-CATCH some other file system error
-   NOTIFY the probability of issues in the file system
+CATCH {{file does not exist}}
+   NOTIFY {{the log path does not exist}}
+CATCH {{some other file system error}}
+   NOTIFY {{the probability of issues in the file system}}
 CATCH
-   NOTIFY an error occurred
+   NOTIFY {{an error occurred}}
 FINALLY
    IF $log IS NULL THEN
-      DO: exit the program with a suitable return code
+      DO {{exit the program with a suitable return code}}
    ENDIF 
 ENDTRY
 ```
@@ -1168,7 +1343,33 @@ ENDTRY
 
 
 
-# Appendix 1: Naming conventions
+# Appendix 1: Unicode Characters
+
+|**Glyph**|**Unicode name**|**Code**|**HTML Entity**<br>**(Numeric)**|**HTML Entity**<br>**(Name)**|**Comments**|
+|------|----------|-----------|----------|-----------|--------------|
+|`✍`|WRITING HAND|`U+270D`|`&#9997;`<br>`&#x270D;`|||
+|`≠`|NOT EQUAL TO|`U+2260`|`&#8800;`<br>`&#x2260;`|`&ne;`||
+|`∧`|LOGICAL AND|`U+2227`|`&#8743`<br>`&#x2227`|`&and;`||
+|`∨`|LOGICAL OR|`U+2228`|`&#8744;`<br>`&#x2228;`|`&or;`||
+|`¬`|NOT SIGN|`U+00AC`|`&#172;`<br>`&#xac;`|`&not;`||
+|`Δ`|GREEK CAPITAL LETTER DELTA|`U+0394`|`&#916;`<br>`&#x394;`|`&Delta;`||
+|`∈`|ELEMENT OF|`U+2208`|`&#8712;`<br>`&#x2208;`|`&Element;`<br>`&in;`<br>`&isin;`<br>`&isinv;`||
+|`∉`|NOT AN ELEMENT OF|`U+2209`|`&#8713;`<br>`&#x2209;`|`&NotElement;`<br>`&notin;`<br>`&notinva;`||
+|`∅`|EMPTY SET|`U+2205`|`&#8709;`<br>`&#x2205;`|`&empty;`||
+|**⊂**|SUBSET OF|`U+2282`|`&#8834;`<br>`&#x2282;`|`&sub;`||
+|**⊃**|SUPERSET OF|`U+2283`|`&#8835;`<br>`&#x2283;`|`&sup;`||
+|`⊄`|NOT A SUBSET OF|`U+2284`|`&#8836;`<br>`&#x2284;`|`&nsub;`||
+|`⊅`|NOT A SUPERSET OF|`U+2285`|`&#8837;`<br>`&#x2285;`|`&nsup;`||
+|`⊆`|SUBSET OF OR EQUAL TO|`U+2286`|`&#8838;`<br>`&#x2286;`|`&sube;`<br>`&SubsetEqual;`<br>`&subseteq;`||
+|`⊇`|SUPERSET OF OR EQUAL TO|`U+2287`|`&#8839;`<br>`&#x2287;`|`&SupersetEqual;`<br>`&supe;`<br>`&supseteq;`||
+|`⊈`|NEITHER A SUBSET OF NOR EQUAL TO|`U+2288`|`&#8840;`<br>`&#x2288;`|`&NotSubsetEqual;`<br>`&nsube;`<br>`&nsubseteq;`||
+|`⊉`|NEITHER A SUPERSET OF NOR EQUAL TO|`U+2289`|`&#8841;`<br>`&#x2289;`|`&NotSupersetEqual;`<br>`&nsupe;`<br>`&nsupseteq;`||
+|**∪**|Union|U+222A|&#8746;<br>&#x222A;<br>&cup;|||
+|**∩**|Intersection|U+2229|&#8745;<br>&#x2229;<br>&cap;|||
+|||||||
+|||||||
+
+# Appendix 2: Naming conventions
 ##  camelCase
 #### Rule
 The first word starts with a lowercase letter. Every new word after that starts with an uppercase letter. There are no spaces or underscores between words.
@@ -1273,3 +1474,4 @@ You won't usually see this for variable or function names inside most common pro
 * Configuration files
 
 * Sometimes in Lisp-family languages.
+
