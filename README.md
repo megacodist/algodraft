@@ -15,4 +15,16 @@ Please review the full license texts in the [LICENSE](LICENSE) and [LICENSE-MIT.
 # Metadata
 
 ## Section Statuses
-Each Markdown file representing a section of this tutorial utilizes a `status` field within its YAML frontmatter metadata. This status indicates the current stage of completion for that specific section, helping to track the overall progress of the tutorial development.
+Each Markdown file representing a section of this tutorial utilizes a `status` field within its YAML frontmatter metadata. This status indicates the current stage of completion for that specific section, helping to track the overall progress of the tutorial development. The defined statuses are as follows: 
+* **`Planned`**
+	* **Verbose Form:** Section Identified / Outlined - Writing Not Started
+	* **Meaning:** The section has been identified as necessary for the tutorial structure, and its corresponding file may exist (potentially with just a heading or a brief outline). However, significant content writing has not yet commenced.
+* **`Writing`**
+	* **Verbose Form:** Active Authoring in Progress
+	* **Meaning:** Active authoring is currently underway for this section. This status indicates that the content is being actively generated, composed, or significantly revised during the current work session.
+* **`Draft`**
+	* **Verbose Form:** First Pass Complete - Requires Review/Editing
+	* **Meaning:** The initial pass of writing the main content for this section is complete. The core information, concepts, and structure are present. However, the section likely requires further review, editing, polishing, addition of examples/images, or formatting before being considered final.
+* **`Ready`**
+	* **Verbose Form:** Content Finalized - Ready for Use/Publication
+	* **Meaning:** The content for this section is considered final and complete for the purpose of this tutorial. It has been written, reviewed, edited, and meets the requirements for inclusion. No further work is planned for this section at this time.
