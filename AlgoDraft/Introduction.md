@@ -14,7 +14,7 @@ The primary goal of pseudocode is clear, unambiguous, and easy-to-write/read com
 
 With collaboration with Google Gemini, I (Megacodist) managed to outlined this pseudocode named AlgoDraft with file extension of .algod.
 # Characteristics
-Pseudocode is all about logic not implementation.
+AlgoDraft prefers logic clarity and conceptualization over implementation. It means AlgoDraft is a drawing board, you can sketch whatever you want. But when it comes to realization using state-of-the-art technologies, you might encounter difficulties or obstacles.
 
 It must be as higher level as possible if we do not want to say the highest level. The ligh level in programming sense means free from any limiting technology, assuming everything is possible.
 

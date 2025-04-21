@@ -1040,8 +1040,8 @@ By choosing a data structure whose properties match your needs, you can express 
 
 ## Object Instantiation
 ```
-$obj AS DataType <- DataType()
-$obj AS {{NLD describing the type}} <- DO {{create instance of the type}}
+$obj AS DataType <- CREATE DataType()
+$obj AS {{NLD describing the type}} <- DO {{create instance of the type described}}
 ```
 
 ## Tuples
