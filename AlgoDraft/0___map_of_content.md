@@ -10,4 +10,11 @@ status: Writing
 		2. [[Integer Basic Type]]
 		3. [[Complex Basic Type]]
 3. [[Data Structures]]
-	1. [[Sets]]
+	1. Data Structure Categories Explained
+		1. [[Element Topology]]
+		2. [[Sequentiality]]
+		3. [[Homogeneity]]
+		4. [[Mutability]]
+		5. [[Iterability]]
+		6. [[Uniqueness]]
+	2. [[Sets]]
