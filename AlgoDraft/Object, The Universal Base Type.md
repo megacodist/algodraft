@@ -1,7 +1,7 @@
 ---
 status: Writing
 ---
-In AlgoDraft, every entity you work with—be it a [[Numeric Data Type|number]], [[Strings|a piece of text]], or [[Data Structures|a more complex data structure]]—represents a specific **value**. To provide a unified foundation for this value-based system, AlgoDraft defines a universal base type named `Object`.
+In AlgoDraft, every entity you work with—be it a [[Numeric Basic Types|number]], [[Strings|a piece of text]], or [[Data Structures|a more complex data structure]]—represents a specific **value**. To provide a unified foundation for this value-based system, AlgoDraft defines a universal base type named `Object`.
 
 **Definition:** `Object` is the ultimate ancestor in the AlgoDraft type hierarchy. Every other data type, whether built-in (like [[Integer Basic Type|Integer]], [[Real Basic Type|Real]], [[Complex Basic Type|Complex]], String) or user-defined, directly or indirectly inherits from `Object`.
 

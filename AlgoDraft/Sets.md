@@ -1,7 +1,7 @@
 ---
 status: Writing
 ---
-Sets are an **unstructured, non-sequential, iterable, heterogeneous, mutable, and uniqueness-enforcing** data structure in AlgoDraft. They are used to represent collections of **distinct** elements where **order does not matter** and **each element appears only once**.
+Sets are an **unstructured, non-sequential, heterogeneous, mutable, iterable, and non-duplicable** data structure in AlgoDraft:
 
 * **Unstructured**: Sets have no internal organization such as hierarchy or lineage. Elements exist in an unstructured "pool," with no relationship to each other beyond co-membership in the set.
 	- No first, last, parent, or neighbor.
@@ -9,17 +9,15 @@ Sets are an **unstructured, non-sequential, iterable, heterogeneous, mutable, an
 
 *  **Non-sequential**: Sets are not sequences. They do not preserve order — you should not expect elements to appear in a specific order when iterated or displayed.
 
-* *
+* **Heterogeneous**: While practical usage often favors uniform types (e.g., `Set<Integer>`), this is not required by AlgoDraft’s design and they are allowed sets to contain elements of any type.
 
+*  **Mutable**: Elements can be added, removed, and/or altered at any time.
 
+*  **Iterable**: Although the order is not guaranteed, sets can be iterated over using constructs like `FOR EACH`, although the iteration order is unspecified.
 
-Sets are a **non-sequential**, **unstructured**, **iterable**, **mutable**, **flexibly-typed**, and **uniqueness-enforcing** data structure in AlgoDraft:
-- **non-sequential**: Elements have no fixed position or meaningful order. Algorithms should not assume any ordering of elements within a set.
-- **non-linear**: The structure does not follow a straight or hierarchical path. All elements are conceptually equal and independently accessible.
-- **iterable**: You can loop through all elements in a set, though the order of iteration is undefined and should not affect algorithm correctness.
-- **mutable**: Sets can be modified after creation by adding or removing elements.
-- **flexibly-typed**: Sets can contain elements of mixed types. Homogeneity is not enforced by default in AlgoDraft.
-- **uniqueness-enforcing**: Duplicate elements are not allowed. If an equivalent element already exists in the set, insertion has no effect.
+* **Non-duplicable**: Duplicate elements are not allowed. If an equivalent element already exists in the set, insertion has no effect.
+
+They are used to represent collections of **distinct** elements where **order does not matter** and **each element appears only once**.
 # Constructing
 ```
 // Defining a set using literal notation...
