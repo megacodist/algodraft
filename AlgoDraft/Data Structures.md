@@ -5,42 +5,40 @@ In AlgoDraft, data structures are fundamental ways to organize, manage, and stor
 
 To better understand and choose the right data structure for a task, we categorize them based on several key properties or characteristics:
 
-*  **Element Topology**: Refers to the _conceptual arrangement_ of elements within a data structure — how they are positioned, related, or connected. It captures the “shape” or internal organization of the data and defines how elements are accessed or navigated in relation to each other.
-* * **Sequentiality**: Describes whether the elements have a defined order or follow a specific processing sequence (like First-In-First-Out) and you can predictably move from one element to the next logical one in a sequence. Structures where elements don't have a defined positional or processing order are **non-sequential**.
+*  **Elements Topology**: Refers to the _conceptual arrangement_ of elements within a data structure — how they are positioned, related, or connected. It captures the “shape” or internal organization of the data and defines how elements are accessed or navigated in relation to each other.
 * * **Homogeneity**: Indicates whether the structure typically hold elements of the same data type (**homogeneous**) or can it hold elements of different types (**heterogeneous**).
 * **Mutability**: Can the structure be changed after creation? Can elements be added, removed, or modified (Mutable)? Or is the structure fixed once created (Immutable)?
 * **Iterability**: Is it possible to systematically visit or process each element contained within the structure (e.g., using a `FOR EACH` loop)? This applies even to non-linear structures, though the traversal strategies might be more complex (like Depth-First or Breadth-First). Structures like Records, which group named fields, are typically not considered iterable in this sense (you access fields by name, not by iterating over values as members of a collection).
-* **Uniqueness**: Indicates whether elements (or certain parts, like keys or field names) must be unique within the structure. This affects membership tests and structural integrity.
+* **Duplicability**: Indicates whether elements (or certain parts, like keys or field names) are duplicate within the structure or not. This affects membership tests and structural integrity.
 
 # **AlgoDraft Data Structures Characteristics/Categorizations**
-| Data Structure | **Element Topology** | Sequentiality                   | Homogeneity                             | Mutability                                             | Iterability | Uniqueness                                            | Primary Use Case                                      |
-| -------------- | -------------------- | ------------------------------- | --------------------------------------- | ------------------------------------------------------ | ----------- | ----------------------------------------------------- | ----------------------------------------------------- |
-| **Tuple**      | Linear               | Yes                             | **Not Enforced²**                       | Immutable                                              | Yes         | Duplicates Allowed                                    | Grouping a fixed number of related, ordered items.    |
-| **String**     | Linear               | Yes (Sequence of chars)         | **Yes (Characters)**                    | **Immutable**                                          | Yes         | Duplicates Allowed (Characters)                       | Representing textual data.                            |
-| **List**       | Linear               | Yes                             | **Not Enforced²**                       | Mutable                                                | Yes         | Duplicates Allowed                                    | Storing sequences where order matters, random access. |
-| **Set**        | Unstructured         | No                              | **Not Enforced²**                       | Mutable                                                | Yes         | **Elements Unique**                                   | Storing unique items, checking membership quickly.    |
-| **Mapping**    | Associative          | **Not Enforced³**               | **Not Enforced²** (for Keys and Values) | Mutable                                                | Yes⁴        | **Keys Unique**, Values can duplicate                 | Associating unique keys with arbitrary values.        |
-| **Stack**      | Linear               | Yes (LIFO - Last-In First-Out)  | **Not Enforced²**                       | Mutable                                                | Yes⁵        | Duplicates Allowed                                    | Processing items in reverse order of arrival.         |
-| **Queue**      | Linear               | Yes (FIFO - First-In First-Out) | **Not Enforced²**                       | Mutable                                                | Yes⁵        | Duplicates Allowed                                    | Processing items in order of arrival.                 |
-| **Record**     | Associative          | No (Fields have names)          | **Not Enforced²**                       | Fields names/number fixed; field values often mutable⁶ | No⁷         | **Field Names Unique**, Values can duplicate          | Grouping related data under specific names.           |
-| **Tree**       | Hierarchical         | No (Hierarchical)               | **Not Enforced²** (Node Data)           | Varies (Structure/Nodes can be mutable)                | Yes⁸        | Varies (Depends on specific tree type/rules)          | Representing hierarchical relationships.              |
-| **Graph**      | Networked            | No (Network)                    | **Not Enforced²** (Node/Edge Data)      | Varies (Structure/Nodes/Edges can be mutable)          | Yes⁸        | Varies (Nodes/Edges might be unique depending on use) | Representing complex relationships and networks.      |
-**Footnotes:**
 
-² **Homogeneity**: For structures marked `Not Enforced`, AlgoDraft does not require elements to share the same type. Mixed or uniform types may be used as appropriate.
+|Data Structure|Elements Topology|Homogeneous|Mutable|Iterable|Duplicable|Primary Use Case|
+|---|---|---|---|---|---|---|
+|**Tuple**|Linear|No|No|Yes|Yes|Grouping a fixed number of related, ordered items.|
+|**String**|Linear|Yes|No|Yes|Yes|Representing textual data.|
+|**List**|Linear|No|Yes|Yes|Yes|Storing sequences where order matters, random access.|
+|**Set**|Unstructured|No|Yes|Yes|No|Storing unique items, checking membership quickly.|
+|**Mapping**|Associative|No|Yes|Yes¹|Keys: No  <br>Values: Yes|Associating unique keys with arbitrary values.|
+|**Stack**|Linear|No|Yes|Yes²|Yes|Processing items in reverse order of arrival.|
+|**Queue**|Linear|No|Yes|Yes²|Yes|Processing items in order of arrival.|
+|**Record**|Associative|No|Partly³|No|Fields: No  <br>Values: Yes|Grouping related data under specific names.|
+|**Tree**|Hierarchical|No|Varies⁴|Yes⁵|Varies⁶|Representing hierarchical relationships.|
+|**Graph**|Networked|No|Varies⁴|Yes⁵|Varies⁶|Representing complex relationships and networks.|
 
-³ **Sequentiality (Mapping)**: AlgoDraft does not guarantee order in Mappings. If order is relevant (e.g., by insertion), it must be stated explicitly.
+**Footnotes**
 
-⁴ **Iterability (Mapping)**: Mappings are iterable over keys, values, or key-value pairs. Order is unspecified unless defined.
+¹ **Mapping Iterability:** Mappings are iterable by keys, values, or key-value pairs. Order is undefined unless specified.
 
-⁵ **Iterability (Stack/Queue)**: Stacks and Queues allow iteration, but are primarily used via `Push`/`Pop` or `Enqueue`/`Dequeue` operations.
+² **Stack/Queue Iterability:** Though their primary interface is procedural (push/pop, enqueue/dequeue), they are iterable in their internal order (LIFO for stacks, FIFO for queues).
 
-⁶ **Mutability (Record)**: A Record’s structure is fixed after definition, but its field values may be mutable depending on their types.
+³ **Record Mutability:** Field structure is fixed after declaration. Field _values_ are mutable depending on their type.
 
-⁷ **Iterability (Record)**: Records are typically accessed by field name rather than iteration. Field reflection may exist but is not standard iteration.
+⁴ **Tree/Graph Mutability:** Trees and graphs may have mutable nodes, edges, and structure — this varies by use.
 
-⁸ **Iterability (Tree/Graph)**: Trees and Graphs are traversed using traversal algorithms (e.g., DFS, BFS); iteration order is defined by the traversal method.
+⁵ **Tree/Graph Iterability:** These are iterable via traversal methods like DFS and BFS, rather than element-by-element iteration.
 
+⁶ **Tree/Graph Duplicability:** Whether elements must be unique depends on the specific variant or constraints of the structure.
 
 # **Why This Matters in AlgoDraft**
 

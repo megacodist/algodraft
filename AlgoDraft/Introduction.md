@@ -1,5 +1,5 @@
 ---
-status: Writing
+status: Draft
 ---
 
 Humans need to convey their ideas or exchange ideas with other people. If you want to talk about mathematics, you need to know algebra, set theory, their theoroms, jargons among other things. Pseudocode is the language of algorithms.
@@ -14,7 +14,7 @@ The primary goal of pseudocode is clear, unambiguous, and easy-to-write/read com
 
 With collaboration with Google Gemini, I (Megacodist) managed to outlined this pseudocode named AlgoDraft with file extension of .algod.
 # Characteristics
-AlgoDraft’s **neutral, descriptive, and conceptual tone**.
+AlgoDraft’s **neutral, descriptive, and conceptual tone and syntax**.
 
 AlgoDraft prefers logic clarity and conceptualization over implementation. It means AlgoDraft is a drawing board, you can sketch whatever you want. But when it comes to realization using state-of-the-art technologies, you might encounter difficulties or obstacles.
 
