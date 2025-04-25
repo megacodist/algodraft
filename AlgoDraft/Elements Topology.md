@@ -111,11 +111,18 @@ Networked topology generalizes structure even further, where **elements can conn
 - No fixed root or hierarchy
 - Suitable for modeling relationships, routes, or dependencies
 # **Unstructured Topology**
-In **unstructured topologies**, the elements **do not exhibit any consistent or definable relationship** in terms of position, hierarchy, linkage, or mapping. There is **no predictable pattern** by which elements are related, ordered, or accessed.
+Unstructured topology refers to data structures where **no inherent organizational relationship** exists among the elements. This category serves as the **fallback** for collections that do not exhibit a consistent or meaningful topological pattern like linear, hierarchical, or networked forms.
 
 This does **not** mean the data is chaotic or invalid — rather, it means that **AlgoDraft makes no assumption** about how the elements are related or accessed. The structure exists **only in terms of its content**, not its form.
 
-The **Undefined Relationship** implies that elements are **logically grouped**, but the grouping is **not defined by element-to-element relationships**. It’s the absence of a topology, rather than a form of it.
+ 1. **No Implied Ordering or Connection**
+	There is **no expectation** of order, positionality, ancestry, or connectivity among elements. Items are simply **gathered together** without a logical scheme that defines their relative placement.
+
+ 2. **Access by Container, Not Structure**
+	Elements are **logically grouped**, but the grouping is **not defined by element-to-element relationships**. It’s the absence of a topology, rather than a form of it.
+
+ 3. **No Navigational Context**
+	Unlike other topologies (which may involve indices, paths, or links), unstructured collections **lack navigational context**. You cannot traverse from one element to another by following a structural path.
 
 **Examples in AlgoDraft:**
 - `Set`

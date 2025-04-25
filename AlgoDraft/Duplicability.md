@@ -1,7 +1,7 @@
 ---
-status: Writing
+status: Draft
 ---
-**Uniqueness** in AlgoDraft describes whether a data structure **enforces distinctness** among its elements or allows **repetition**. This characteristic helps define how the structure organizes and interprets its contents, especially in contexts like searching, indexing, or identity-based access.
+**Duplicability** in AlgoDraft describes whether a data structure **enforces distinctness** among its elements or allows **repetition**. This characteristic helps define how the structure organizes and interprets its contents, especially in contexts like searching, indexing, or identity-based access.
 
 # Duplicable
 A structure is **duplicable** if it **permits repeated elements**. This includes values, characters, keys, or any other units the structure stores.

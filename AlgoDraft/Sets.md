@@ -1,13 +1,11 @@
 ---
 status: Writing
 ---
-Sets are an **unstructured, non-sequential, heterogeneous, mutable, iterable, and non-duplicable** data structure in AlgoDraft:
+Sets are an **unstructured, heterogeneous, mutable, iterable, and non-duplicable** data structure in AlgoDraft:
 
 * **Unstructured**: Sets have no internal organization such as hierarchy or lineage. Elements exist in an unstructured "pool," with no relationship to each other beyond co-membership in the set.
 	- No first, last, parent, or neighbor.
     - Membership is the key relation — _is this element in the set?_
-
-*  **Non-sequential**: Sets are not sequences. They do not preserve order — you should not expect elements to appear in a specific order when iterated or displayed.
 
 * **Heterogeneous**: While practical usage often favors uniform types (e.g., `Set<Integer>`), this is not required by AlgoDraft’s design and they are allowed sets to contain elements of any type.
 
@@ -35,9 +33,7 @@ $empty3 AS Set<SomeType> <- ∅
 * In set literals, trailing comma is allowed and it is a good practice to add values later easily.
 * `AN EMPTY` although verbose, it is a good practice to emphasize the emptiness of the newly created set.
 # Operations
-## Value Operations
-These operations are inherited from [[Object, The Universal Base Type#Universal Value Operations|Object]] type.
-### Equality/Inequality Operators
+## Equality/Inequality Operators
 ```
 // Defining some sets for comparison using AlgoDraft syntax...
 $set1 AS Set<Integer> <- {10, 20, 30}
