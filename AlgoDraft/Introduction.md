@@ -14,6 +14,7 @@ The primary goal of pseudocode is clear, unambiguous, and easy-to-write/read com
 
 With collaboration with Google Gemini, I (Megacodist) managed to outlined this pseudocode named AlgoDraft with file extension of .algod.
 # Characteristics
+
 AlgoDraft’s **neutral, descriptive, and conceptual tone and syntax**.
 
 AlgoDraft prefers logic clarity and conceptualization over implementation. It means AlgoDraft is a drawing board, you can sketch whatever you want. But when it comes to realization using state-of-the-art technologies, you might encounter difficulties or obstacles.

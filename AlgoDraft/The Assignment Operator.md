@@ -3,50 +3,41 @@ status: Draft
 ---
 The assignment operator `<-` is used to place a value into a declared variable.
 
-#### Syntax
+**Syntax**
 ```
 $variableName <- <value>
 ```
 
-* **`<-`**: The assignment operator. Read it as "gets" or "is assigned". It takes the value on the right and stores it in the variable on the left.
+* **`<-`**: The assignment operator. It takes the value on the right and stores it in the variable on the left. You can read it as:
+	* The variable named `variableName` **gets** the value `<value>`.
+	* The variable named `variableName` **is assigned** the value `<value>`.
 
 * **`<value>`**: The data being assigned. This can be a literal value (like `10`, `"Hello"`, `TRUE`), another variable, or the result of an operation. The value must be compatible with the variable's declared data type.
 
-#### Example
+**Example**
 ```
 $counter AS Integer // Declaration
 $counter <- 0       // Assignment
+$counter2 AS Integer <- $counter
+$counter3 AS Integer <- $counter + 10
 
 $customerName AS String
-$customerName <- "Bob"
+$customerName <- "Megacodist"
+$message AS String <- "Welcome!"
 
 $isActive AS Boolean
 $isActive <- TRUE
-```
-
-#### Declaration with Initialization Syntax
-You can declare a variable and assign its initial value in a single step.
-```
-$variableName AS DataType <- <initialValue>
-```
-
-#### Example
-```
-$score AS Integer <- 0
-$message AS String <- "Welcome!"
 $isComplete AS Boolean <- FALSE
 ```
-
-#### Changing Variable Values
 
 The key characteristic of variables is that their value can be updated using the assignment operator again.
 
 ```
 $score AS Integer <- 0
-NOTIFY: Initial score is $score as info // Notifies: Initial score is 0...
+NOTIFY {{initial score is $score as info}}
 
 $score <- $score + 10 // Update the value
-NOTIFY: Score after update is $score as info // Notifies: Score after update is 10...
+NOTIFY {{score after update is $score as info}}
 ```
 
 The `<-` operator is central to both variables and constants:

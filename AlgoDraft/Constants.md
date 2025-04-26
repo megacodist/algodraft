@@ -5,7 +5,7 @@ Constants are named containers used to store data that will not change after it'
 
 #### Syntax:
 ```
-CONST $CONSTANT_NAME AS DataType <- <value>
+CONST $CONSTANT_NAME AS DataType <- <value/literal>
 ```
 * **`CONST`**: The keyword indicating that this is a constant.
 
