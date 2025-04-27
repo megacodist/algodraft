@@ -322,7 +322,7 @@ $flag AS Boolean <- DO {{check that $list items are in acsending order}}
 $settFile AS File <- DO {{open settings file in read/write, binary mode}}
 ```
 
-## Getting User Input (`INPUT:`)
+## Getting User Input (INPUT)
 When your algorithm needs data from the user during execution, use the `INPUT:` keyword. This keyword:
 * this operation involves external interaction.
 * waits until the user provides the requested input.
@@ -351,7 +351,7 @@ $nums <- INPUT: get some Integers from user // Waits until the user inputs a lis
 $keyPressed AS String <- INPUT any single character  // Waits until the user presses any key
 ```
 
-## Notifying the User (`NOTIFY:`)
+## Notifying the User (NOTIFY)
 In our pseudocode dialect, we need a way to represent the algorithm communicating information outwards to the user. While traditional pseudocode often uses `PRINT`,  `OUTPUT`, or `DISPLAY` (usually implying console output), our dialect uses the more abstract `NOTIFY:` keyword.
 
 The `NOTIFY:` statement signifies that the algorithm should make the user aware of something. It abstracts away the specific method of notification (e.g., printing to a terminal, showing a dialog box, updating a status bar, playing a sound, etc.). It focuses purely on the intent to inform.
@@ -436,7 +436,7 @@ ENDIF
 * **Stay Abstract**: Avoid specifying how to notify (e.g., don't write `NOTIFY: show a blinking red dialog box...`). Let the severity and description guide the implementation.
 * **Define Standard Levels (Optional)**: Consider establishing a standard set of severity levels for consistency within your project or team.
 
-## Identation
+## Indentation
 Indentation visually represents the structure and nesting of your logic. It makes code drastically easier to read and understand by grouping related instructions. We use identation in two scenarios:
 
 1.	Blocks

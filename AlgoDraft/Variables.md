@@ -25,3 +25,6 @@ $customerId AS String
 $customerName AS String <- "Megacodist"
 $isActive AS Boolean
 ```
+
+Defining multiple variables in the same statement...
+$minValue, $maxValue AS Integer
