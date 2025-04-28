@@ -21,3 +21,5 @@ The essence of a tuple is a **linear, heterogeneous, immutable, iterable, and du
 
 They are used to represent a fixed collection of related items where order matters, types may differ, and mutability is sacrificed for **predictability, consistency, and conceptual integrity**.
 
+# Operations
+## Unpacking

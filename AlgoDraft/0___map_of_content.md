@@ -37,6 +37,13 @@ status: Writing
 	5. [[KEEP-DOING]]
 5. [[Functions and Streams]]
 	1. [[Functions]]
+		1. [[Function Parameters]]
+		2. [[Return Value in Functions]]
+		3. [[Function Invocation]]
+			1. [[Function Invocation Using Positional Arguments]]
+			2. [[Function Invocation Using Named Arguments]]
+			3. [[Function Invocation Using Both Positional and Named Arguments]]
+	2. [[Streams]]
 6. [[Data Structures]]
 	2. Data Structure Categories Explained
 		1. [[Elements Topology]]
