@@ -53,4 +53,5 @@ status: Writing
 		5. [[Duplicability]]
 	3. [[Tuples]]
 	4. [[Sets]]
-	5. [[Records]]
+	5. [[Queues]]
+	6. [[Records]]
