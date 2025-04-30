@@ -9,8 +9,8 @@ status: Writing
 		1. [[Real Basic Type]]
 		2. [[Integer Basic Type]]
 		3. [[Complex Basic Type]]
-	4. [[String Basic Type]]
-	5. [[FsPath Basic Type]]
+	4. [[FsPath Basic Type]]
+	5. [[Iterator Basic Type]]
 	6. [[File Basic Type]]
 	7. [[Function Basic Type]]
 3. Basic Syntax

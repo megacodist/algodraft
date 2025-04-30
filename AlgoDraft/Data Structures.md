@@ -6,7 +6,7 @@ In AlgoDraft, data structures are fundamental ways to organize, manage, and stor
 To better understand and choose the right data structure for a task, we categorize them based on several key properties or characteristics:
 
 *  **Elements Topology**: Refers to the _conceptual arrangement_ of elements within a data structure — how they are positioned, related, or connected. It captures the “shape” or internal organization of the data and defines how elements are accessed or navigated in relation to each other.
-* * **Homogeneity**: Indicates whether the structure typically hold elements of the same data type (**homogeneous**) or can it hold elements of different types (**heterogeneous**).
+* **Homogeneity**: Indicates whether the structure typically hold elements of the same data type (**homogeneous**) or can it hold elements of different types (**heterogeneous**).
 * **Mutability**: Can the structure be changed after creation? Can elements be added, removed, or modified (**mutable**)? Or is the structure fixed once created (**immutable**)?
 * **Iterability**: Is it possible to systematically visit or process each element contained within the structure (e.g., using a `FOR EACH` loop)? This applies even to non-linear structures, though the traversal strategies might be more complex (like Depth-First or Breadth-First). Structures like Records, which group named fields, are typically not considered iterable in this sense (you access fields by name, not by iterating over values as members of a collection).
 * **Duplicability**: Indicates whether elements (or certain parts, like keys or field names) are duplicate within the structure or not. This affects membership tests and structural integrity.
