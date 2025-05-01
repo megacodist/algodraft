@@ -151,4 +151,10 @@ $anotherCounterIter AS Iterator<Integer> <- CountUpTo(3)
 
 Each call to a Stream Function creates a brand new Iterator instance with its own fresh state, independent of any other iterators created from the same definition.
 
-The actual execution of the Stream Function's body (hitting YIELD or termination) is **driven solely by operations performed on the associated Iterator**. Specifically, it's the NEXT operator on the Iterator that requests the next value and causes the Stream Function's logic to run from its last paused point until the next YIELD or termination signal (EXHAST or ENDSTREAM).
+The actual execution of the Stream Function's body (hitting `YIELD` or termination) is **driven solely by operations performed on the associated Iterator**. Specifically, it's the `NEXT` operator on the Iterator that requests the next value and causes the Stream Function's logic to run from its last paused point until the next `YIELD` or termination signal (`EXHAST` or `ENDSTREAM`).
+
+## Stream Functions Yielding No Values
+
+It is possible for a Stream Function's logic, given certain parameters, to never execute a `YIELD` statement (e.g., a loop condition is false from the start, parameters lead directly to an `EXHAST`).
+
+In such a case, the Iterator produced by calling that Stream Function definition will conceptually be in the **Exhausted** state from the very moment it is created. Checking `EXHAUSTED $iter` on such an iterator will immediately return `TRUE`.

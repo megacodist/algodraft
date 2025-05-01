@@ -1,37 +1,41 @@
 ---
 status: Writing
 ---
-**Iterability** refers to whether a data structure’s elements can be **visited one by one in a defined and repeatable manner**. In AlgoDraft, iterability doesn’t imply how the iteration is implemented, but **whether the concept of “visiting elements” makes sense** for the structure.
+In AlgoDraft, **iterability** refers to whether a data structure comes with a **guaranteed, built-in iteration mechanism** that allows traversal of its elements using a consistent and well-understood control construct such as a `FOR EACH` loop.
+
+This property does **not** concern whether it is theoretically possible to traverse the elements — instead, it denotes whether AlgoDraft itself **endorses and enables such traversal inherently**.
+
+* **Iterable**: AlgoDraft provides a built-in way to traverse.  
+* **Non-Iterable**: You must define your own traversal logic.
 
 # **Non-Iterable**
 
-A non-iterable structure **does not support** element-wise traversal because its elements **aren’t structured for stepping through**. These structures are **accessed directly by name or position**, and not through looping.
+A **non-iterable** data structure in AlgoDraft is one for which **no standard iteration method is defined or guaranteed**. You cannot use `FOR EACH` directly on them without explicitly defining a traversal logic.
 
-**Implications in AlgoDraft:**
-- You cannot use `FOR EACH` directly.
-- Processing typically involves **direct access by field or method**, not iteration.
+**Examples in AlgoDraft**:
 
-**Examples:**
-- **Records**: You don’t iterate over fields; you access them by name (e.g., `person.age`)
-- Some abstract containers or wrappers without iterable semantics
+- **Records**: Fields are accessed by name, not by traversal.
+
+- **Trees and Graphs**: Traversal strategies (like DFS, BFS) **exist**, but must be explicitly invoked or implemented — AlgoDraft does not assume a single, inherent way to iterate over them.
+
+> **Important**: Non-iterable does _not_ mean untraversable. You can still walk through the elements, but you must **impose your own logic** (e.g., define a DFS function for a tree).
 
 # **Iterable**
-An iterable structure allows traversal over its elements, typically using **loops**, **traversals**, or **other step-wise mechanisms**. The **order of iteration** may be:
 
-- Well-defined (as in Lists or Strings),
-- Algorithmically defined (as in Trees or Graphs),
-- Undefined but still supported (as in Sets).
+An **iterable** data structure is one for which AlgoDraft **ensures a native, direct traversal strategy**
+and expect it to work without having to invent your own traversal method. The structure defines or implies **how** to walk through its contents.
 
-**Implications in AlgoDraft:**
-- You can use iteration constructs like `FOR EACH` with them.
-- Essential for algorithms that **examine**, **process**, or **filter** data.
+**Examples in AlgoDraft**:
 
-**Examples:**
-- Lists, Strings, Tuples (in their natural order)
-- Sets (order not guaranteed)
-- Mappings (can iterate over keys, values, or key-value pairs)
-- Trees and Graphs (through DFS, BFS, etc.)
-- Stacks and Queues (though they’re usually processed rather than walked)
+- **Lists**: Iterated from first to last element.
+
+- **Sets**: Iterated in an undefined, but guaranteed way.
+
+- **Mappings**: Can be iterated over keys, values, or key-value pairs.
+
+- **Stacks/Queues**: Support iteration in their operational order (LIFO/FIFO).
+
+> **Note**: Some structures like **Sets** or **Mappings** do not define a meaningful _order_ for traversal, but **still count as iterable** because AlgoDraft supports traversing their contents natively.
 
 ## Operations
 ### ITERAOTR OF Operator, Obtaining an Iterator
