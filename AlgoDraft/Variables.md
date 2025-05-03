@@ -13,7 +13,7 @@ $variableName AS DataType <- <value/literal>
 
 * **`variableName`**: The name you choose for the variable. By convention, use [[Appendix 2, Naming conventions#camelCase|camelCase]] (e.g., `userAge`, `firstName`, `totalScore`).
 
-* **`AS DataType`**: Specifies the type of data the variable can store (e.g., `Integer`, `String`, `Boolean`, `List<Real>`). This is mandatory.
+* **`AS DataType`**: Specifies the type of data the variable can store which can be a basic type, data structure, or user-defined type. This is mandatory.
 * **`<- <value/literal>`** (Optional): The optional assignment operator.
 
 **Example**

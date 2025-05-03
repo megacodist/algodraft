@@ -1,6 +1,11 @@
 ---
 status: Draft
 ---
+---
+Indentation can be used or expressions and single-clause (non-multiline) statements
+
+---
+
 Indentation visually represents the structure and nesting of your logic. It makes code drastically easier to read and understand by grouping related instructions. We use indentation in two scenarios:
 
 1.	Blocks
