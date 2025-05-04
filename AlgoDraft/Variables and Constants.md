@@ -7,3 +7,5 @@ To work with data in AlgoDraft, you need places to store it. This is done using 
 I need a section for literals, variables, and constants
 
 the hazard of unintialized variables
+
+All data containers (variables, constants, parameters, fields, attributes etc.) in AlgoDraft must be prepended with $.

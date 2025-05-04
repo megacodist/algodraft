@@ -13,18 +13,18 @@ To better understand and choose the right data structure for a task, we categori
 
 # **AlgoDraft Data Structures Characteristics/Categorizations**
 
-| Structure   | Elements Topology | Homogeneous | Mutable | Duplicable | Iterable |
-| ----------- | ----------------- | ----------- | ------- | ---------- | -------- |
-| **Tuple**   | Linear            | No          | No      | Yes        | Yes¹     |
-| **List**    | Linear            | No          | Yes     | Yes        | Yes¹     |
-| **String**  | Linear            | Yes         | No      | Yes        | Yes¹     |
-| **Set**     | Unstructured      | No          | Yes     | No         | Yes²     |
-| **Mapping** | Associative       | No          | Yes     | No         | Yes³     |
-| **Stack**   | Linear            | No          | Yes     | Yes        | Yes⁴     |
-| **Queue**   | Linear            | No          | Yes     | Yes        | Yes⁵     |
-| **Record**  | Unstructured      | No          | Yes     | No         | No⁶      |
-| **Tree**    | Hierarchical      | No          | Yes     | Yes        | No⁷      |
-| **Graph**   | Networked         | No          | Yes     | Yes        | No⁷      |
+| Structure   | Elements Topology | Homogeneous | Mutable                         | Duplicable                      | Iterable |
+| ----------- | ----------------- | ----------- | ------------------------------- | ------------------------------- | -------- |
+| **String**  | Linear            | Yes         | No                              | Yes                             | Yes¹     |
+| **Tuple**   | Linear            | No          | No                              | Yes                             | Yes¹     |
+| **List**    | Linear            | No          | Yes                             | Yes                             | Yes¹     |
+| **Set**     | Unstructured      | No          | Yes                             | No                              | Yes²     |
+| **Stack**   | Linear            | No          | Yes                             | Yes                             | Yes⁴     |
+| **Queue**   | Linear            | No          | Yes                             | Yes                             | Yes⁵     |
+| **Mapping** | Associative       | No          | Keys: No<br>Values: Yes         | Keys: No<br>Values: Yes         | Yes³     |
+| **Record**  | Associative       | No          | Names/labels: No<br>Values: Yes | Names/labels: No<br>Values: Yes | No⁶      |
+| **Tree**    | Hierarchical      | No          | Yes                             | Yes                             | No⁷      |
+| **Graph**   | Networked         | No          | Yes                             | Yes                             | No⁷      |
 **Footnotes**
 
 - ¹ **Tuple**, **List**, and **String** are iterable by **index-based traversal**.
