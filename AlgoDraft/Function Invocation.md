@@ -29,8 +29,10 @@ These terms are related but distinct:
 
 * **Argument**: The actual value (literal or evaluation of an expression) or variable supplied by the caller when the function is invoked. Arguments provide the concrete data that the parameters will hold during the function's execution. In the above example `"example.com"`, `443`, and `1000` are arguments.
 
-There are three methods for argument-parameter correspondence (sending arguments to parameters):
+There are three approaches for argument-parameter correspondence (sending arguments to parameters):
 
 1. [[Function Invocation Using Positional Arguments]]
 2. [[Function Invocation Using Named Arguments]]
 3. [[Function Invocation Using Both Positional and Named Arguments]]
+
+Whichever approach is being used, at least arguments must be provided for non-default-valued parameters.

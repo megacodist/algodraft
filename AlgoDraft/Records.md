@@ -49,19 +49,22 @@ RECORD RecordName // Must follow PascalCase convention for types
 ENDRECORD
 ```
 
+**Keywords and Parts:**
+
 - **`RECORD`**: The keyword that begins the definition of a new record type.
 
 - **`RecordName`**: The name you choose for your custom record type (e.g., `UserProfile`, `Point`, `ColorRgb`). This name must follow the PascalCase convention for types in AlgoDraft.
 
 - **`$fieldName`**: The name given to each piece of data (a field) within the record. Field names must be conformed with variable naming rule. Each field declaration must be on its own line and indented. Fields without default values (`<- value`) MUST be declared before fields with default values.
 
-- **`AS`**: The keyword used to separate the field name from its data type declaration.
-
-- **`DataType`**: The specified data type for the field which can be a basic data type, data structure, or a user-defined type.
+- **`AS DataType`**: The specified data type for the field which can be a basic data type, data structure, or a user-defined type.
+- **`<- <defaultValue>`**: Optionally assigns a default value to a field using AlgoDraft's assignment operator (`<-`). The `<defaultValue>` must be a literal or existing object compatible with the `DataType`. Fields with defaults must come after fields without defaults.
 
 - **`ENDRECORD`**: The keyword that marks the end of the record type definition block.
 
-**Example**:
+**Example 1:**
+
+Let's define a record to hold information about a 2D point.
 
 ```
 RECORD Point2D
@@ -72,9 +75,28 @@ ENDRECORD
 
 This defines a new type called `Point2D` that groups two `Real` values, `$xCoord` and `$yCoord`.
 
+**Example** 2:
+
+Let's define a record for a user session, requiring `sessionId` and `userId` at creation, but providing defaults for others.
+
+```
+RECORD UserSession
+    // Fields without default values (must be provided at creation)
+    $sessionId AS String
+    $userId AS Integer
+	
+    // Fields with default values (can be omitted or overridden at creation)
+    $startTime AS DateTime <- DO {{get date and time during instantiation}}
+    $isActive AS Boolean <- TRUE
+    $permissions AS String <- "ReadOnly"
+ENDRECORD
+```
+
 # Declaring Record Variables
 
 Once a record type is defined, you can declare variables of that type using the variable declaration syntax:
+
+**Example 1:**
 
 ```
 $startPoint AS Point2D
@@ -83,14 +105,55 @@ $endPoint AS Point2D
 
 This declares two variables, `$startPoint` and `$endPoint`, which are intended to hold instances of our `Point2D` record. At this point, they don't hold a specific point yet.
 
-# Creating Record Instances (Instantiation)
-
-To actually create a data structure in memory based on your record definition, you use the `CREATE` keyword followed by the record type name.
+**Example 2:**
 
 ```
+$currentSession AS UserSession
+$adminSession AS UserSession
+```
+
+These variables are now ready to hold instances of the `UserSession` record.
+# Creating Record Instances (Instantiation)
+
+To create an actual data instance based on your `RECORD` definition, you use the **`NEW`** keyword followed by the record type name. Think of `NEW RecordType()` as invoking a special kind of **constructor function** that builds and returns a new instance of your record.
+
+Because it behaves like a function call, the process of providing initial values (arguments) for the record's fields uses the **exact same argument-parameter-correspondence syntax and rules as regular function invocation** in AlgoDraft. For more information, refer to [[Function Invocation]]. 
+
+
+**Example 1:**
+```
 $startPoint AS Point2D
-$startPoint <- CREATE Point2D() // Creates a Point2D instance
+$startPoint <- CREATE Point2D(0, 0) // Creates a Point2D instance
 
 $endPoint AS Point2D
-$endPoint <- CREATE Point2D()   // Creates another Point2D instance
+$endPoint <- CREATE Point2D(2, 2)   // Creates another Point2D instance
+```
+
+**Example 2:**
+```
+// Style 1: Using only Positional Arguments (for the required fields)
+// startTime, isActive, permissions will get their defined defaults.
+$session1 AS UserSession <- NEW UserSession("sess_abc", 123) // Positional for $sessionId, $userId
+
+// Style 2: Using only Named Arguments (Possible if ALL fields had defaults, OR for overriding)
+// Note: You MUST still provide values for $sessionId and $userId via named arguments here.
+$session2 AS UserSession <- NEW UserSession(sessionId <- "sess_333", userId <- 555, permissions <- "Audit") // startTime and isActive get defaults
+
+// Style 3: Using Mixed Arguments (Positional for required, Named for overriding defaults)
+// startTime and isActive get defaults. Permissions is overridden.
+$session3 AS UserSession <- NEW UserSession("sess_xyz", 456, permissions <- "ReadWrite")
+
+// Style 4: Using Mixed Arguments (Overriding multiple defaults)
+// startTime gets its default. isActive and permissions are overridden.
+$session4 AS UserSession <- NEW UserSession("sess_111", 789, isActive <- FALSE, permissions <- "Admin")
+
+// Style 5: Using Mixed Arguments (Overriding all defaults)
+$specificTime AS DateTime // Assume this is set elsewhere
+$session5 AS UserSession <- NEW UserSession("sess_222", 101, startTime <- $specificTime, isActive <- TRUE, permissions <- "Guest")
+
+// --- INVALID Instantiation ---
+// Missing arguments for required fields $sessionId, $userId
+// $invalidSession AS UserSession <- NEW UserSession() // ERROR!
+// $invalidSession AS UserSession <- NEW UserSession("sess_only") // ERROR! needs $userId too
+// $invalidSession AS UserSession <- NEW UserSession(ermissions <- "Admin") // ERROR! needs $sessionId and $userId
 ```

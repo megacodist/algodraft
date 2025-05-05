@@ -10,9 +10,10 @@ status: Writing
 		2. [[Integer Basic Type]]
 		3. [[Complex Basic Type]]
 	4. [[FsPath Basic Type]]
-	5. [[Iterator Basic Type]]
-	6. [[File Basic Type]]
-	7. [[Function Basic Type]]
+	5. [[Date and Time Basic Types]]
+	6. [[Iterator Basic Type]]
+	7. [[File Basic Type]]
+	8. [[Function Basic Type]]
 3. Basic Syntax
 	1. [[Casing Conventions]]
 	2. [[Variables and Constants]]
@@ -65,4 +66,5 @@ status: Writing
 	2. [[Classes]]
 8. [[Interfaces]]
 	1. [[IIterable Interface]]
-9. Foo
+9. [[Appendix 1, Unicode Characters]]
+10. [[Appendix 2, Naming conventions]]
