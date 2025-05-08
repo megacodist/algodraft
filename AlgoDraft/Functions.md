@@ -1,6 +1,8 @@
 ---
 status: Draft
 ---
+In this chapter we are going to introduce ways to structure and reuse code by encapsulating logic into callable units. All involve defining a named block of code that can be called, potentially take inputs (**parameters**), and execute a sequence of steps. These are called **Functions**.
+
 Functions compute and **return** a single value based on inputs or perform actions, cause side effects, possibly modifying state.
 
 # Declaration Syntax

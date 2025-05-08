@@ -51,7 +51,7 @@ Class attributes are declared using the `STATIC` keyword. They can be mutable 
 
 **Key Points for Declaration:**
 
-* **`<visibility>`**: Optional [[Visibility in Classes|attribute visibility]] defaults to `PUBLIC`. Determines which client code can access the attribute.
+* **`<visibility>`**: Optional [[Encapsulation|attribute visibility]] defaults to `PUBLIC`. Determines which client code can access the attribute.
 
 - **`STATIC` Keyword:** This keyword signifies that the attribute belongs to the class, not to individual instances.
 
@@ -160,7 +160,7 @@ Instance attributes are declared directly within the `CLASS ... ENDCLASS` bloc
     [<visibility>] CONST $UPPER_SNAKE_CASE_NAME AS DataType
     ```
 
-- **`<visibility>`**: Optional [[Visibility in Classes|attribute visibility]] defaults to `PUBLIC`. Determines which client code can access the attribute.
+- **`<visibility>`**: Optional [[Encapsulation|attribute visibility]] defaults to `PUBLIC`. Determines which client code can access the attribute.
 
 - **No `STATIC` Keyword:** The absence of `STATIC` signifies that the attribute belongs to individual instances.
 
