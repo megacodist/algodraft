@@ -1,12 +1,15 @@
 ---
 status: Draft
 ---
-
 Humans need to convey their ideas or exchange ideas with other people. If you want to talk about mathematics, you need to know algebra, set theory, their theoroms, jargons among other things. Pseudocode is the language of algorithms.
 
 It is the general way to express algorithmic ideas.
 
-It is worth mentioning that there is NOT a standard pseudocode that everyone agrees upon.
+You might learn a couple of programming languages but you should "store" your algorithmic ideas in a language-agnostic way. And that is pseudocode.
+
+It is worth mentioning that there is NOT a standard pseudocode that everyone agrees upon. Thus there are plenty of "dialects" of pseudocode out there.
+
+You also might not be convinced by any of them. In that case you should have your own dialect. 
 
 AlgoDraft is the result of our effort to have the most formal-informal algorithm language: the most formal among all casual contracts and the most informal among all programming languages.
 
