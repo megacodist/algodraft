@@ -1,5 +1,5 @@
 ---
-status: Planned
+status: Draft
 ---
 One of the powerful features of classes in AlgoDraft is **operator overloading**. This allows you to define custom behavior for standard AlgoDraft operators (like `+`, `-`, `=`, `NOT`, and even keyword operators like `IN` or custom word-like operators like `POW`) when they are applied to objects of your classes.
 

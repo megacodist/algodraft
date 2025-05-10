@@ -16,7 +16,17 @@ AlgoDraft is the result of our effort to have the most formal-informal algorithm
 The primary goal of pseudocode is clear, unambiguous, and easy-to-write/read communication of logic.
 
 With collaboration with Google Gemini, I (Megacodist) managed to outlined this pseudocode named AlgoDraft with file extension of .algod.
+
+The role of AlgoDraft:
+1. The middle ground thoughts and algorithms.
+2. To structure unstructured thoughts.
+3. A shelter for strictly limiting formal syntaxes.
+4. Stepping stones to cross whitewater river of algorithm.
+5. A rest area during iterations of crafting algorithms
+6. 
 # Characteristics
+
+strongly-typed pseudocode
 
 AlgoDrat tries to be a neutral syntax.
 
