@@ -20,7 +20,7 @@ AlgoDraft offers two ways to define type aliases, depending on the complexity of
 This form is ideal when the existing type expression is concise.
 
 ```
-ALIAS NewTypeName FOR <type_expr>
+ALIAS NewTypeName FOR <type_expr> [ENDALIAS]
 ```
 
 - **`ALIAS`**: The keyword that starts the type alias definition.
@@ -30,6 +30,8 @@ ALIAS NewTypeName FOR <type_expr>
 - **`FOR`**: This keyword in this context links the new name to the existing type.
 
 - **`<type_expr>`**: The type you are creating an alias for (e.g., `Integer`, `List<String>`, `Boolean`, another alias).
+
+- **`ENDALIAS`**: The optional `ENDALIAS` to signify the end of alias definition.
 
 **Examples (Single-Line):**
 
@@ -43,6 +45,9 @@ ALIAS PixelValue FOR Integer
 // Aliasing a parameterized data structure
 ALIAS NameList FOR List<String>
 ALIAS UserScores FOR Mapping<UserID TO Integer> // UserID is itself an alias
+
+// Define an alias for a function that takes two integers and returns a boolean
+ALIAS IntegerPredicate FOR FUNCTION (IN Integer, IN Integer) -> Boolean
 ```
 
 **Multi-Line Alias (for complex type expressions):**
@@ -70,12 +75,12 @@ ENDALIAS
 ```
 // Aliasing a function signature
 ALIAS
-	SimplePredicate
-	FOR
-	FUNCTION RETURNS Boolean
-		PARAMS
-			Integer
-		ENDPARAMS
-	ENDFUNCTION
+    MyFunctionTypeAlias // Name of the new function type
+    FOR
+    FUNCTION ( // No name, just the signature structure
+        IN TypeA,         // Parameter modes and types are part of the signature type
+        OUT TypeB,
+        INOUT TypeC
+	    ) -> ReturnTypeD     // Optional return type
 ENDALIAS
 ```
