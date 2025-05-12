@@ -1,7 +1,6 @@
 ---
 status: Draft
 ---
-- **x.1. Function Syntax:** We will start by detailing the precise syntax for defining a function, including how to name it, specify its inputs, indicate what (if anything) it returns, and write its body of executable statements.
     
 - **x.2. Function Parameters:** Functions often need input data to work with. This subsection explains how to define parameters, which act as placeholders for the data a function will receive when called. We'll cover:
     
@@ -36,27 +35,81 @@ A complete function definition in AlgoDraft follows this structure:
 
 ```
 FUNCTION FunctionName (
-    // Parameter list (see x.2. Function Parameters for details)
-    [ParameterDirectionality] $parameterName1 AS DataType1 [<- defaultValue1],
-    [ParameterDirectionality] $parameterName2 AS DataType2 [<- defaultValue2],
+    parameterDefinition_1,
+    parameterDefinition_2,
     ...
+    parameterDefinition_N
 	) [-> ReturnType] :=
-    // Definition operator: separates signature from body
-    //
-    // Function Body:
-    // Sequence of AlgoDraft statements that implement the function's logic.
-    // This is where computations are performed and actions are taken.
-    // May include 'RETURN' statements.
-    //
+    // Function Body: Sequence of AlgoDraft statements
 ENDFUNCTION
 ```
 
-* `FUNCTION`: Begins the definition of any routine (whether it acts as a mathematical-like function or a procedure).
-* `FunctionName`: The identifier (name) you give to the routine. This name is used to call the routine later. It should follow [[Appendix 2, Naming conventions#PascalCase or UpperCamelCase|PascalCase]] convention.
-* `[RETURNS ReturnType]` (Optional clause): The key difference between a value-returning function and an action-performing procedure lies in the optional `RETURNS` clause:
-   * If present, this clause specifies that the routine is a function designed to return a value.
-   * If absent, the routine is a procedure designed primarily for its actions/side effects.
-* `PARAMS`: The keyword that begins the parameters block where all the routine's parameters (arguments it accepts) are defined.
-* `ENDPARAMS`: The keyword that marks the end of the parameter definition block.
-* `// Body`: A placeholder representing the sequence of statements and logic that make up the routine's implementation. This is where computations happen, actions are performed.
-* `ENDFUNCTION`: The keyword that marks the end of the entire function definition block.
+*   If a function takes no parameters, the parentheses `()` are still required but will be empty.
+
+*   If a function does not return a value (i.e., it acts as a procedure), the `-> ReturnType` clause is omitted.
+
+**Keywords and Clauses:**
+
+*   **`FUNCTION`**: The keyword initiating a function definition.
+
+*   **`FunctionName`**: The identifier (name) assigned to the function. This name is used to invoke the function. It should be conformed to PascalCasing.
+
+*   **`(` ... `)` (Parentheses)**: Enclose the list of parameter definitions. Mandatory even if the list is empty.
+
+*   **`parameterDefinition`**: Defines a single parameter the function accepts. The full syntax for a `parameterDefinition` is detailed in Function Parameters. Each definition typically includes:
+
+    *   Parameter Directionality (`IN`, `OUT`, `INOUT`).
+    
+    *   Parameter Name (e.g., `$param1`).
+    
+    *   Parameter Data Type (e.g., `AS Integer`).
+    
+    *   Optional Default Value (e.g., `<- 0`).
+    
+    *   Multiple `parameterDefinition`s are separated by commas (`,`).
+
+*   **`-> ReturnType` (Optional Return Clause)**:
+
+    *   **`->`**: The arrow operator indicating a return value specification and delimits parameters list and return type..
+    
+    *   **`ReturnType`**: The data type of the value the function will return (e.g., `Integer`, `Boolean OR NULL`, `List<String>`). This clause is omitted for functions that do not return a value.
+
+*   **`:=` (Definition Operator)**: Separates the function's signature (name, parameters, and return type) from its executable body. It signifies "is defined as."
+
+*   **`Function Body`**: The block of AlgoDraft statements that implement the function's logic. If the function has a `-> ReturnType` clause, the body must use a `RETURN value` statement.
+
+*   **`ENDFUNCTION`**: The keyword marking the termination of the function definition block.
+
+**Example 1:** A function that returns a value:
+
+```AlgoDraft
+FUNCTION Add (
+	IN $a AS Integer,
+	IN $b AS Integer
+	) -> Integer :=
+	
+	RETURN $a + $b
+ENDFUNCTION
+```
+
+**Example 2:** A procedure (no return value) with an optional parameter:
+
+```AlgoDraft
+FUNCTION Greet (
+	IN $name AS String,
+	IN $greeting AS String <- "Hello"
+	) := // No "-> ReturnType"
+	
+	$msg AS String <- $greeting + ", " + $name + "!"
+	NOTIFY {{the greeting message of $msg}}
+ENDFUNCTION
+```
+
+**Example 3:** A function with no parameters:
+
+```AlgoDraft
+FUNCTION GetCurrentTimestamp () -> DateTime :=
+	$dateTime AS DateTime <- DO {{get current date and time of $tz time zone}}
+	RETURN $dateTime
+ENDFUNCTION
+```
