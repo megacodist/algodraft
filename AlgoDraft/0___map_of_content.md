@@ -18,6 +18,8 @@ status: Writing
 	11. [[Comparison Operators]]
 		1. [[Equality, Inequality Operators]]
 		2. [[Relational Operators]]
+	12. [[Type Aliases]]
+	13. [[Declaring Conceptual and External Types]]
 3. [[Basic Data Types]]
 	1. [[Object, The Universal Base Type]]
 	2. [[Boolean Basic Type]]

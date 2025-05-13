@@ -9,7 +9,7 @@ Declaration specifies the variable's name and the type of data it will hold:
 $variableName AS DataType <- <value/literal>
 ```
 
-* **`$`**: All variable names must start with a dollar sign ($).
+* **`$`**: All variable names must start with a dollar sign ($) known as **sigil**.
 
 * **`variableName`**: The name you choose for the variable. By convention, use [[Appendix 2, Naming conventions#camelCase|camelCase]] (e.g., `userAge`, `firstName`, `totalScore`).
 

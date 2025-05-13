@@ -1,23 +1,6 @@
 ---
 status: Draft
 ---
-    
-- **x.2. Function Parameters:** Functions often need input data to work with. This subsection explains how to define parameters, which act as placeholders for the data a function will receive when called. We'll cover:
-    
-    - **x.2.1. Default-Valued Parameters:** How to make parameters optional by providing default values.
-        
-    - **x.2.2. Parameter Directionality:** A crucial concept detailing how data flows between the caller and the function using IN, OUT, and INOUT modes, defining the contract for each parameter.
-        
-- **x.3. Function Invocation:** Once a function is defined, you need to know how to call it. This subsection covers the syntax and rules for function invocation, including:
-    
-    - **x.3.1. Arguments:** Understanding the difference between parameters (in the definition) and arguments (the actual values/variables passed during a call).
-        
-    - **x.3.2. Function Invocation Using Positional Arguments:** The common method of providing arguments based on their order.
-        
-    - **x.3.3. Function Invocation Using Named Arguments:** A more explicit and often clearer way to provide arguments by matching them to parameter names.
-        
-    - **x.3.4. Function Invocation Using Both Positional and Named Arguments:** Combining both methods for flexibility.
-
 In AlgoDraft, **Functions** are fundamental building blocks for creating structured and reusable algorithms. They allow you to encapsulate a specific piece of logic, a computation, or a series of actions into a named unit that can be executed (or "called") multiple times from different parts of your algorithm. This promotes modularity, readability, and makes your algorithms easier to understand, debug, and maintain.
 
 A function in AlgoDraft can be designed to:

@@ -1,0 +1,18 @@
+// This piece of code tries to parse A
+
+DECLARE
+    MdRoot
+    FOR
+    {{the root element in the markdown AST hierarchy}}
+ENDDECLARE
+DECLARE
+    MdElement
+    FOR
+    {{the base element of all elements in the Markdown AST hierarchy}}
+ENDDECLARE
+
+$mdFile AS File<String> <- DO {{open the Markdown document in text, read mode}}
+$ast as MdRoot <- DO {{parse $mdFile into Markdown AST}}
+FOR EACH ($elem AS MdElement) IN $ast.$children DO
+    // Do something with $elem...
+ENDFOR

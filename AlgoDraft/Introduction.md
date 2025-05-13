@@ -28,7 +28,11 @@ The role of AlgoDraft:
 
 strongly-typed pseudocode
 
-AlgoDrat tries to be a neutral syntax.
+AlgoDrat tries to be a neutral syntax to "store" algorithmic ideas.
+
+AlgoDraft must be limitation free as much as possible.
+
+AlgoDraft must exhibit a taste of mathematics in mathematical expressions.
 
 Its syntax and tone must be self-descriptive not cryptic.
 

@@ -114,45 +114,100 @@ A crucial aspect of defining function parameters in AlgoDraft is specifying thei
 
 This approach is vital for designing algorithms because it makes the intent and potential side effects of a function call immediately clear from its signature.
 ## `IN` Directionality
-* Data is conceptually transferred from the caller's argument to the routine's parameter at the start of the call.
- * Any change made to the parameter, remains inside of the routine and is NOT reflected back to the caller.
- * The caller's argument can be a literal, a variable, an expression, or anything else that is evaluated to a value.
- * Use cases include passing values needed for computation, configuration settings, or data to be read without modification.
 
-**Example**:
-   ```
-PARAMS
-    IN $config1 AS String // Input configuration #1
-	$config2 AS String    // Input configuration #2
-ENDPARAMS
-   ```
+- **Purpose:** Specifies that the parameter is used solely to pass input data **into** the function. It is the default directionality of parameters in AlgoDraft.
 
-## `OUT` Directionality:
-* Data is conceptually transferred from routine's parameter to the the caller's argument at the end of the call.
-* The caller's argument must only be a variable and the initial value of the caller's variable is generally disregarded; the routine is responsible for assigning the output value.
-* Use cases include returning secondary results, status indicators, or outputs when a primary `RETURN $value` is not used or insufficient.
+- **Data Flow:** Information flows one way: from the caller's argument to the function's parameter when the function is called.
 
- ```
- PARAMS
-     OUT $statusMessage AS String // Output status description
-     OUT $resultCode AS Integer  // Output numerical result code
- ENDPARAMS
- ```
+- **Caller Expectation:** The caller's original literal, variable, expression, or anything else that is evaluated to a value, provided as an argument, will **not** be changed by the function through this `IN` parameter. The function operates on a conceptual copy or an immutable view of the input.
 
-## `INOUT` Directionality
-*  Data is initially transferred from the caller's argument to the routine's parameter. The routine can then read this value and modify it. Upon completion, the final value of the parameter is transferred back to the caller's argument.
-* The caller's argument must only be a variable.
-* Use cases include modifying data structures passed by the caller (e.g., sorting a list in place), updating counters or state variables provided by the caller.
+- **Function Behavior:** Inside the function, an `IN` parameter can be read but should not be assigned a new value that is intended to be seen by the caller (any such assignment would be local to the function).
+
+- **Use Case:** Passing values needed for computation, configuration settings, data to be examined without alteration. This is the most common directionality for inputs.
+
+**Example:**
 
 ```
-PARAMS
-     INOUT $dataList AS List<Person> // Input data, potentially modified by routine
-ENDPARAMS
+FUNCTION CalculateArea (
+	    $length AS Float, // Input: length of a rectangle
+	    IN $width AS Float   // Input: width of a rectangle
+	) -> Float :=
+    RETURN $length * $width
+ENDFUNCTION
+```
+
+## `OUT` Directionality:
+
+- **Purpose:** Specifies that the parameter is used solely to pass output data **out of** the function, back to a variable provided by the caller.
+
+- **Data Flow:** Information flows one way: from the function's parameter to the caller's argument variable when the function completes or returns.
+
+- **Caller Expectation:** The caller must provide a variable as the argument for an `OUT` parameter. The initial value of this caller variable is generally disregarded by the function. The caller should expect this variable's value to be **overwritten** with the result assigned to the `OUT` parameter by the function.
+
+- **Function Behavior:** Inside the function, an `OUT` parameter should be treated as uninitialized initially (conceptually). The function is responsible for **assigning a value** to this parameter before it finishes. Reading from an `OUT` parameter before assigning it a value is generally an error or leads to undefined behavior.
+
+- **Use Case:** Returning secondary results, status indicators, error messages, or multiple distinct pieces of output when a primary `RETURNS` value is not used or is insufficient.
+
+```
+FUNCTION GetUserDetails (
+	    $userId AS Integer,          // Input: ID of the user
+	    OUT $userName AS String,        // Output: The user's name
+	    OUT $userAge AS Integer         // Output: The user's age
+	) :=
+    // Simulate fetching data
+    IF $userId = 1 THEN
+        $userName <- "Alice"
+        $userAge <- 30
+    ELSE
+        $userName <- "Unknown"
+        $userAge <- -1
+    ENDIF
+ENDFUNCTION
+
+// Caller:
+DECLARE $name AS String
+DECLARE $age AS Integer
+GetUserDetails(1, $userName <- $name, $userAge <- $age)
+// Now $name is "Alice" and $age is 30
+```
+
+## `INOUT` Directionality
+
+- **Purpose:** Specifies that the parameter serves as both input **into** the function and allows the function to pass modified data **out of** the function, back to the same variable provided by the caller.
+
+- **Data Flow:** Information flows two ways. The parameter initially receives the value from the caller's argument. The function can then read this value and modify it. Upon completion, the (potentially modified) final value of the parameter is reflected back in the caller's original variable.
+
+- **Caller Expectation:** The caller provides a variable with an initial value. The caller should expect this variable to potentially be **modified** by the function.
+
+- **Function Behavior:** Inside the function, an `INOUT` parameter has an initial value from the caller. The function can read from it and assign new values to it.
+
+- **Use Case:** Modifying data structures passed by the caller (e.g., sorting a list provided by the caller "in-place"), updating counters, accumulating results directly in a caller's variable.
+
+
+```
+FUNCTION IncrementValue (
+	    INOUT $counter AS Integer, // Input/Output: the value to increment
+	    IN $amount AS Integer <- 1 // Input: how much to increment by
+	) :=
+    $counter <- $counter + $amount
+ENDFUNCTION
+
+// Caller:
+$myScore AS Integer <- 100
+IncrementValue($myScore) // $amount uses default 1
+// Now $myScore is 101
+IncrementValue($myScore, 5)
+// Now $myScore is 106
 ```
 
 ## Summary
-| Mode | Purpose | Data Flow Direction | Initial Value Usage | Caller Variable Effect |
-|------|---------|---------------------|---------------------|-----------------| 
-| IN |Input Only | Caller -> Routine | Read by Routine | Not Affected |
-|OUT | Output Only | Routine -> Caller | Ignored by Routine | Updated on Exit |
-| INOUT | Input and Output | Caller <-> Routine | Read by Routine | Updated on Exit |
+
+By consistently using `IN`, `OUT`, and `INOUT`, your function signatures in AlgoDraft become highly self-documenting, making it easier to reason about the behavior and data flow of your algorithms.
+
+The following table highlights deafferents among parameter directionalities:
+
+| Mode    | Purpose          | Data Flow Direction | Initial Value Usage | Caller Variable Effect |
+| ------- | ---------------- | ------------------- | ------------------- | ---------------------- |
+| `IN`    | Input Only       | Caller -> Routine   | Read by Routine     | Not Affected           |
+| `OUT`   | Output Only      | Routine -> Caller   | Ignored by Routine  | Updated on Exit        |
+| `INOUT` | Input and Output | Caller <-> Routine  | Read by Routine     | Updated on Exit        |
