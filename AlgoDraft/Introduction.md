@@ -40,7 +40,9 @@ AlgoDraft is all about concepts. Implementation is a concerns for programming la
 
 AlgoDraft prefers logic clarity and conceptualization over implementation. It means AlgoDraft is a drawing board, you can sketch whatever you want. But when it comes to realization using state-of-the-art technologies, you might encounter difficulties or obstacles.
 
-It must be as higher level as possible if we do not want to say the highest level. The ligh level in programming sense means free from any limiting technology, assuming everything is possible.
+It must be as higher level as possible if we do not want to say the highest level. The high level in programming sense means free from any limiting technology, assuming everything is possible.
+
+AlgoDraft tries to be the most formal though documentation and the least strict coding convention.
 
 AlgoDraft prioritizes clarity and simplicity over strict syntax.
 

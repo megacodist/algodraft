@@ -1,7 +1,7 @@
 ---
 status: Draft
 ---
-The `CONCEPT` block is a design tool for defining abstract interfaces to the external world. It allows you to declare AlgoDraft names for entities whose precise nature and behavior are specified using Natural Language Descriptions (NLDs).
+The `CONCEPT` block is a design tool for declaring conceptual entities, although the implementers are highly likely to find "similar stuff out there." It allows you to define AlgoDraft names for entities whose precise nature and behavior are specified using Natural Language Descriptions (NLDs).
 
 **Purpose and Philosophy:**
 
@@ -143,9 +143,12 @@ $pthMdFile <- INPUT {{the path/url of a markdown document}}
 TRY
 	$mdFile AS File<String> <- DO {{open the Markdown document in text, read mode}}
 	$ast as MdRoot <- DO {{parse $mdFile into Markdown AST}}
-CATCH {{reading document failure}}
-CATCH {{Markdown AST parsing failure}}
-	NOTIFY {{}}
+CATCH {{reading document failure}} AS $err:
+	NOTIFY {{the $err error occurred reading $pthMdFile}}
+	DO {{exit}}
+CATCH {{Markdown AST parsing failure}}:
+	NOTIFY {{cannot parse $pthMdFile}}
+	DO {{exit}}
 ENDTRY
 FOR EACH ($elem AS MdElement) IN $ast.$children DO
     // Do something with $elem...

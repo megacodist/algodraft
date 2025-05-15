@@ -1,6 +1,10 @@
 ---
 status: Draft
 ---
+NLD is a syntax in AlgoDraft but not like others. It is a pillar that the power and flexibility of AlgoDraft is based upon. It makes it nicely possible to embed human ideas directly into strict programming constructs.
+
+
+
 A core feature of AlgoDraft is the use of human language phrases and sentences known as **Natural Language Descriptions (NLDs)**. These are short, descriptive pieces of text, written in plain English (or another natural language), enclosed in double curly braces `{{ }}` that follow specific AlgoDraft keywords.
 
 NLDs are the points where AlgoDraft explicitly connects the human way of thinking about processes with the structured requirements of algorithm design. They act as placeholders for more detailed logic or descriptions of intent.
