@@ -1,6 +1,33 @@
 ---
 status: Draft
 ---
+In AlgoDraft, algorithms often need to interact with or refer to ideas, data structures, functionalities, or constant values whose precise, low-level implementation details are either unknown at the early design stage, intentionally kept abstract, external to the core AlgoDraft logic, or perhaps even beyond AlgoDraft's direct expressive capabilities for that specific detail.
+
+The **`CONCEPT ... ENDCONCEPT`** block is AlgoDraft's dedicated mechanism for declaring these **conceptual entities**. It allows you to give these abstract notions a name and a clear, human-understandable specification within your algorithm design.
+
+**The Role of Natural Language Descriptions (NLDs) within `CONCEPT`:**
+
+Every entity declared within a `CONCEPT` block is defined using the `:= {{description}}` syntax. The Natural Language Description (NLD), enclosed in `{{ }}`, provides the complete conceptual definition for AlgoDraft's purposes. It describes the entity's essential nature, its expected behavior or contract, its origin (if conceptualized as external), or the minimal interface it's expected to present (especially for conceptual records and classes).
+
+**Message to Implementers/Designers & Realization Paths:**
+
+Entities declared in `CONCEPT` blocks are abstract placeholders that signal a requirement. They await "realization" as the design progresses towards a concrete implementation. This signals to anyone reading or implementing the AlgoDraft design:
+
+"Dear implementer/future designer, the following entity represents a need within this algorithm. AlgoDraft, by design, might not express the full depth of this external system or complex type, or I (the designer) am choosing to keep it abstract for now. When moving towards concrete implementation, this concept needs to be addressed. This might involve one of three primary realization paths:
+
+1. **Implementation in AlgoDraft:** The entity (e.g., a CONCEPT FUNCTION) is fully implemented using standard AlgoDraft statements and structures. The CONCEPT declaration serves as its initial specification and contract.
+    
+2. **Integration with External Libraries/APIs/Systems:** The entity corresponds to functionality or data provided by an external software library, operating system feature, hardware interface, or remote service. This often involves finding and using appropriate APIs from that external source. (This path might later be documented in AlgoDraft using IMPORT blocks if the design is refined to that level of detail).
+    
+3. **Leveraging Target Programming Language Capabilities:** The chosen target programming language (for final implementation beyond AlgoDraft) may offer built-in features, types, or paradigms that directly or effectively realize the conceptual entity.
+    
+
+Your task is to choose or combine these paths appropriately to fulfill the conceptual requirement based on project needs and available technologies."
+
+
+
+
+
 The `CONCEPT` block is a design tool for declaring conceptual entities, although the implementers are highly likely to find "similar stuff out there." It allows you to define AlgoDraft names for entities whose precise nature and behavior are specified using Natural Language Descriptions (NLDs).
 
 **Purpose and Philosophy:**

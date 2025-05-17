@@ -91,7 +91,7 @@ In essence, NLDs make AlgoDraft a powerful tool for drafting algorithms and d
 
 NLDs are enclosed in double curly braces: `{{description}}`. Their specific usage depends on the context:
 
-1. **Inline NLDs:** Typically follow an AlgoDraft keyword that expects a description of an action, input, event, condition, or exception.
+1. **Inline NLDs:** Typically are used as a placeholder within an AlgoDraft statement describing an action, input, event, condition, or exception.
     
     ```
     KEYWORD {{natural language description of action/condition/etc.}}
@@ -123,16 +123,33 @@ Regardless of their role, NLDs should adhere to certain guidelines:
 - **Non-Executable Description**: Remember, NLDs are descriptions for humans (and for guiding later coding or external realization). They are not directly executable AlgoDraft code themselves.
 
 # NLDs Best Practices
-Use them when:
-- You want to **express intent clearly** without diving into implementation details.
 
-- The meaning is **obvious or already explained elsewhere**.
+**Use inline NLDs when:**
 
-- You're aiming for **readability or teaching purposes**.
+- You want to **express the intent of a specific step clearly** without immediately diving into its detailed AlgoDraft implementation.
 
-Avoid them:
-- If you're refining the algorithm for implementation.
+- The specific action or data is **obvious in context or will be detailed later**.
 
-- When the meaning could be **ambiguous** or **context-sensitive**.
+- You're aiming for **initial draft readability or teaching purposes**.
 
-- If your pseudocode is meant to be machine-parsable (e.g., for auto-grading tools or interpreters).
+**Use definitional NLDs when:**
+
+- You are **defining a type, constant, or function that is conceptual, abstract, or external** to your current AlgoDraft logic.
+
+- You want to **specify the contract or behavior of these conceptual entities** without providing an AlgoDraft implementation for them.
+
+# When to Replace or Realize NLDs
+
+- **Inline NLDs:**
+
+	- As the algorithm design is refined, inline NLDs (like `IF {{a condition is fullfiled}} THEN`) should generally be replaced with actual AlgoDraft statements that perform the described action.
+	
+	- **Transpilation**: When pseudocode is being transpiled to the destination language like  `DO {{sort the list}}` is replaced with the target language sorting APIs.
+
+- **Definitional NLDs in CONCEPT blocks:** These represent entities that need "realization." This means either:
+    
+    - Providing a standard AlgoDraft definition for them (e.g., writing an AlgoDraft `FUNCTION` body for a `CONCEPT FUNCTION`).
+    
+    - Mapping them to concrete external entities, potentially through an `IMPORT` block.
+
+Avoid leaving NLDs in a state where their meaning could be **ambiguous** or **critically context-sensitive** without sufficient surrounding explanation, especially in final design documents. If your pseudocode is meant for any form of automated processing, the interpretation of NLDs would be a significant challenge unless very constrained.
