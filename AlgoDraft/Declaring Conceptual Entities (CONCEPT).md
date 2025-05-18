@@ -1,54 +1,62 @@
 ---
 status: Draft
 ---
+# What are `CONCEPT` Blocks?
+
 In AlgoDraft, algorithms often need to interact with or refer to ideas, data structures, functionalities, or constant values whose precise, low-level implementation details are either unknown at the early design stage, intentionally kept abstract, external to the core AlgoDraft logic, or perhaps even beyond AlgoDraft's direct expressive capabilities for that specific detail.
 
 The **`CONCEPT ... ENDCONCEPT`** block is AlgoDraft's dedicated mechanism for declaring these **conceptual entities**. It allows you to give these abstract notions a name and a clear, human-understandable specification within your algorithm design.
 
-**The Role of Natural Language Descriptions (NLDs) within `CONCEPT`:**
+## The Role of Natural Language Descriptions (NLDs) within `CONCEPT`
 
 Every entity declared within a `CONCEPT` block is defined using the `:= {{description}}` syntax. The Natural Language Description (NLD), enclosed in `{{ }}`, provides the complete conceptual definition for AlgoDraft's purposes. It describes the entity's essential nature, its expected behavior or contract, its origin (if conceptualized as external), or the minimal interface it's expected to present (especially for conceptual records and classes).
 
-**Message to Implementers/Designers & Realization Paths:**
+## Message to Implementers/Designers & Realization Paths
 
 Entities declared in `CONCEPT` blocks are abstract placeholders that signal a requirement. They await "realization" as the design progresses towards a concrete implementation. This signals to anyone reading or implementing the AlgoDraft design:
 
-"Dear implementer/future designer, the following entity represents a need within this algorithm. AlgoDraft, by design, might not express the full depth of this external system or complex type, or I (the designer) am choosing to keep it abstract for now. When moving towards concrete implementation, this concept needs to be addressed. This might involve one of three primary realization paths:
+> Dear implementer/future designer, the following entity represents a need within this algorithm. AlgoDraft, by design, might not express the full depth of this external system or complex type, or I (the designer) am choosing to keep it abstract for now. When moving towards concrete implementation, this concept needs to be addressed. This might involve one of three primary realization paths:
+>
+> 1. **Implementation in AlgoDraft:** The entity (e.g., a `CONCEPT FUNCTION`) is fully implemented using standard AlgoDraft statements and structures. The `CONCEPT` declaration serves as its initial specification and contract.
+>
+>2. **Integration with External Libraries/APIs/Systems:** The entity corresponds to functionality or data provided by an external software library, operating system feature, hardware interface, or remote service. This often involves finding and using appropriate APIs from that external source. (This path might later be documented in AlgoDraft using `IMPORT` blocks if the design is refined to that level of detail).
+>
+>3. **Leveraging Target Programming Language Capabilities:** The chosen target programming language (for final implementation beyond AlgoDraft) may offer built-in features, types, or paradigms that directly or effectively realize the conceptual entity.
+>
+> Your task is to choose or combine these paths appropriately to fulfill the conceptual requirement based on project needs and available technologies.
 
-1. **Implementation in AlgoDraft:** The entity (e.g., a CONCEPT FUNCTION) is fully implemented using standard AlgoDraft statements and structures. The CONCEPT declaration serves as its initial specification and contract.
-    
-2. **Integration with External Libraries/APIs/Systems:** The entity corresponds to functionality or data provided by an external software library, operating system feature, hardware interface, or remote service. This often involves finding and using appropriate APIs from that external source. (This path might later be documented in AlgoDraft using IMPORT blocks if the design is refined to that level of detail).
-    
-3. **Leveraging Target Programming Language Capabilities:** The chosen target programming language (for final implementation beyond AlgoDraft) may offer built-in features, types, or paradigms that directly or effectively realize the conceptual entity.
-    
+## Benefits of Using CONCEPT Blocks
 
-Your task is to choose or combine these paths appropriately to fulfill the conceptual requirement based on project needs and available technologies."
+- **Design-Time Abstraction:** Focus on what an entity is or does, deferring the how.
 
+- **OS/Library/Platform Agnosticism:** Design core logic independently of specific external implementations. "Program to interface NOT implementation."
 
+- **Clear Documentation:** Explicitly documents abstract dependencies, assumptions, and areas requiring further realization.
 
+- **Highlights Design Decisions:** Makes it clear which parts are abstract versus concretely defined in AlgoDraft.
 
+## Syntax
 
-The `CONCEPT` block is a design tool for declaring conceptual entities, although the implementers are highly likely to find "similar stuff out there." It allows you to define AlgoDraft names for entities whose precise nature and behavior are specified using Natural Language Descriptions (NLDs).
+All conceptual declarations are grouped within a `CONCEPT ... ENDCONCEPT` block. You can have multiple `CONCEPT` blocks in your AlgoDraft document, perhaps to organize different sets of conceptual entities.
 
-**Purpose and Philosophy:**
-
-- **Focus:** Design-time abstraction, OS/library agnosticism, clarity of high-level dependencies.
-
-- **Mechanism:** You declare an AlgoDraft name (for a type, constant, or function) and associate it with an NLD using the definition operator (`:=`). The NLD is the conceptual definition for AlgoDraft's purposes.
-
-**Syntax**:
+**General Structure:**
 
 ```
 CONCEPT
-    // Declarations of conceptual types, constants, and functions using ':= {{NLD}}'
+    // One or more declarations of conceptual types, constants, or functions.
+    // Each declaration uses the ':= {{NLD}}' pattern.
 ENDCONCEPT
 ```
 
-Within this block, each declaration clearly states its AlgoDraft name and type/signature, followed by `:=` and its descriptive NLD.
+Each entity declaration within the block specifies its kind (`TYPE`, `RECORD`, `CLASS`, `CONST`, `FUNCTION`), its AlgoDraft name (and type/signature where applicable), followed by `:=` and its defining NLD.
 
 # Declaring Conceptual External Types
 
-Conceptual types are treated as opaque by AlgoDraft; their properties and usage are understood through their NLD and how conceptual external functions operate on them.
+Conceptual types allow you to name and refer to data structures or kinds of data whose detailed internal structure is not being defined within AlgoDraft at this point.
+
+## Generic Conceptual Types (`TYPE`)
+
+Use `TYPE` for conceptual types where you are not specifying a record-like or class-like nature, or when it's truly opaque.
 
 **Syntax (Single-line):**
 
@@ -62,25 +70,71 @@ The `ENDTYPE` keyword is optional if the entire declaration is on a single lin
 
 ```
 TYPE TypeName :=
-    {{A more detailed NLD, potentially spanning multiple lines,
-    describing the characteristics and purpose of this conceptual type.}}
+    {{A detailed Natural Language Description, potentially spanning multiple lines,
+	  explaining what this type represents, its purpose, and any key
+	  conceptual properties or constraints known at this design stage.}}
 ENDTYPE
 ```
+
+`TypeName` becomes known to AlgoDraft. It's treated as an opaque type; its characteristics, any implied structure, and valid operations are understood solely through its NLD and by how conceptual functions interact with it.
 
 **Example**:
 
 ```
 CONCEPT
-    TYPE FileHandle := {{An opaque system identifier for an open file, used for I/O operations.}}
-
-    TYPE UserSession :=
-        {{A conceptual data structure representing an active user session,
-          containing details like user ID, login time, and session token.
-          Specific fields are externally defined.}}
-    ENDTYPE
+	TYPE APIAuthToken := {{An opaque security token string required for authenticating calls to ExternalServiceX.}}
+	
+	TYPE RawSensorInput :=
+		{{A block of binary data received directly from a hardware sensor before any parsing or interpretation.
+		  The format is specific to the sensor hardware, documented externally.}}
+	ENDTYPE
 ENDCONCEPT
 ```
 
+## Conceptual Records (`RECORD`)
+
+Use `RECORD` when the conceptual type is best understood as a data aggregate or structure with named fields.
+
+**Syntax (Single-line):**
+
+```
+RECORD RecordName := {{NLD describing conceptual fields and structure}} [ENDRECORD]
+```
+
+The `ENDRECORD` keyword is optional if the entire declaration is on a single line.
+
+- **Syntax (Multi-line NLD):**
+    
+    ```
+    RECORD RecordName :=
+        {{NLD describing this as a data aggregate. The NLD **must** outline the
+          minimal, necessary conceptual fields and their AlgoDraft-compatible types.
+          Example: Expected fields include 'id' (Integer), 'status' (String).
+          The realized structure in a target language or external system may be a superset.}}
+    ENDRECORD
+    ```
+    
+    content_copydownload
+    
+    Use code [with caution](https://support.google.com/legal/answer/13505487).Pseudocode
+    
+- **Explanation:** Signals that RecordName is conceptually a structured data type. The NLD specifies the essential conceptual fields. AlgoDraft itself doesn't provide direct field access syntax (e.g., myRecord.field) for these conceptual records; interaction with fields would typically be through conceptual functions or DO {{NLD}} statements that describe such access.
+    
+- **Example:**
+    
+    ```
+    CONCEPT
+        RECORD Coordinates := {{A 2D point. Minimal fields: 'xPos' (Float), 'yPos' (Float).}}
+    
+        RECORD MessageHeader :=
+            {{Header information for a network message.
+              Minimal fields: 'messageID' (String), 'senderID' (String),
+              'timestamp' (DateTime), 'priority' (Integer).}}
+        ENDRECORD
+    ENDCONCEPT
+    ```
+    
+    content_copydownload
 # Declaring Conceptual External Constants
 
 These named constants have an AlgoDraft type, but their value is understood to originate from an external source described by the NLD.
