@@ -3,8 +3,7 @@ status: Draft
 ---
 A defining characteristic and a cornerstone of AlgoDraft's design philosophy is the **Natural Language Description (NLD)**. While NLDs are a specific syntactic element – short, descriptive pieces of text in human languages enclosed in double curly braces (`{{ }}`) – they are unlike any other construct in the language. NLDs stand as a fundamental pillar upon which the power and flexibility of AlgoDraft are built.
 
-They uniquely enable the direct embedding of human thought and high-level conceptualization within the structured framework of an algorithmic design. NLDs serve as the crucial **junction** where the often informal, flexible, and sometimes imprecise nature of human thought meets the formal, deterministic requirements of programming languages and algorithm specification. They are the designated placeholders where AlgoDraft explicitly connects the human way of thinking about processes with the structured elements needed for clear design.
-
+They uniquely enable the direct embedding of human thoughts and high-level conceptualization within the structured framework of an algorithmic design. NLDs serve as the crucial **junction** where the often informal, flexible, and sometimes imprecise nature of human thoughts meet the formal, deterministic requirements of algorithm specification. Indeed, the double curly braces (`{{ }}`) designate a **safe space where designers can be informal**; outside of this "comfort zone", AlgoDraft requires adherence to its formal programming constructs. NLDs are the designated placeholders where AlgoDraft explicitly connects the human way of thinking about processes with the structured elements needed for clear, step-by-step design.
 # Types of NLDs
 
 Currently NLDs fulfill two primary roles within the AlgoDraft syntax:

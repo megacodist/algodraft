@@ -47,7 +47,16 @@ $email AS String <- "test@example.com"
 IsValidEmail($email) // Evaluates to TRUE or FALSE
 ```
 
-**Rule 4: Any well-formed combination of the above entities with Boolean operators, is a Boolean expression:** If we have two Boolean expressions, the followings are Boolean expressions as well:
+**Rule 4: Any Natural Language Description (NLD) expressing a condition is a Boolean expression.**
+
+```AlgoDraft
+$userAge AS Integer <- INPUT {{user's age}}
+IF {{$userAge is a valid integer}} AND $userAge <= 18 THEN
+	NOTIFY {{access to certain services is restricted due to the user not having attained the legal age}}
+ENDIF
+```
+
+**Rule 5: Any well-formed combination of the above entities with Boolean operators, is a Boolean expression:** If we have two Boolean expressions, the followings are Boolean expressions as well:
 
 * The negation of each of them
 * The Boolean AND of both of the
