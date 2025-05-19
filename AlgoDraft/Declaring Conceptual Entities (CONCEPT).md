@@ -1,7 +1,7 @@
 ---
 status: Draft
 ---
-# What are `CONCEPT` Blocks?
+# The Club of Conceptual Buddies: An Introduction to `CONCEPT` Blocks
 
 In AlgoDraft, algorithms often need to interact with or refer to ideas, data structures, functionalities, or constant values whose precise, low-level implementation details are either unknown at the early design stage, intentionally kept abstract, external to the core AlgoDraft logic, or perhaps even beyond AlgoDraft's direct expressive capabilities for that specific detail.
 

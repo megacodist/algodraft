@@ -49,7 +49,8 @@ status: Writing
 	4. [[Streams]]
 6. Intermediate Syntax
 	1. [[Iteration]]
-	2.  [[Interfacing with External Entities]]
+	2. [[Type Compatibility and Checking]]
+	3.  [[Interfacing with External Entities]]
 		1. [[Declaring Conceptual Entities (CONCEPT)]]
 		2. [[Importing Concrete External Entities (IMPORT)]]
 		3. [[Comparing CONCEPT and IMPORT]]

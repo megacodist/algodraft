@@ -1,18 +1,40 @@
-// This piece of code tries to parse A
+// Consolidating All AlgoDraft Articles into a Booklet
+// AlgoDraft repository consistes of one article for each section and an MOP
+// file serves as the table of content.
+// 
+// The MOP File Structure
+// The MOP file is solely consisting of numbered item elements. Each of
+// these numbered item elements contains a text or a back link element as
+// their first child and zero or more numbered item elements as their next
+// children.
 
-DECLARE
-    MdRoot
-    FOR
-    {{the root element in the markdown AST hierarchy}}
-ENDDECLARE
-DECLARE
-    MdElement
-    FOR
-    {{the base element of all elements in the Markdown AST hierarchy}}
-ENDDECLARE
+CONCEPT
+    CLASS MdElement := {{
+        represents the base element that all markdown elements are drived
+        from.}}
+    ENDCLASS
 
-$mdFile AS File<String> <- DO {{open the Markdown document in text, read mode}}
-$ast as MdRoot <- DO {{parse $mdFile into Markdown AST}}
-FOR EACH ($elem AS MdElement) IN $ast.$children DO
-    // Do something with $elem...
-ENDFOR
+    CLASS MdNumItem := {{
+        represents a numbered item element in a markdown AST}}
+    ENDCLASS
+
+    CLASS MdText := {{represents a text element in a markdown AST}}
+
+    CLASS MdLink := {{represents a link element in a markdown AST}}
+
+    CLASS MdBackLink := {{represents a back link element in a markdown AST}}
+
+    CLASS MdHeading := {{represents a heading element in a markdown AST.
+        Minimal attributes:
+            level AS Integer,
+            text AS String,
+        }}
+    ENDCLASS
+
+    FUNCTION ChangeLevel(
+            $heading AS MdHeading,
+            $offset AS Integer,
+            ) -> MdHeading := {{
+        changes the level of $heading by adding $offset}}
+    ENDFUNCTION
+ENDCONCEPT
