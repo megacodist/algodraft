@@ -11,8 +11,18 @@
 CONCEPT
     CLASS MdElement := {{
         represents the base element that all markdown elements are drived
-        from.}}
+        from.
+        Minimal attributes:
+            text AS String,
+            children AS List<MdElement>,
+        }}
     ENDCLASS
+
+    CLASS MdAst := {{
+        represents the root of a Markdown document AST.
+        Minimal attributes:
+            children AS List<MdElement>,
+        }}
 
     CLASS MdNumItem := {{
         represents a numbered item element in a markdown AST}}
@@ -35,6 +45,27 @@ CONCEPT
             $heading AS MdHeading,
             $offset AS Integer,
             ) -> MdHeading := {{
-        changes the level of $heading by adding $offset}}
+        changes the level of $heading by adding $offset. it has not been
+        decided what to do if the new level is invalid.}}
     ENDFUNCTION
 ENDCONCEPT
+
+
+FUNCTION
+ENDFUNCTION
+
+
+// Reading the MOP file...
+$pthMop AS FsPath <- INPUT {{the path to the MOP file}}
+TRY
+    $flMop AS File<String> <- DO {{read $pthMop file in text, read mode}}
+    $mopAst AS MdAst <- DO {{parse content of $flMop as Markdown AST}}
+CATCH {{reading file failure}} DO
+    NOTIFY {{problems reading $pthMop file}}
+    DO {{exit with a proper code}}
+CATCH {{parsing file failure}} DO
+    NOTIFY {{problems parsing $pthMop file}}
+    DO {{exit with a proper code}}
+ENDTRY
+// Consolidating articles documents...
+$consolidated AS MdAst <- NEW MdAst()

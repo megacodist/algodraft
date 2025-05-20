@@ -35,6 +35,13 @@ $ast AS {{AST node}} <- DO {{parse the markdown text}}
 IF {{there is hardware error}} THEN
    DO {{exit program with code 2}}
 ELSE
+
+// NLD describing an exception...
+$pth AS FsPath <- INPUT {{the path to a file}}
+TRY
+	$file AS File<String> <- DO {{open $pth in text, reading mode}}
+CATCH {{reading file failure}} DO
+ENDTRY
 ```
 
 ## Conceptual Definitional NLDs
