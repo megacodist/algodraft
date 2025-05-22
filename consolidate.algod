@@ -18,32 +18,36 @@ CONCEPT
         }}
     ENDCLASS
 
-    CLASS MdAst := {{
-        represents the root of a Markdown document AST.
-        Minimal attributes:
-            children AS List<MdElement>,
-        }}
+    CLASS MdRoot INHERITS MdElement := {{
+        represents the root of a Markdown document AST.}}
 
-    CLASS MdNumItem := {{
+    CLASS MdNumItem INHERITS MdElement := {{
         represents a numbered item element in a markdown AST}}
     ENDCLASS
 
-    CLASS MdText := {{represents a text element in a markdown AST}}
+    CLASS MdText INHERITS MdElement := {{represents a text element in a
+        markdown AST}}
+    ENDCLASS
 
-    CLASS MdLink := {{represents a link element in a markdown AST}}
+    CLASS MdLink INHERITS MdElement := {{represents a link element in a
+        markdown AST}}
+    ENDCLASS
 
-    CLASS MdBackLink := {{represents a back link element in a markdown AST}}
+    CLASS MdBackLink INHERITS MdElement := {{represents a back link element
+        in a markdown AST.
+        Minimal attributes:
+            path AS FsPath,
+        }}
 
-    CLASS MdHeading := {{represents a heading element in a markdown AST.
+    CLASS MdHeading INHERITS MdElement := {{represents a heading element in a markdown AST.
         Minimal attributes:
             level AS Integer,
-            text AS String,
         }}
     ENDCLASS
 
     FUNCTION ChangeLevel(
-            $heading AS MdHeading,
-            $offset AS Integer,
+            heading AS MdHeading,
+            offset AS Integer,
             ) -> MdHeading := {{
         changes the level of $heading by adding $offset. it has not been
         decided what to do if the new level is invalid.}}
@@ -51,21 +55,114 @@ CONCEPT
 ENDCONCEPT
 
 
-FUNCTION
+// Opens, reads, and parses the provided file into a Markdown AST and
+// finaly returns it. Upon any error, it logs the error and returns NULL.
+FUNCTION LoadAst(path AS FsPath) -> MdRoot OR NULL :=
+    TRY
+        file AS File<String> <- DO {{read @path file in text, read mode}}
+        ast AS MdRoot <- DO {{parse content of @file as Markdown AST}}
+    CATCH FileNotFoundError DO
+        LOG {{@path not found}}
+        RETURN NULL
+    CATCH PermissionError DO
+        LOG {{@path not accessible}}
+        RETURN NULL
+    CATCH {{unexpected end of file}} DO
+        LOG {{unexpected end of file: @path}}
+        RETURN NULL
+    CATCH {{Markdown parse error}} DO
+        LOG {{Markdown parse error: @path}}
+        RETURN NULL
+    FINALLY
+        DO {{close @file}}
+    ENDTRY
+    RETURN ast
+ENDFUNCTION
+
+
+FUNCTION ConsolidateSection(
+        numLevels AS Tuple<Integer, ...>,
+        section AS MdElement,
+        parent AS MdElement,) :=
+    num AS Integer <- 0
+    anyError AS Boolean <- FALSE
+    FOR EACH subsec IN section.children DO
+        num <- num + 1
+        IF subsec IS NOT AN MdNumItem THEN
+            anyError <- TRUE
+            LOG {{Element No. @num in MOP: expected a numbered item element
+                but got @(TYPE OF subsec)}}
+            CONTINUE
+        ENDIF
+        childIter AS Iterator<MdElement> <- ITERATOR OF subsec.children
+        IF childIter EXHAUSTED THEN
+            anyError <- TRUE
+            LOG {{Element No. @num in MOP: no nested elements}}
+            CONTINUE
+        ENDIF
+        child AS MdElement <- NEXT childIter
+        text AS String
+        path AS FsPath OR NULL <- NULL
+        IF child IS AN MdText THEN
+            text <- child.text
+        ELSE IF child IS AN MdBackLink THEN
+            text <- child.text
+            path <- child.path
+        ELSE
+            anyError <- TRUE
+            LOG {{Element No. @num in MOP: expected a text or a back link
+                element but got @(TYPE OF child)}}
+            CONTINUE
+        ENDIF
+        heading AS MdHeading <- NEW MdHeading(
+            text <- text,
+            level <- LENGTH OF numLevels + 1)
+        DO {{append @heading to @parent.children}}
+        IF path != NULL THEN
+            root AS MdRoot OR NULL <- LoadAst(path)
+            IF root = NULL THEN
+                anyError <- TRUE
+                CONTINUE
+            ENDIF
+        ENDIF
+        ConsolidateFile(root, heading)
+    ENDFOR
+ENDFUNCTION
+
+
+FUNCTION ConsolidateFile(
+        numLevels AS Tuple<Integer, ...>,
+        root AS MdRoot,
+        parent AS MdElement,
+        ) -> Boolean :=
+    temp AS MdElement
+    anyError AS Boolean <- FALSE
+    num AS Integer <- 0
+    FOR EACH elem IN root.children DO
+        num <- num + 1
+        IF elem IS AN MdBackLink THEN
+            temp <- DO {{convert @elem to a link element}}
+        ELSE IF elem IS AN MdHeading THEN
+            temp <- ChangeLevel(elem, LENGTH OF numLevels)
+            IF {{@temp level is invalid}} THEN
+                anyError <- TRUE
+                DO {{set @temp level to the highest}}
+            ENDIF
+        ELSE
+            temp <- elem
+        ENDIF
+        DO {{append @temp to @parent.children}}
+        IF {{@elem has children}} THEN
+            ConsolidateFile()
+        ENDIF
+    ENDFOR
 ENDFUNCTION
 
 
 // Reading the MOP file...
-$pthMop AS FsPath <- INPUT {{the path to the MOP file}}
-TRY
-    $flMop AS File<String> <- DO {{read $pthMop file in text, read mode}}
-    $mopAst AS MdAst <- DO {{parse content of $flMop as Markdown AST}}
-CATCH {{reading file failure}} DO
-    NOTIFY {{problems reading $pthMop file}}
-    DO {{exit with a proper code}}
-CATCH {{parsing file failure}} DO
-    NOTIFY {{problems parsing $pthMop file}}
-    DO {{exit with a proper code}}
-ENDTRY
-// Consolidating articles documents...
-$consolidated AS MdAst <- NEW MdAst()
+pthMop AS FsPath <- INPUT {{the path to the MOP file}}
+ast AS MdRoot OR NULL <- LoadAst(pthMop)
+IF ast = NULL THEN DO {{Exit with a proper code}}
+FOR EACH (elem AS MdElement) IN ast.children DO
+    //
+ENDFOR
