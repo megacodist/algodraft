@@ -45,3 +45,7 @@ int AS Integer <- NEXT iter
 NOTIFY {{@int is the first eneterd integer}}
 ```
 
+# Sequence Slicing
+
+Changing the slicing syntax to `[a .. b Δ c]` must be considered.
+How about the following open-ended notations? `[.. b]` and `[a ..]`

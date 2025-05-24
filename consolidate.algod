@@ -81,7 +81,7 @@ ENDFUNCTION
 
 
 FUNCTION ConsolidateSection(
-        numLevels AS Tuple<Integer, ...>,
+        levelNums AS Tuple<Integer, ...>,
         section AS MdElement,
         parent AS MdElement,) :=
     num AS Integer <- 0
@@ -116,7 +116,7 @@ FUNCTION ConsolidateSection(
         ENDIF
         heading AS MdHeading <- NEW MdHeading(
             text <- text,
-            level <- LENGTH OF numLevels + 1)
+            level <- LENGTH OF levelNums + 1)
         DO {{append @heading to @parent.children}}
         IF path != NULL THEN
             root AS MdRoot OR NULL <- LoadAst(path)
@@ -125,25 +125,25 @@ FUNCTION ConsolidateSection(
                 CONTINUE
             ENDIF
         ENDIF
-        ConsolidateFile(root, heading)
+        ConsolidateChildren(root, heading)
     ENDFOR
 ENDFUNCTION
 
 
-FUNCTION ConsolidateFile(
-        numLevels AS Tuple<Integer, ...>,
-        root AS MdRoot,
-        parent AS MdElement,
+FUNCTION ConsolidateChildren(
+        levelNums AS Tuple<Integer, ...>,
+        source AS MdRoot,
+        dest AS MdElement,
         ) -> Boolean :=
     temp AS MdElement
     anyError AS Boolean <- FALSE
     num AS Integer <- 0
-    FOR EACH elem IN root.children DO
+    FOR EACH elem IN source.children DO
         num <- num + 1
         IF elem IS AN MdBackLink THEN
             temp <- DO {{convert @elem to a link element}}
         ELSE IF elem IS AN MdHeading THEN
-            temp <- ChangeLevel(elem, LENGTH OF numLevels)
+            temp <- ChangeLevel(elem, LENGTH OF levelNums)
             IF {{@temp level is invalid}} THEN
                 anyError <- TRUE
                 DO {{set @temp level to the highest}}
@@ -151,11 +151,12 @@ FUNCTION ConsolidateFile(
         ELSE
             temp <- elem
         ENDIF
-        DO {{append @temp to @parent.children}}
-        IF {{@elem has children}} THEN
-            ConsolidateFile()
-        ENDIF
+        DO {{append @temp to @dest.children}}
+        // Consolidating children...
+        anyError <- anyError ∨ ConsolidateChildren(
+            levelNums + (num,), elem, temp)
     ENDFOR
+    RETURN anyError
 ENDFUNCTION
 
 
