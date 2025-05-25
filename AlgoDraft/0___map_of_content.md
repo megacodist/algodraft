@@ -85,6 +85,7 @@ status: Writing
 	1. [[IEquatable Interface]]
 	2. [[IComparable Interface]]
 	3. [[IIterable Interface]]
+	4. [[IContainer Interface]]
 11. [[Appendix 1, Unicode Characters]]
 12. [[Appendix 2, Naming conventions]]
 13. [[Pending Revisions]]
