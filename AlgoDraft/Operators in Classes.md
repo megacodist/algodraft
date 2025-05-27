@@ -148,7 +148,7 @@ NOTIFY {{the previous and current values are $previousScore and $playerScore.Get
 
 # Binary Operators
 
-Binary operators act on two operands. In an overloaded operator method, `$this` usually represents the left-hand operand (`$this ^= $other`), although it depends on the context (`$other PREPENDS TO $this`). The other operand is defined in an `OPERANDS` block.
+Binary operators act on two operands. In an overloaded operator method, `$this` usually represents the left-hand operand (`$this ^= $other`), although it depends on the context (`PUSH elem TO this`). The other operand is defined in an `OPERANDS` block.
 
 **Syntax**:
 

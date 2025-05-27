@@ -5,7 +5,6 @@ In AlgoDraft, an **Iterator** is a fundamental concept that represents the ca
 
 Iterators are the means by which you receive individual values from sources like:
 
-
 # Iterators, AlgoDraft Vending Machines
 
 Think of an Iterator like a high-tech **vending machine** that can only dispense items one by one. You don't know how many items are inside, or where they are stored internally. All you can do is interact with the machine using two specific controls that tell you its state and give you the next item if one is available:
