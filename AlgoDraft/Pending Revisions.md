@@ -5,6 +5,12 @@ status: Writing
 
 How about replacing `NEW` for `CONSTRUCTOR` in a class for constructor definition?
 
+# Casting
+
+What is casting and how should it be implemented?
+
+Good syntax? `CAST obj TO DataType`
+
 # Downcasing
 
 One of the use cases of `IS A/AN` operator mentioned in AlgoDraft is downcasing. Please explain it more.

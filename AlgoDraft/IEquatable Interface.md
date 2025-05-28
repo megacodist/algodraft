@@ -84,6 +84,42 @@ The behavior of the equality operators in AlgoDraft is crucial for predictable a
         
     - **Why an Error?** Raising an error for undefined equality comparisons is critical. It signals a potential design flaw or a missing contract, forcing the designer to explicitly address how such disparate objects should (or should not) be compared, rather than the system silently defaulting to a potentially misleading `FALSE` or an arbitrary comparison.
 
+**Implementation:**
+
+A `CLASS` implementing `IEquatable` **MUST** provide a concrete implementation for **exactly one** of the three equality/inequality operators:
+
+* `OPERATOR this = other -> Boolean` (Equality)  
+
+* `OPERATOR this ≠ other -> Boolean` (Mathematical Inequality)  
+
+* `OPERATOR this != other -> Boolean` (Common Programming Inequality)
+
+The choice of which one to implement is up to the designer, though implementing the `=` operator is the most common and often the most natural starting point.
+
+**Implicitly Provided Operators (Derivation by AlgoDraft):**
+
+Once a class has provided the required implementation for one of these operators, AlgoDraft **implicitly provides** the logic for the remaining two equality/inequality operators. The derivation rules are straightforward:
+
+- **If `=` is implemented by the class:**
+    
+    - `a != b` is implicitly defined as `NOT (a = b)`
+    
+    - `a ≠ b` is implicitly defined as `NOT (a = b)`
+
+- **If `!=` is implemented by the class:**
+    
+    - `a = b` is implicitly defined as `NOT (a != b)`
+    
+    - `a ≠ b` is implicitly defined as `a != b`
+
+- **If `≠` is implemented by the class:**
+    
+    - `a = b` is implicitly defined as `NOT (a ≠ b)`
+    
+    - `a != b` is implicitly defined as `a ≠ b`
+
+A class can choose to explicitly override any of these implicitly provided operators if a highly specialized or perhaps more performant (though unlikely for simple negation) implementation is desired, but this is generally not necessary. This minimal requirement simplifies the task for the class designer while ensuring a complete and consistent set of equality operations.
+
 **Example:**
 
 User-defined `CLASS`es in AlgoDraft can choose to `IMPLEMENTS IEquatable` to provide custom equality logic tailored to their specific attributes and meaning:
@@ -117,10 +153,7 @@ CLASS Book IMPLEMENTS IEquatable :=
             RETURN FALSE
         ENDIF
     ENDOPERATOR
-	
     // != and ≠ are implicitly available as NOT (this = otherObj)
-    OPERATOR this != otherObj AS ANY -> Boolean := RETURN NOT (this = otherObj) ENDOPERATOR
-    OPERATOR this ≠ otherObj AS ANY -> Boolean := RETURN NOT (this = otherObj) ENDOPERATOR
 ENDCLASS
 ```
 
