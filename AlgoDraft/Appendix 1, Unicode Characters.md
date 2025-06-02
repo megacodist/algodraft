@@ -6,6 +6,7 @@ status: Writing
 | **Glyph** | **Unicode name**                   | **Code** | **HTML Entity**<br>**(Numeric)** | **HTML Entity**<br>**(Name)**                      | **Comments** |
 | --------- | ---------------------------------- | -------- | -------------------------------- | -------------------------------------------------- | ------------ |
 | `✍`       | WRITING HAND                       | `U+270D` | `&#9997;`<br>`&#x270D;`          |                                                    |              |
+| `∞`       | INFINITY                           | `U+221E` | `&#8734;`<br>`&#x221e;`<br>      | `&infin;`                                          |              |
 | `≠`       | NOT EQUAL TO                       | `U+2260` | `&#8800;`<br>`&#x2260;`          | `&ne;`                                             |              |
 | `≥`       | GREATER-THAN OR EQUAL TO           | `U+2265` | `&#x2265;`<br>`&#8805;`          | `&ge;`                                             |              |
 | `≤`       | LESS-THAN OR EQUAL TO              | `U+2264` | `&#x2264;`<br>`&#8804`           | `&le;`                                             |              |

@@ -23,7 +23,11 @@ Right now, this operator only works on objects as follow:
 <obj> IS A/AN <type_interface>
 ```
 
-`<obj>` is an object. How about overloading this operator by allowing the left-hand operator to be both an object or a type descriptor.
+`<obj>` is an object. How about overloading this operator by allowing the left-hand operator to be both an object or a type object.
+
+# IContainer
+
+How about renaming `IContainer` to `IContainerable`?
 
 # Iterator Basic Type
 
