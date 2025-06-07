@@ -41,6 +41,10 @@ int AS Integer <- NEXT iter
 NOTIFY {{@int is the first eneterd integer}}
 ```
 
+# Numeric Basic Type
+
+I decided to have `±INFINITY`/`±∞` conceptual values in numeric types. So, their possible operations must be defined in `Numeric` class.
+
 # RECORD
 
 How about a one-line (or sometimes inline) version of RECORD syntax.

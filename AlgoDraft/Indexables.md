@@ -1,5 +1,5 @@
 ---
-status: Planned
+status: Draft
 ---
 In AlgoDraft, any data structure that holds ordered collections of elements is **indexable**. This fundamental property means their elements can be accessed using a numerical position or index. All such indexable sequences in AlgoDraft begin by fulfilling the contract of `IContainer`, which provides capabilities like determining `LENGTH OF`, checking membership with `IN`, and iteration via `ITERATOR OF` this (inherited from `IIterable`).
 
