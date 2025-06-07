@@ -1,17 +1,15 @@
 ---
 status: Draft
 ---
-In AlgoDraft, an **Iterator** is a fundamental concept that represents the capability to produce a series of values, one value at a time, upon request. It's a way to interact with data that might be generated on the fly or come from a collection, without needing to have the entire collection loaded or pre-computed at once.
+In AlgoDraft, an **Iterator** is a fundamental built-in basic type. It represents the active mechanism or capability to produce a series of values, one value at a time, upon request. It's how you interact with data that might be generated on the fly (from an Iteration Function) or come from a collection (via an `IIterable` object), without needing the entire sequence of values to be loaded or pre-computed at once.
 
-Iterators are the means by which you receive individual values from sources like:
+Think of an Iterator as AlgoDraft's version of a high-tech **vending machine**. This machine can only dispense items one by one. You, as the user of the iterator, don't necessarily know how many items are inside, or how they are stored or generated internally. Your interaction is limited to two primary controls that inform you about the machine's state and allow you to get the next available item:
 
-# Iterators, AlgoDraft Vending Machines
+1. **"Sold Out" Lamp (Check Availability):** This tells you if the iterator can yield another value right now.
 
-Think of an Iterator like a high-tech **vending machine** that can only dispense items one by one. You don't know how many items are inside, or where they are stored internally. All you can do is interact with the machine using two specific controls that tell you its state and give you the next item if one is available:
+2. **"Dispense" Button (Get Item):** This action attempts to retrieve the next value from the iterator.
 
-- **Sold Out Lamp (Check Availability):** This tells you if the machine can dispense another item right now.
-    
-- **Dispense Button (Get Item):** This action attempts to get the next item.
+
 
 # Operations
 
