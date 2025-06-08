@@ -41,7 +41,7 @@ AlgoDraft provides a cohesive set of concepts and tools to support powerful and 
 
 - **Built-in Integer Iterables:** Iterating over ranges of integers is extremely common in algorithms (e.g., for counted loops, accessing array/list indices). Because of this, AlgoDraft provides dedicated, built-in types and convenient literal syntaxes for defining these common integer streams. These types themselves are iterable.
 
-- **Iteration Functions:** Beyond built-in integer iterables, AlgoDraft offers a versatile mechanism for designers to create their own **custom iterators** using special functions. These "Iteration Functions" can lazily `YIELD` streams of any data type, providing a powerful way to define custom data generation or traversal logic.
+- **Stream Functions:** Beyond built-in integer iterables, AlgoDraft offers a versatile mechanism for designers to create their own **custom iterators** using special functions. These "Stream Functions" can lazily `YIELD` streams of any data type, providing a powerful way to define custom data generation or traversal logic.
 
 - **Iteration Flow of Execution**: The primary high-level construct in AlgoDraft for performing iteration is the **`FOR EACH ... IN ... DO ... ENDFOR` loop**. This loop is designed to work seamlessly with any data source that is either an `IIterable` object (from which it internally obtains a fresh iterator) or an Iterator object directly.
 
@@ -55,6 +55,6 @@ By exploring this "Iteration" section, you will gain a comprehensive understandi
 
 - AlgoDraft's specialized built-in types for conveniently generating common streams of integers.
 
-- How to create your own custom, lazy streams of data for virtually any purpose using **Iteration Functions** and the `YIELD` keyword.
+- How to create your own custom, lazy streams of data for virtually any purpose using **Stream Functions** and the `YIELD` keyword.
 
 Mastering these concepts will unlock the ability to design efficient, memory-friendly, and highly expressive algorithms in AlgoDraft that can process sequences of data, large or small, finite or potentially infinite.

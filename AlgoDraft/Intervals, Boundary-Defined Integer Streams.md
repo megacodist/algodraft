@@ -1,6 +1,10 @@
 ---
 status: Draft
 ---
+
+
+
+
 In AlgoDraft, an **Interval** is a fundamental, built-in immutable data type. It is inspired by mathematical intervals, which typically define ranges of real numbers. However, AlgoDraft's Interval is specifically designed to define and generate **streams of discrete integers**. Think of an Interval object not as a collection that stores numbers, but as a specification or a recipe for producing a sequence of integers on demand (a stream).
 
 The **primary purpose** of an Interval object is to yield this stream of integers when iterated. This makes Intervals essential for two main applications within AlgoDraft:
