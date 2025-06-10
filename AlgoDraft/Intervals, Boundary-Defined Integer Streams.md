@@ -1,25 +1,21 @@
 ---
 status: Draft
 ---
-
-
-
-
-In AlgoDraft, an **Interval** is a fundamental, built-in immutable data type. It is inspired by mathematical intervals, which typically define ranges of real numbers. However, AlgoDraft's Interval is specifically designed to define and generate **streams of discrete integers**. Think of an Interval object not as a collection that stores numbers, but as a specification or a recipe for producing a sequence of integers on demand (a stream).
+In AlgoDraft, an **Interval** is a fundamental, built-in immutable data type. It is inspired by mathematical intervals, which typically define ranges of real numbers. However, AlgoDraft's Interval is specifically designed to define and generate **streams of discrete integers**. Think of an Interval object not as a collection that stores numbers, but as a **specification** or a **recipe** for producing a stream of integers on demand.
 
 The **primary purpose** of an Interval object is to yield this stream of integers when iterated. This makes Intervals essential for two main applications within AlgoDraft:
 
-1. **Iteration Control:** Generating integer sequences for use in `FOR EACH` loops, allowing for precise control over counting, stepping, and direction (including potentially infinite streams if not otherwise bounded).
+1. **Iteration Control:** Generating integer streams for use in `FOR EACH` loops, allowing for precise control over counting, stepping, and direction (including potentially infinite streams if not otherwise bounded by context).
 
-2. **Slicing Specifications:** Defining the exact range and step for extracting sub-sequences (slices) from sliceable data structures like `Tuple`s and `String`s.
+2. **Slicing Specifications:** Defining the exact range and step for extracting sub-sequences (slices) from sliceable data structures like Tuples, Strings, and Lists.
 
 An Interval object encapsulates a conceptual start point, an end point, a step value, and the rules of inclusivity for its boundaries, all of which determine the stream of integers it can produce.
 
-Interval objects are **first-class citizens** in AlgoDraft: they can be created using a special literal syntax or via a constructor, assigned to variables, passed to functions, and returned from them.
+Interval objects are **first-class citizens** in AlgoDraft: they can be created using a special literal syntax or via direct instantiation (using `NEW Interval(...)`), assigned to variables, passed to functions, and returned from them.
 
 # Creating Interval Objects
 
-There are two ways to create Interval objects: using their rich literal syntax (most common) or by direct instantiation using a constructor.
+There are two ways to create Interval objects: using their rich literal syntax (most common) or by direct instantiation using `NEW Interval(...)`.
 
 ## Literals (Primary Method)
 
@@ -37,51 +33,55 @@ boundary_start startExpr .. stopExpr [step_clause] boundary_end
 
 - `boundary_start` and `boundary_end`: One of `[` (inclusive) or `(` (exclusive).
 
+**Details of Interval Literal Syntax:**
+
 - **Boundary Specifiers (Inclusivity/Exclusivity):**
-	
-    * The characters `[` and `]` denote **inclusive** boundaries (the value is part of the range).
     
-    * The characters `(` and `)` denote **exclusive** boundaries (the value is not part of the range; iteration starts/stops after/before it).  
+    - The characters `[` and `]` denote **inclusive** boundaries (the value is part of the range).
     
-    - `[start .. stop]`: Inclusive start, Inclusive stop.
+    - The characters `(` and `)` denote **exclusive** boundaries (the value is not part of the range; iteration effectively starts/stops after/before it).
     
-    - `[start .. stop)`: Inclusive start, Exclusive stop (common for 0-based indexing where stop is the count).
-    
-    - `(start .. stop]`: Exclusive start, Inclusive stop.
-    
-    - `(start .. stop)`: Exclusive start, Exclusive stop.
+    - These are paired to define the interval's interaction with `startExpr` and `stopExpr`:
+        
+        - `[start .. stop]`: Inclusive start, Inclusive stop.
+        
+        - `[start .. stop)`: Inclusive start, Exclusive stop (a common form, especially for 0-based indexing where stop often represents a count or one-past-the-end).
+        
+        - `(start .. stop]`: Exclusive start, Inclusive stop.
+        
+        - `(start .. stop)`: Exclusive start, Exclusive stop.
 
 - **The `STEP` / `Δ` Clause (Optional):**
     
     - Specifies the increment (`stepValue` > 0) or decrement (`stepValue` < 0) between numbers in the generated stream.
     
-    - `STEP 0` or `Δ 0` is invalid and **raises an ERROR**.
+    - `STEP 0` or `Δ 0` is invalid and **raises an error**.
     
     - **Default Step Logic:**
         
-        - If `STEP` is omitted and `startExpr <= stopExpr` (or is implied by an open-ended notation): step defaults to `1`.
+		* If `STEP` is omitted and `startExpr <= stopExpr` (or is implied by an open-ended notation): step defaults to `1`.
         
         - If `STEP` is omitted and `startExpr > stopExpr` (or is implied by an open-ended notation): step defaults to `-1`.
 
 - **Iteration Direction and Step Consistency (Error Conditions):**
     
-    - If `startExpr < stopExpr` (or is implied by an open-ended notation), an explicitly provided `stepValue` **must be positive**. A negative `stepValue` in this case **raises an ERROR**.
+    - If `startExpr < stopExpr`, an explicitly provided `stepValue` **must be positive**. A negative `stepValue` in this case **raises an error**.
     
-    - If `startExpr > stopExpr` (or is implied by an open-ended notation), an explicitly provided `stepValue` **must be negative**. A positive `stepValue` in this case **raises an ERROR**.
+    - If `startExpr > stopExpr`, an explicitly provided `stepValue` **must be negative**. A positive `stepValue` in this case **raises an error**.
 
 - **Special Case: `startExpr = stopExpr` Literals:**
     
     - `[a .. a]`: Yields a stream with the single integer `a`.
     
-    - `[a .. a), (a .. a], (a .. a)`: All yield an empty stream.
+    - `[a .. a)`, `(a .. a]`, `(a .. a)`: All yield an empty stream.
 
 - **Open-Ended Interval Literals:**
     
-    - `[ .. stopExpr ... ) or ( .. stopExpr ... )`: The start boundary defaults to `0`.
+    - `[ .. stopExpr)` or `( .. stopExpr)`: The start boundary effectively defaults to 0.
     
-    - `[startExpr .. ... ] or (startExpr .. ... ]`: The stop boundary effectively defaults to a conceptual `INFINITY`. Iterating such an interval directly (e.g., `FOR EACH i IN [0..) DO ...`) will produce an infinite stream unless the loop is broken by other means. When used for slicing a sequence, `INFINITY` is resolved to the sequence's end.
+    - `[startExpr .. ]` or `(startExpr .. ]`: The stop boundary effectively defaults to a conceptual `INFINITY`. Iterating such an interval directly (e.g., `FOR EACH i IN [0 .. ) DO ...`) will produce an infinite stream unless the loop is broken by other means. When used for slicing a finite sequence, `INFINITY` is resolved to the sequence's end.
     
-    - `[ .. ]` (and its bracket variants): Represents a full conceptual range (e.g., `start <- 0`, `stop <- ∞`, `step <- 1` if iterated directly, or all indices of a sequence if used in slicing).
+    - `[ .. ]` (and its bracket variants): Represents a full conceptual range (e.g., `Interval(start <- 0, stop <- INFINITY, step <- 1)` if iterated directly, or all indices of a sequence if used in slicing).
 
 **Example:**
 
@@ -107,9 +107,9 @@ all_non_negatives AS Interval <- [ .. )      // Stream: 0, 1, 2, ... (potentiall
 // err_dir_pos AS Interval <- [5 .. 1 STEP 1)  // ERROR: start > stop but step is positive
 ```
 
-## Instantiation
+## Direct Instantiation using `NEW Interval()`
 
-While literals are common, Interval objects can also be instantiated directly. This is useful if intervals must be treated like first-class citizens.
+While literals are the most common way to create Intervals, they can also be instantiated directly using `NEW`. This is useful if the start, stop, or step values are computed dynamically.
 
 **Syntax:**
 
@@ -169,71 +169,74 @@ reverseRange AS Interval <- NEW Interval(start <- 5, stop <- 0) // step defaults
 // reverseRange will yield stream: 5, 4, 3, 2, 1, 0
 ```
 
-### Characteristics
+# Characteristics of Interval Objects
 
-1. **Immutability:**
-	
-	Interval objects are immutable. Once created (either from a literal or via `NEW`), their defining `start`, `stop`, and `step` characteristics cannot be changed.
+1. **Immutability:**  
+    Interval objects are immutable. Once created, their defining characteristics cannot be changed.
 
-2. **Iterability:**
-	
-	`Interval` **implements `IIterable`**. Iterating over an `Interval` object **yields a stream of Integers** according to its defined `start`, `stop`, `step`, and boundary inclusivity/exclusivity rules (as normalized from its creation).
-	
-	```
-	NOTIFY {{Iterating interval [1 .. 3]:}}
-	FOR EACH num IN [1 .. 3] DO // Literal [1..3] creates an Interval; yields stream 1, 2, 3
-	    NOTIFY {{Value: @num}}
-	ENDFOR
-	```
+2. **Iterability (`IIterable` via `IIntegerStream`):**  
+    Interval implements `IIntegerStream`, which means it implements `IIterable`. Iterating over an Interval object **yields a stream of Integers** according to its defined start, stop, step, and the inclusivity/exclusivity rules derived from its literal form or constructor arguments.
+    
+    ```
+    NOTIFY {{Iterating interval [1 .. 3]:}}
+    // Literal [1..3] creates an Interval; yields stream 1, 2, 3
+    FOR EACH num IN [1 .. 3] DO
+        NOTIFY {{Value: @num}}
+    ENDFOR
+    ```
 
-3. **Equatability:**
-	
-	`Interval` **implements `IEquatable`**. Two `Interval` objects are considered equal (`=`) if and only if they **generate the exact same finite stream of integers** when iterated. If both generate infinite streams with the same `start` and `step`, they are also considered equal.
-
-	```
-	iv1 AS Interval <- [0 .. 3)          // Stream: 0, 1, 2
-	iv2 AS Interval <- [0 .. 2]          // Stream: 0, 1, 2
-	iv3 AS Interval <- (0 .. 6 Δ 2)    // Stream: 1, 3, 5
-	
-	IF iv1 = iv2 THEN
-		NOTIFY {{Intervals @iv1 and @iv2 are equivalent because they produce the same integer stream}}
-	ENDIF
-	
-	// Infinite stream comparison
-	infinite1 AS Interval <- [0 .. )
-	infinite2 AS Interval <- NEW Interval(startVal <- 0, stepVal <- 1) // stopVal defaults to INFINITY
-	IF infinite1 = infinite2 THEN
-		NOTIFY {{Both @infinite1 and @infinite2 represent the stream 0, 1, 2, ...}}
-	ENDIF
-	```
+3. **Equatability (`IEquatable` via `IIntegerStream`):**  
+    Interval implements `IIntegerStream`, which means it implements `IEquatable`. Two `Interval` objects, or an `Interval` and a `Count` objects, are considered equal (=) if and only if they **generate the exact same finite or infinite stream of integers** when iterated.
+    
+    ```
+    iv1 AS Interval <- [0 .. 3)          // Stream: 0, 1, 2
+    iv2 AS Interval <- [0 .. 2]          // Stream: 0, 1, 2
+    iv3 AS Interval <- (0 .. 6 Δ 2)    // Stream: 1, 3, 5
+    
+    IF iv1 = iv2 THEN
+        NOTIFY {{Intervals @iv1 and @iv2 are equivalent as they produce the same integer stream}}
+    ENDIF
+    
+    // Infinite stream comparison
+    infinite1 AS Interval <- [0 .. ) // Stream: 0, 1, 2, ...
+    infinite2 AS Interval <- NEW Interval(startVal <- 0, stopVal <- INFINITY, stepVal <- 1)
+    IF infinite1 = infinite2 THEN
+        NOTIFY {{Both @infinite1 and @infinite2 represent the stream 0, 1, 2, ...}}
+    ENDIF
+    ```
 
 # Use Cases
 
-The primary role of an Interval is to specify how to generate a stream of integers. This makes them useful in two main contexts:
+The primary role of an `Interval` is to specify how to generate a stream of integers. This makes them useful in two main contexts:
 
-1. **Generating Integer Streams for Iteration:** Used with the `FOR EACH` loop to control iterations requiring specific integer ranges, steps, or directions.
+1. **Generating Integer Streams for Iteration:**
 	
-	```
-	NOTIFY {{Counting up by threes:}}
-	FOR EACH count IN [0 .. 10 STEP 3) DO // Stream: 0, 3, 6, 9
-	    NOTIFY {{Current count: @count}}
-	ENDFOR
+    Used with the `FOR EACH` loop to control iterations requiring specific integer ranges, steps, or directions.
+    
+    ```
+    NOTIFY {{Counting up by threes:}}
+    FOR EACH count IN [0 .. 10 STEP 3) DO // Stream: 0, 3, 6, 9
+        NOTIFY {{Current count: @count}}
+    ENDFOR
+    
+    NOTIFY {{Accessing elements in reverse:}}
+    items AS List<String> <- ["X", "Y", "Z"]
+    // Interval (LENGTH OF items .. 0] generates indices: 2, 1, 0
+    // This works even if 'items' is empty, as (0 .. 0] produces an empty stream.
+    FOR EACH idx IN (LENGTH OF items .. 0] DO
+        itemValue AS String <- items[idx] // Requires items to be indexable
+        NOTIFY {{Item at index @idx is @itemValue}}
+    ENDFOR
+    ```
+
+2. **Specifying Slices for Sliceable Sequences:**
 	
-	NOTIFY {{Accessing elements in reverse:}}
-	items AS List<String> <- ["A", "B", "C"]
-	// Interval (LENGTH OF items .. 0] generates indices: 2, 1, 0
-	// This works even if 'items' is empty, as (0 .. 0] produces an empty stream.
-	FOR EACH idx IN (LENGTH OF items .. 0] DO
-	    NOTIFY {{Item at index @idx is @(items[idx])}}
-	ENDFOR
-	```
-
-2. **Specifying Slices for Sliceable Sequences:** `Interval` objects (created via literals or `NEW`) are used within the subscript operator `[]` of types that implement `IImmutableSliceable` or `IMutableSliceable` (e.g., `Tuple`, `String`, `List`). The `Interval` tells the slicing operation which indices to include.
-
-	```
-	sourceText AS String <- "AlgoDraftIsCool"
-	sliceSpecifier AS Interval <- [0 .. 9 Δ 2) // Specifies indices 0, 2, 4, 6, 8
-	// The String's slicing operation uses this Interval:
-	result AS String <- sourceText[sliceSpecifier] // result will be "AgDat"
-	NOTIFY {{Applying @sliceSpecifier to @sourceText yields @result}}
-	```
+    `Interval` objects (whether created via literals or `NEW`) are used within the subscript operator `[]` of types that implement an sliceable interface (e.g., `Tuple`, `String`, `List`). The `Interval` tells the slicing operation which indices to include from the original sequence to form the new sequence.
+    
+    ```
+    sourceText AS String <- "AlgoDraftIsCool"
+    sliceSpecifier AS Interval <- [0 .. 9 Δ 2) // Interval specifying indices 0, 2, 4, 6, 8
+    // The String's slicing operation uses this Interval:
+    result AS String <- sourceText[sliceSpecifier] // result will be "AgDat"
+    NOTIFY {{Applying @sliceSpecifier to @sourceText yields @result}}
+    ```

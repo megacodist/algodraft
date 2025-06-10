@@ -53,6 +53,7 @@ status: Writing
 	2. [[IIterable Interface]]
 	3. [[Integer Streams]]
 		1. [[Intervals, Boundary-Defined Integer Streams]]
+		2. [[Counts, Count-Defined Integer Streams]]
 	4. [[Stream Functions]]
 7. Intermediate Syntax
 	1. [[Type Objects]]
