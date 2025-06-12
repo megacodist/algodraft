@@ -17,7 +17,7 @@ When we talk about equality, it's useful to distinguish between:
 
 - **Identity (Reference Equality):** This checks if two variables refer to the exact same object instance in memory. While relevant in many programming languages, AlgoDraft, as a conceptual design language, focuses less on this low-level implementation detail.
 
-- **Value Equality (Equivalence):** This checks if two objects represent the same conceptual value, even if they are different instances. For example, two different Point objects, both representing the coordinates (10, 20), would be considered equal in value. This is the primary focus of the `IEquatable` interface.
+- **Value Equality (Equivalence):** This checks if two objects represent the same conceptual value, even if they are different instances. For example, two different Point objects, both representing the coordinates `(10, 20)` or `10` as integer and `10.0` as real numbers, would be considered equal in value. This is the primary focus of the `IEquatable` interface.
 
 The `IEquatable` interface in AlgoDraft provides the standard contract that allows user-defined `CLASS`es to define their own custom logic for value equality.
 
@@ -49,12 +49,12 @@ ENDINTERFACE
         - **Symmetric:** If `x = y` is `TRUE`, then `y = x` must also be `TRUE`.
         
         - **Transitive:** If `x = y` is `TRUE` and `y = z` is `TRUE`, then `x = z` must also be `TRUE`.
-    
+
 - `OPERATOR this ≠ other -> Boolean` and `OPERATOR this != other -> Boolean`:
     
     - These operators represent inequality.
         
-    - Typically, their behavior is the logical negation of the `=` operator (i.e., they return `NOT (this = other)`).
+    - Typically, their behavior is the logical negation of the `=` operator (i.e., they should return `NOT (this = other)`).
     
     - **AlgoDraft Rule**: If a class implements the `=` operator from `IEquatable`, the `≠` and `!=` operators are implicitly available as its negation, unless the class explicitly provides its own overriding implementations for them (which is rare but possible).
 
@@ -62,7 +62,7 @@ ENDINTERFACE
 
 The behavior of the equality operators in AlgoDraft is crucial for predictable algorithm design. When an equality operation like `object1 = object2` is evaluated:
 
-1. The AlgoDraft system determines if a meaningful, defined comparison is possible between object1 and object2. This requires that **at least one of the classes of object1 or object2 implements `IEquatable` AND its defined `=` operator is capable of performing a comparison with an instance of the other object's class.**
+1. The AlgoDraft system determines if a meaningful, defined comparison is possible between `object1` and `object2`. This requires that **at least one of the classes of `object1` or `object2` implements `IEquatable` AND its defined `=` operator is capable of performing a comparison with an instance of the other object's class.**
     
     - **Dispatch Logic (Conceptual):**
         
