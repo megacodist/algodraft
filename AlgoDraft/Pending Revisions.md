@@ -15,6 +15,18 @@ Good syntax? `CAST obj TO DataType`
 
 One of the use cases of `IS A/AN` operator mentioned in AlgoDraft is downcasing. Please explain it more.
 
+# Index Basic Type
+
+How about adding a basic type named `Index` very like `Integer` but contains two special values `FIRST` and `LAST` to work with indexable data structures.
+
+```
+lines AS Tuple<String...> <- INPUT {{some lines, might start and end with '*'}}
+// Removing possible comments (starting with *)...
+startIdx AS Index <- FIRST + 1 IF {{@lines[FIRST] starts with '*'}}	ELSE FIRST
+stopIdx AS Index <- LAST - 1 IF {{@lines[LAST] starts with '*'}} ELSE LAST
+lines <- lines[startIdx .. stopIdx]
+```
+
 # `IS A/AN`
 
 Right now, this operator only works on objects as follow:
@@ -29,16 +41,14 @@ Right now, this operator only works on objects as follow:
 
 How about renaming `IContainer` to `IContainerable`?
 
-# Iterator Basic Type
+# IIterable Interface
 
-In this version of AlgoDraft, an `Iterator` object exposes two operators: `EXHAUSTED` and `NEXT`. I decided to declare `EXHAUSTED` as a postfix unary operator and `NEXT` as a prefix unary operator:
+How about making the syntax generic (adding `<T>`)?
 
 ```
-ints AS Tuple<Integer> <- INPUT {{zero or more integers}}
-iter AS Iterator<Integer> <- ITERATOR OF ints
-IF iter EXHAUSTED THEN NOTIFY {{The user entered no integer.}}
-int AS Integer <- NEXT iter
-NOTIFY {{@int is the first eneterd integer}}
+INTERFACE IIterable<T> :=
+    OPERATOR ITERATOR OF this -> Iterator<T> ENDOPERATOR
+ENDINTERFACE
 ```
 
 # Numeric Basic Type
@@ -69,4 +79,16 @@ The preceding character in variable and constant names are called sigil. In this
 - Reiterate that outside NLDs, these identifiers are used without the `@`.
 - Update "Key Characteristics of NLDs" to reflect this: "Integration of Identifiers: NLDs explicitly reference AlgoDraft identifiers by prefixing them with `@` (e.g., `@userCount,` `@ProcessData`, `@ErrorType`)."
 - Update "NLDs Best Practices" if needed.
+
+# Tuple
+
+Variadic syntax of tuple type annotation is start-anchored: `Tuple<Type1, Type2, ..., TrailingType...>`. 
+
+How about defining:
+
+* End-anchored syntax like `Tuple<LeadingType..., Type1, Type2>`.
+
+* Both-end-anchored syntax like `Tuple<Type1, MiddleType..., Type2>`.
+
+* Double (or even multiple) variadic syntax like `Tuple<Integer..., String...>`
 

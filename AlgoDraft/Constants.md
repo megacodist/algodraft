@@ -34,3 +34,5 @@ CONST $MAX_USERS AS Integer <- 100
 // The following would be conceptually WRONG in AlgoDraft:
 // $MAX_USERS <- 101 // ERROR: Cannot assign to a constant
 ```
+
+It is a good practice to join two or more parts using underscore in order to avoid confusion with keywords.

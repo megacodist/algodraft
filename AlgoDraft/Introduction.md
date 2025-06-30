@@ -3,6 +3,11 @@ status: Draft
 ---
 Humans need to convey their ideas or exchange ideas with other people. If you want to talk about mathematics, you need to know algebra, set theory, their theoroms, jargons among other things. Pseudocode is the language of algorithms.
 
+In the Gen AI era, a powerful pseudocode can be the only programming language you need. Such flavors of pseudocode is better than both natural language and a specific programming language:
+
+* It allows you to participate in algorithm design. Pseudocodes are actually the language of algorithms.
+* Does not have the limitations of a specific coding language.
+
 It is the general way to express algorithmic ideas.
 
 You might learn a couple of programming languages but you should "store" your algorithmic ideas in a language-agnostic way. And that is pseudocode.
