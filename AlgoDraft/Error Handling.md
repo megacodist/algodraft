@@ -10,10 +10,10 @@ TRY
    // Block 0: Code that might cause an error.
    // This is the code you want to "protect".
    <block_0: potentially problematic instructions>
-CATCH <ErrorType1> [AS $errorInfo1] // Optional: Catch a specific error type
+CATCH <ErrorType1> [AS $errorInfo1] DO // Optional: Catch a specific error type
    // Block 1: Executes ONLY if ErrorType1 occurred in Block 0.
    <block_1: handling instructions for ErrorType1>
-CATCH <ErrorType2> [AS $errorInfo2] // Optional: Catch another specific error
+CATCH <ErrorType2> [AS $errorInfo2] DO // Optional: Catch another specific error
    // Block 2: Executes ONLY if ErrorType2 occurred in Block 0.
    <block_2: handling instructions for ErrorType2>
 CATCH // Optional: Generic catch-all (use sparingly, usually last)

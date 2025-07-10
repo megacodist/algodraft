@@ -20,7 +20,7 @@ The `IComparable` interface in AlgoDraft provides the standard contract that a
 The `IComparable` interface is a built-in interface in AlgoDraft, formally defined as:
 
 ```
-// Assumed prerequisite interface:
+// Prerequisite interface:
 // INTERFACE IEquatable :=
 //     OPERATOR this = other -> Boolean ENDOPERATOR
 //     OPERATOR this ≠ other -> Boolean ENDOPERATOR

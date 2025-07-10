@@ -56,10 +56,11 @@ status: Writing
 		2. [[Counts, Count-Defined Integer Streams]]
 	4. [[Stream Functions]]
 7. Intermediate Syntax
-	1. [[Type Objects]]
+	1. [[Error Handling]]
+	2. [[Type Objects]]
 		1. [[Obtaining Type Objects]]
 		2. [[Type Compatibility and Checking]]
-	2.  [[Interfacing with External Entities]]
+	3.  [[Interfacing with External Entities]]
 		1. [[Declaring Conceptual Entities (CONCEPT)]]
 		2. [[Importing Concrete External Entities (IMPORT)]]
 		3. [[Comparing CONCEPT and IMPORT]]
