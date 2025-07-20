@@ -94,7 +94,7 @@ cte3 AS Count <- [COUNT 4 TO 1 Δ -3]            // Calculated Start = 10. Strea
     ```
 
 *   **Slicing Sequences:**
-    `Count` objects can be used as specifications within the subscript operator `[]` of types that implement sliceable interfaces (like `IImmutableSliceable`). The `Count` object generates the stream of indices that the slicing operation will use.
+    `Count` objects can be used as specifications within the subscript operator `[]` of types that implement sliceable interfaces (like `IROSequentiable`). The `Count` object generates the stream of indices that the slicing operation will use.
     ```algodraft
     sourceData AS Tuple<String> <- ("a", "b", "c", "d", "e", "f")
     // Get 3 items starting from index 2

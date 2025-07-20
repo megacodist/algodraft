@@ -35,21 +35,31 @@ A **Class** in AlgoDraft is a blueprint for creating objects. It defines the 
 **Overall Class Definition Syntax:**
 
 ```AlgoDraft
-CLASS ClassName
+CLASS ClassName [INHERITS BaseClass] [IMPLEMENTS Interface1, interface2, ...]:=
 	
     // --- Attributes Section ---
     <attribute_definition_1>
     <attribute_definition_2>
     // ...
+    
+	// --- (Optional) Functions Section ---
+    <function_definition_1> // e.g., FUNCTION FromSomethingElse ... ENDFUNCTION
+    <function_definition_2> // e.g., FUNCTION GetThatUniversal ... ENDFUNCTION
+    // ...
 	
     // --- Methods Section ---
-    <method_definition_1> // e.g., METHOD CONSTRUCTOR ... ENDMETHOD
+    <method_definition_1> // e.g., METHOD NEW ... ENDMETHOD
     <method_definition_2> // e.g., METHOD DoSomething ... ENDMETHOD
     // ...
 	
     // --- (Optional) Operators Section ---
     <operator_definition_1>
     <operator_definition_2>
+    // ...
+
+	// --- (Optional) NLIs Section ---
+    <nli_definition_1>  // e.g. DO {{Natural language description}}
+    <nli_definition_2>
     // ...
 	
 ENDCLASS
@@ -61,7 +71,7 @@ ENDCLASS
     
     - The `CLASS` keyword initiates the definition, followed by the chosen `ClassName` (which must be conformed to PascalCase).
     
-    - The `ENDCLASS` keyword concludes the definition. All attributes, methods, and operators definitions for this class must reside between these keywords.
+    - The `ENDCLASS` keyword concludes the definition. All attributes and operations definitions for this class must reside between these keywords.
 
 2. **Attributes Section**:
     
@@ -76,17 +86,23 @@ ENDCLASS
         - **Instance Attributes:** Unique to each object created from the class.
             
 
-3. **Methods Section**:
+3. **Functions Section (Optional)**:
+    
+    - This section contains the definitions of **class functions**, which are utility functions logically grouped with a class but **not** tied to a specific object instance. They are analogous to "static methods" in other languages.
+    
+    - Class functions **do not** have access to the this variable and are called directly on the class itself (e.g., ClassName.FunctionName(...)). They are often used for factory functions or utility logic related to the class concept.
+
+4. **Methods Section**:
     
     - This section contains the definitions of functions that are bound to the class. These are called **methods**.
     
     - Methods implement the behavior of the class's objects.
     
-    - A class **must have at least one method**, which is the special `CONSTRUCTOR` method responsible for initializing new objects.
+    - A class **must have at least one method**, which is the special `NEW` method responsible for initializing new objects.
     
-    - If a type only needs to group data and doesn't require any specific behavior (i.e., no methods other than potentially a very simple constructor that could be handled by record instantiation rules), it is **highly recommended to re-define it as a RECORD instead of a CLASS** for simplicity. Classes are intended for types that combine data with behavior.
+    - A class can be used to simply group data if it only contains attributes and a basic constructor. However, the true power of classes is realized when they combine data with a rich set of behaviors.
     
-4. **Operators Section (Optional)**:
+5. **Operators Section (Optional)**:
     
     - AlgoDraft allows classes to define custom behavior for standard operators (e.g., +, -, =, <). This feature is called **operator overloading**.
     
@@ -94,7 +110,15 @@ ENDCLASS
     
     - The reasonable use of operator overloading can increase code readability.
 
-5. **Logical, Not Syntactically Enforced, Sections**:
+6. **NLIs Section (Optional)**:
+    
+    - This section contains definitions for **Natural Language Instructions (NLIs)**. These are a unique AlgoDraft feature for defining high-level, descriptive operations on an instance using a natural language phrase.
+    
+    - An NLI is defined using the `DO` keyword followed by an NLD (`{{...}}`). It acts like a method but is invoked using a more expressive, human-readable syntax (e.g., `DO {{perform some action with @param on @this}}`).
+	
+    - The existence of `@this` determine if the NLI is a method or a function.
+
+7. **Logical, Not Syntactically Enforced, Sections**:
     
     - The division into "Attributes Section," "Methods Section," and "Operators Section" as shown above (often separated by comments) is a **strong convention for readability and organization**.
     
@@ -106,53 +130,3 @@ This general structure provides the framework. In the following subsections, we 
 
 
 
-
-Access syntax for class and instance attributes and methods.
-
-
-
-
-
-
-    *   **9.2.2 Defining Methods (Functions within a Class)**
-        *   Syntax: `FUNCTION MethodName($param1 AS Type, ...) AS ReturnType ... ENDFUNCTION` (same as standalone functions).
-        *   Placement: Defined *inside* the `CLASS ... ENDCLASS` block.
-        *   **The `SELF` Keyword:**
-            *   Introducing `SELF` (or `THIS` - be consistent).
-            *   Purpose: How methods refer to the specific instance of the class they are operating on.
-            *   Accessing attributes: `SELF.$attributeName`.
-            *   Calling other methods of the same instance: `SELF.OtherMethodName(...)`.
-        *   Example of a simple class with attributes and a method.
-    *   **9.2.3 The Constructor Method (Special Method for Initialization)**
-        *   Purpose: A special method automatically called when `NEW ClassName(...)` is used.
-        *   Syntax: How to define a constructor (e.g., `FUNCTION CONSTRUCTOR($param1, ...)`, or `FUNCTION ClassName(...)` - choose one and be consistent).
-        *   Role: Initialize attributes, especially those without default values defined directly in the attribute list.
-        *   Relationship to `NEW`: Arguments passed to `NEW ClassName({{...}})` are typically passed to the constructor.
-        *   How it differs from Record instantiation: Classes have explicit constructor logic, Records have implicit initialization based on `NEW` arguments and defaults.
-
-**9.3 Creating Class Instances (Objects)**
-    *   Using `NEW ClassName({{arguments}})`:
-        *   Reiterate that this invokes the constructor.
-        *   Argument passing rules (`{{...}}` with positional/named/mixed) are the same as function calls and record instantiation, now mapping to constructor parameters.
-        *   Example: `$myObject AS MyClassName <- NEW MyClassName({{arg1, arg2, namedArg: value}})`
-
-**9.4 Accessing Attributes and Calling Methods**
-    *   Accessing Attributes: `$objectInstance.$attributeName` (for reading and writing, same as records).
-    *   Calling Methods: `$objectInstance.MethodName({{arguments}})` (again, `{{...}}` for arguments if the method takes any).
-    *   Example showing attribute access and method calls.
-
-**9.5 Example: A Simple Counter Class**
-    *   Define a `Counter` class with an attribute `$count` and methods like `Increment`, `Decrement`, `GetValue`.
-    *   Show instantiation and usage.
-
-**9.6 (Optional/Advanced) Operator Overloading within Classes**
-    *   Introduction: What is operator overloading? (Allowing standard operators like `+`, `==`, `<` to have custom behavior for class instances).
-    *   Syntax: How to define operator methods (e.g., `OPERATOR + ($other AS MyClass) AS MyClass`, `OPERATOR == ($other AS MyClass) AS Boolean`).
-    *   Connection to Interfaces: How this might relate to `IEquatable`, `IComparable` (a class can implement these by defining the corresponding operator methods).
-    *   Simple example (e.g., a `Vector2D` class overloading `+` for vector addition).
-    *   *Keep this section high-level for pseudocode, focusing on the concept rather than deep implementation details.*
-
-**9.7 Summary: Classes vs. Records**
-    *   Quick table or bullet points highlighting key differences and use cases.
-        *   Records: Primarily for data grouping, simpler instantiation (no explicit constructor method definition needed from the user).
-        *   Classes: Data + Behavior (methods), explicit constructor for controlled initialization, can support operator overloading, form the basis for more advanced OO patterns.

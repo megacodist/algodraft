@@ -9,7 +9,7 @@ Beyond these basic container properties, indexable sequences are further disting
 
 2. **Sliceability:** Can a new sequence of the same fundamental type be created by extracting a portion (a "slice") of the original, using an Interval object to specify the range?
 
-This section will explore these four categories by defining the core interfaces that model their contracts: `IImmutableIndexable`, `IMutableIndexable`, `IImmutableSliceable`, and `IMutableSliceable`. We will focus on the unique capabilities each interface adds, emphasizing their similarities and clarifying the boundaries between them.
+This section will explore these four categories by defining the core interfaces that model their contracts: `IROIndexable`, `IRWIndexable`, `IROSequentiable`, and `IRWSequentiable`. We will focus on the unique capabilities each interface adds, emphasizing their similarities and clarifying the boundaries between them.
 
 **Note:**
 
@@ -27,27 +27,31 @@ All subsequent indexable sequence interfaces will build upon `IContainer`.
 
 # The Four Categories of Indexables
 
-## `IImmutableIndexable`: Read-Only Positional Access
+## `IROIndexable`: Read-Only Positional Access
 
 This interface represents a contract for ordered collections where elements can be retrieved by index, but not modified through that index. It includes all `IContainer` capabilities.
 
 **Syntax:**
 
 ```
-INTERFACE IImmutableIndexable INHERITS IContainer :=
+INTERFACE IROIndexable<T> INHERITS IContainer<T> :=
     // Adds read-only indexed access
-    OPERATOR this[index AS Integer] -> ANY ENDOPERATOR
+    OPERATOR this[index AS Integer] -> T ENDOPERATOR
     // Inherits: LENGTH OF, IN, ITERATOR OF (from IContainer)
 ENDINTERFACE
 ```
 
 **Semantics:**
 
-This is the **indexer** or **subscript operator** for read-only access. It retrieves the element at the specified zero-based index. The interface declares a return type of `ANY` to accommodate potentially heterogeneous sequences; concrete implementing types will effectively return their specific element type (e.g., `String` returns `Char`). An error **must be raised** if index is out of the valid interval of `[0 .. (LENGTH OF sequence_object))`.
+This is the **indexer** or **subscript operator** for read-only access. It retrieves the element at the specified zero-based index. The interface declares a return type of generic `T` to accommodate potentially heterogeneous sequences. An error **must be raised** if index is out of the valid interval of `[0 .. (LENGTH OF sequence_object))`.
+
+**Use Case:**
+
+This interface shines at implementing data structures that have an intrinsic ordering such as the order in which elements are added or the order imposed by value of elements, the client code does not have any control over their relative order.
 
 **Implementations:**
 
-- `Stack<T>` and `Queue<T>` are designed to directly implement `IImmutableIndexable`, allowing read-only inspection of their contents by index, in addition to their standard LIFO/FIFO operations.
+- `Stack<T>` and `Queue<T>` are designed to directly implement `IROIndexable`, allowing read-only inspection of their contents by index, in addition to their standard LIFO/FIFO operations.
 
 - This interface also serves as a base for all other more specialized indexable sequence interfaces.
 
@@ -63,17 +67,17 @@ IF (LENGTH OF myTaskQueue) > 0 THEN
 ENDIF
 ```
 
-## `IMutableIndexable`: Writable Positional Access
+## `IRWIndexable`: Read-Write Positional Access
 
-This interface extends `IImmutableIndexable` by adding the crucial capability to modify (write or set) the element at a specific index. So, elements can be both read from and written to by their position.
+This interface extends `IROIndexable` by adding the crucial capability to modify (write or set) the element at a specific index. So, elements can be both read from and written to by their position.
 
 **Syntax:**
 
 ```
-INTERFACE IMutableIndexable INHERITS IImmutableIndexable :=
+INTERFACE IRWIndexable<T> INHERITS IROIndexable<T> :=
     // Adds write access at a specific index
     OPERATOR this[index AS Integer] <- value AS ANY ENDOPERATOR
-    // Inherits: read this[index], LENGTH OF, IN, ITERATOR OF (from IImmutableIndexable & IContainer)
+    // Inherits: read this[index], LENGTH OF, IN, ITERATOR OF (from IROIndexable & IContainer)
 ENDINTERFACE
 ```
 
@@ -81,15 +85,19 @@ ENDINTERFACE
 
 This is the **indexer assignment operator**. It replaces the element at the specified zero-based index with a new value. The new value must be type-compatible with what the sequence is defined to hold at that position (e.g., for a `List<String>`, `value` should be a `String`). An error **must be raised** if index is out of the valid interval.
 
+**Use Case:**
+
+This interface is a good foundation for a data structure that wants to index all its members and there is no inherent order among them. So, the client code can write every index freely.
+
 **Implementations:**
 
-- `List<T>` (indirectly, as it will implement `IMutableSliceable` which includes this capability).
+- `List<T>` (indirectly, as it will implement `IRWSequentiable` which includes this capability).
 
 **Example:**
 
 ```
 CONCEPT
-	CLASS PixelRowBuffer IMPLEMENTS IMutableIndexable := {{
+	CLASS PixelRowBuffer IMPLEMENTS IRWIndexable<Integer> := {{
 		Represents a row of pixel color values. The initializer accepts the following
 		attributes in their respective order.
 		
@@ -106,17 +114,17 @@ pixelBuffer[2] <- pixelBuffer[0] - pixelBuffer[1] // Read via inherited indexer,
 NOTIFY {{Pixel buffer values: @(pixelBuffer[0]), @(pixelBuffer[1]), @(pixelBuffer[2])}}
 ```
 
-## `IImmutableSliceable`: Immutable Sequences Supporting Slicing
+## `IROSequentiable`: Read-Only Sequences
 
 This interface is for immutable sequences that not only allow read-only indexed access but can also produce new immutable sequences of their own type through a slicing operation.
 
 **Syntax:**
 
 ```
-INTERFACE IImmutableSliceable INHERITS IImmutableIndexable :=
+INTERFACE IROSequentiable<T> INHERITS IROIndexable<T> :=
     // Adds slicing capability, returning a new instance of the same type as 'this'.
     OPERATOR this[interval AS Interval] -> (TYPE OF this) ENDOPERATOR
-    // Inherits: read this[index], LENGTH OF, IN, ITERATOR OF (from IImmutableIndexable & IContainer)
+    // Inherits: read this[index], LENGTH OF, IN, ITERATOR OF (from IROIndexable & IContainer)
 ENDINTERFACE
 ```
 
@@ -126,7 +134,7 @@ This operator applies an Interval object (which defines start, stop, step, and
 
 **Implementations:**
 
-- `Tuple<T1, T2, ...>`
+- `Tuple<T1, T2, ANY...>`
 
 - `String` (as an immutable sequence of `Char`)
 
@@ -144,21 +152,21 @@ middleValues AS Tuple<Integer> <- coordinates[(1 .. 3]] // Results in tuple (30,
 NOTIFY {{Middle coordinate values are @middleValues}}
 ```
 
-## `IMutableSliceable`: The Best of All Worlds (for Sequences)
+## `IRWSequentiable`: The Best of All Worlds (for Sequences)
 
 This interface category represents sequences that offer the most comprehensive set of capabilities: they are indexable for both reading and writing, and they can also be sliced to produce new sequences of their own type.
 
 **Syntax:**
 
 ```
-INTERFACE IMutableSliceable INHERITS IMutableIndexable, IImmutableSliceable :=
+INTERFACE IRWSequentiable<T> INHERITS IRWIndexable<T>, IROSequentiable<T> :=
     // This interface now possesses all capabilities from its parents:
-    // - Read this[index] (from IImmutableIndexable)
-    // - Write this[index] <- value (from IMutableIndexable)
-    // - this[interval AS Interval] -> (TYPE OF this) (from IImmutableSliceable)
-    // - LENGTH OF, IN, ITERATOR OF (from IContainer via IImmutableIndexable)
+    // - Read this[index] (from IROIndexable)
+    // - Write this[index] <- value (from IRWIndexable)
+    // - this[interval AS Interval] -> (TYPE OF this) (from IROSequentiable)
+    // - LENGTH OF, IN, ITERATOR OF (from IContainer via IROIndexable)
 
-    // Concrete classes like List<T> that implement IMutableSliceable
+    // Concrete classes like List<T> that implement IRWSequentiable
     // will also typically provide additional methods for structural modification
     // (e.g., Add, InsertAt, RemoveAt, Clear). These list-specific methods
     // would be part of the List<T> class definition or a more specific IList interface.
@@ -167,30 +175,30 @@ ENDINTERFACE
 
 **Implementations:**
 
-- `List<T>` is the prime example of a type that would implement `IMutableSliceable`. When a List is sliced, it produces a new `List`. `List<T>` would also define its own `+` operator for concatenation and operations like adding/appending, inserting, removing, and clearing as part of its class definition.
+- `List<T>` is the prime example of a type that would implement `IRWSequentiable`. When a List is sliced, it produces a new `List`. `List<T>` would also define its own `+` operator for concatenation and operations like adding/appending, inserting, removing, and clearing as part of its class definition.
 
 # Summary
 
 AlgoDraft categorizes indexable sequences based on their support for **index mutability** and **sliceability**:
 
-1. **`IImmutableIndexable`**: Read-only by index. Not sliceable into its own type via the slice operator. (e.g., AlgoDraft's `Stack`, `Queue` for inspection).
+1. **`IROIndexable`**: Read-only by index. Not sliceable into its own type via the slice operator. (e.g., AlgoDraft's `Stack`, `Queue` for inspection).
 
-2. **`IImmutableSliceable`**: Read-only by index, AND sliceable into new instances of its own type. (e.g., `Tuple`, `String`).
+2. **`IROSequentiable`**: Read-only by index, AND sliceable into new instances of its own type. (e.g., `Tuple`, `String`).
 
-3. **`IMutableIndexable`**: Read AND write by index. Not sliceable into its own type via the slice operator.
+3. **`IRWIndexable`**: Read AND write by index. Not sliceable into its own type via the slice operator.
 
-4. **`IMutableSliceable`**: Read AND write by index, AND sliceable into new instances of its own type. (e.g., `List<T>`).
+4. **`IRWSequentiable`**: Read AND write by index, AND sliceable into new instances of its own type. (e.g., `List<T>`).
 
 All these interfaces inherit from `IContainer`, meaning all indexable sequences provide `LENGTH OF`, `IN`, and `ITERATOR OF` capabilities.
 
 When designing functions that accept sequences, select the interface that demands the least specific set of capabilities required by your function's logic. This maximizes the reusability and flexibility of your algorithmic components. For example:
 
-- If you only need to read elements by index and know the length: accept `IImmutableIndexable`.
+- If you only need to read elements by index and know the length: accept `IROIndexable`.
 
-- If you need to read, get length, and also create sub-sequences of the same immutable type: accept `IImmutableSliceable`.
+- If you need to read, get length, and also create sub-sequences of the same immutable type: accept `IROSequentiable`.
 
-- If you need to modify elements in place by index: accept `IMutableIndexable`.
+- If you need to modify elements in place by index: accept `IRWIndexable`.
 
-- If you need full mutable random access plus slicing: accept `IMutableSliceable` (or a `List<T>` if list-specific operations like add are also needed).
+- If you need full mutable random access plus slicing: accept `IRWSequentiable` (or a `List<T>` if list-specific operations like add are also needed).
 
 This clear separation of concerns through interfaces allows for precise and robust algorithm design in AlgoDraft.

@@ -51,6 +51,12 @@ INTERFACE IIterable<T> :=
 ENDINTERFACE
 ```
 
+# Mapping
+
+There are two mapping annotations:
+1. `Mapping<KT TO VT>`
+2. `Mapping<KT -> VT>`
+
 # Numeric Basic Type
 
 I decided to have `±INFINITY`/`±∞` conceptual values in numeric types. So, their possible operations must be defined in `Numeric` class.
@@ -65,6 +71,19 @@ We believe that distinction between `RECORD`s and `CLASS`es are not very good. A
 
 Changing the slicing syntax to `[a .. b Δ c]` must be considered.
 How about the following open-ended notations? `[.. b]` and `[a ..]`
+
+# Sequences vs Indexables
+
+Sequences introduce the following extensions to their indexables counterparts:
+
+1. **Comparability**: They implement `IComparable` with the default comparing behavior of lexicographical order:
+2. **Slicing**
+
+```
+INTERFACE IROSequentiable INHERITS IROIndexable, IComparable :=
+    OPERATOR this[interval AS ISteppedIntStream] -> IROSequentiable
+ENDINTERFACE
+```
 
 # Sigil
 

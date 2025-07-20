@@ -12,20 +12,20 @@ The `IContainer` interface provides a universal way to interact with the most 
 
 ```
 // Assumed prerequisite interface:
-// INTERFACE IIterable
-//     OPERATOR ITERATOR OF this -> Iterator ENDOPERATOR // Iterator is the basic iterator type
+// INTERFACE IIterable<T> :=
+//     OPERATOR ITERATOR OF this -> Iterator<T> ENDOPERATOR // Iterator is the basic iterator type
 // ENDINTERFACE
 
-INTERFACE IContainer INHERITS IIterable :=
+INTERFACE IContainer<T> INHERITS IIterable<T> :=
     // Operator to check if an element is present within the container.
     // Relies on the container being IIterable (inherited contract) and its elements
     // (or the element being checked) supporting an equality comparison.
-    OPERATOR (element AS ANY) IN this -> Boolean ENDOPERATOR
+    OPERATOR (element AS T) IN this -> Boolean ENDOPERATOR
 
     // Operator to get the total number of elements in the container.
     OPERATOR LENGTH OF this -> Integer ENDOPERATOR
 
-    // OPERATOR ITERATOR OF this -> Iterator ENDOPERATOR is inherited from IIterable.
+    // OPERATOR ITERATOR OF this -> Iterator<T> ENDOPERATOR is inherited from IIterable.
 ENDINTERFACE
 ```
 

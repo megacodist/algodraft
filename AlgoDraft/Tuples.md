@@ -300,3 +300,31 @@ intTuple AS Tuple<Integer...> <- Tuple(myList)
 ```
 # Operations
 ## Unpacking
+
+
+## Appending and Prepending
+
+**Syntax**:
+
+```
+newTuple AS Tuple<Type...> <- APPEND iterable TO tuple
+newTuple AS Tuple<Type...> <- PREPEND iterable TO tuple
+newTuple AS Tuple<Type...> <- INSERT iterable INTO tuple AT index
+```
+
+```
+start AS Tuple<Integer> <- (10, 20)
+end AS Tuple<Integer> <- (40, 50)
+
+// Append single element
+newTuple1 AS Tuple<Integer...> <- APPEND (30,) TO start // (10, 20, 30)
+
+// Prepend single element
+newTuple2 AS Tuple<Integer...> <- PREPEND (0,) TO start // (0, 10, 20)
+
+// Append an iterable (another tuple) - this is concatenation
+newTuple3 AS Tuple<Integer...> <- APPEND end TO start // (10, 20, 40, 50)
+
+// Prepend an iterable
+newTuple4 AS Tuple<Integer...> <- PREPEND start TO end // (10, 20, 40, 50)
+```
