@@ -1,6 +1,62 @@
 ---
 status: Writing
 ---
+# `ALIAS`
+
+## New Syntax
+
+```
+ALIAS
+	<type> <comma_sep_names> FROM <module>;
+	<type> <comma_sep_names> FROM <module>;
+	...
+ENDALIAS
+```
+
+* **`<type>`**: can be `CONST`, `CLASS`, `FUNCTION`, `INTERFACE`
+* **`<comma_sep_names>`**: the comma separated names of type `<type>`
+* **`<module>`**: 
+* **`;`**: 
+
+## Generic Aliases
+
+Should we accept generic aliases?
+
+```
+ALIAS Sorter<T> FOR Function<(T, T) -> Integer>
+```
+
+**Example:**
+```algodraft
+// Define a clear, generic alias for a comparison function for any type T
+// (This assumes AlgoDraft supports generics in ALIAS definitions)
+ALIAS Sorter<T> FOR Function<(T, T) -> Integer>
+
+// Use the alias in a class constructor signature for clarity
+CLASS SortedList<T> :=
+    // ...
+    METHOD NEW(sorter AS Sorter<T> OR NULL <- NULL)
+    // ...
+ENDCLASS
+
+// Use a concrete instantiation of the alias for a variable declaration
+myCustomIntSorter AS Sorter<Integer> <- SomeIntegerSortFunction // Assign a compatible function
+```
+
+# `CATCH`
+
+Catching two or more errors in the same `CATCH` clause using `OR` operator:
+
+```
+bkpConfig AS VpnConfig <- this.config
+TRY
+	this.config.UpdateWith(other.config)
+CATCH {{mismatching config names}} OR {{conflicting config IDs}} DO
+	this.config <- bkpConfig
+	DO {{Re-raise the error}}
+ENDTRY
+```
+
 # `CLASS`
 
 How about replacing `NEW` for `CONSTRUCTOR` in a class for constructor definition?
@@ -14,6 +70,10 @@ Good syntax? `CAST obj TO DataType`
 # Downcasing
 
 One of the use cases of `IS A/AN` operator mentioned in AlgoDraft is downcasing. Please explain it more.
+
+# `Function` Type and Function Statement
+
+Function signature of a function statement and generic part of `Function` type are not completely match each other. Is this a bad design choice?
 
 # Index Basic Type
 

@@ -302,7 +302,7 @@ intTuple AS Tuple<Integer...> <- Tuple(myList)
 ## Unpacking
 
 
-## Appending and Prepending
+## Appending, Prepending, and Inserting
 
 **Syntax**:
 
@@ -311,6 +311,8 @@ newTuple AS Tuple<Type...> <- APPEND iterable TO tuple
 newTuple AS Tuple<Type...> <- PREPEND iterable TO tuple
 newTuple AS Tuple<Type...> <- INSERT iterable INTO tuple AT index
 ```
+
+**Example**:
 
 ```
 start AS Tuple<Integer> <- (10, 20)

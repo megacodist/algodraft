@@ -71,11 +71,11 @@ ALIAS AdjacencyMatrix FOR List<List<Integer>> ENDALIAS
 And you can use them to declare variables:
 
 ```
-$currentUser AS UserIdentifier
-$itemPrice AS ProductPrice
-$activeUsers AS NameList
-$appSettings AS FeatureFlags
-$startPoint AS Coordinate
+currentUser AS UserIdentifier
+itemPrice AS ProductPrice
+activeUsers AS NameList
+appSettings AS FeatureFlags
+startPoint AS Coordinate
 ```
 
 # Aliasing User-Defined Record Types
@@ -84,9 +84,9 @@ If you define custom `RECORD` structures, you can create aliases for them, per
 
 ```
 RECORD EmployeeDetails
-    $employeeId AS String,
-    $department AS String,
-    $yearsOfService AS Integer
+    employeeId AS String,
+    department AS String,
+    yearsOfService AS Integer
 ENDRECORD
 
 // Alias for the EmployeeDetails record
@@ -98,9 +98,9 @@ ENDALIAS
 
 // Another record definition
 RECORD ColorRGB
-    $red AS Integer,    // Assuming values 0-255
-    $green AS Integer,
-    $blue AS Integer
+    red AS Integer,    // Assuming values 0-255
+    green AS Integer,
+    blue AS Integer
 ENDRECORD
 
 ALIAS Pixel FOR ColorRGB ENDALIAS // Pixel is a conceptual name for ColorRGB
@@ -109,13 +109,19 @@ ALIAS Pixel FOR ColorRGB ENDALIAS // Pixel is a conceptual name for ColorRGB
 Defining variables:
 
 ```
-$newHire AS StaffMemberRecord
-$backgroundColor AS Pixel
+newHire AS StaffMemberRecord
+backgroundColor AS Pixel
 ```
 
 # Aliasing Function Signatures (Function Types)
 
 This is a particularly powerful use of `ALIAS`. It allows you to define a name for a specific function "shape" (its parameter types, modes, and return type). This is very useful when working with higher-order functions (functions that take other functions as arguments or return them) or for defining types for callbacks or event handlers.
+
+**Syntax:**
+
+```
+ALIAS AliasName FOR Function<...> ENDALIAS
+```
 
 The syntax for a function signature type within the `FOR` clause mirrors the signature part of a function definition, but typically without parameter names and their possible default values.
 
@@ -127,21 +133,21 @@ The syntax for a function signature type within the `FOR` clause mirrors the s
 ALIAS
     IntegerPredicate
     FOR
-    FUNCTION (Integer) -> Boolean
+    Function<Integer -> Boolean>
 ENDALIAS
 
 // Example: An alias for a procedure that modifies a list of strings
 ALIAS
     StringListModifier
     FOR
-    FUNCTION (INOUT List<String>) // No return type specified (procedure)
+    Function<INOUT List<String> -> NULL> // No return type specified (procedure)
 ENDALIAS
 
 // Example: A more complex alias for a transformation function
 ALIAS
     DataTransformer
     FOR
-    FUNCTION (RawData, OUT ProcessedData, ConfigOptions) -> Boolean
+    Function<(RawData, OUT ProcessedData, ConfigOptions) -> Boolean>
     // Assuming RawData, ProcessedData, ConfigOptions are other defined types or aliases
 ENDALIAS
 ```
@@ -150,19 +156,19 @@ Usage in Parameter Lists:
 
 ```
 FUNCTION FilterNumbers(
-		IN $numbers AS List<Integer>,
-		IN $test AS IntegerPredicate,
-	) -> List<Integer> :=
-    $filteredList AS List<Integer> <- NEW List<Integer>
-    FOR EACH $num IN $numbers DO
-        IF $test($num) THEN // Call the predicate function
-            DO {{add $num to $filteredList}}
+		IN numbers AS List<Integer>,
+		IN test AS IntegerPredicate,
+		) -> List<Integer> :=
+    filteredList AS List<Integer> <- NEW List<Integer>
+    FOR EACH num IN numbers DO
+        IF test(num) THEN // Call the predicate function
+            DO {{Append @num to @filteredList}}
         ENDIF
     ENDFOR
-    RETURN $filteredList
+    RETURN filteredList
 ENDFUNCTION
 
-$processor AS StringListModifier // Variable to hold a function of this type
+processor AS StringListModifier // Variable to hold a function of this type
 ```
 
 **A.3.6. Aliasing Other Aliases (Chaining Aliases)**
@@ -186,9 +192,9 @@ $processor AS StringListModifier // Variable to hold a function of this type
 
 - Once defined, a type alias can be used almost anywhere you would use a regular type name:
     
-    - **Variable declarations:** $myVariable AS MyCustomAlias
+    - **Variable declarations:** myVariable AS MyCustomAlias
         
-    - **Function parameter types:** FUNCTION ProcessData(IN $data AS MyCustomAlias) ...
+    - **Function parameter types:** FUNCTION ProcessData(IN data AS MyCustomAlias) ...
         
     - **Function return types:** FUNCTION CreateObject() -> MyCustomAlias ...
         
