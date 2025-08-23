@@ -8,6 +8,8 @@ In the Gen AI era, a powerful pseudocode can be the only programming language yo
 * It allows you to participate in algorithm design. Pseudocodes are actually the language of algorithms.
 * Does not have the limitations of a specific coding language.
 
+One of the design principle of AlgoDraft is that its code should ideally be expressive enough in a way to be understandable with an AI system without any prior training.
+
 It is the general way to express algorithmic ideas.
 
 You might learn a couple of programming languages but you should "store" your algorithmic ideas in a language-agnostic way. And that is pseudocode.

@@ -101,6 +101,18 @@ Right now, this operator only works on objects as follow:
 
 How about renaming `IContainer` to `IContainerable`?
 
+## Checking empty
+
+**Syntax**:
+
+```
+OPERATOR this IS EMPTY -> Boolean
+ENDOPERATOR
+```
+
+**Semantics**:
+
+Checks whether this container is empty or not.
 # IIterable Interface
 
 How about making the syntax generic (adding `<T>`)?
@@ -109,6 +121,19 @@ How about making the syntax generic (adding `<T>`)?
 INTERFACE IIterable<T> :=
     OPERATOR ITERATOR OF this -> Iterator<T> ENDOPERATOR
 ENDINTERFACE
+```
+
+# IMPORT
+
+How about the following syntax?
+
+```
+IMPORT
+	CLASS ClassName1 [AS CustomName1], ClassName2 FROM <a_module>;
+	FUNCTION
+	CONSTANT
+	INTERFACE
+ENDIMPORT
 ```
 
 # Mapping

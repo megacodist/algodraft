@@ -56,7 +56,6 @@ ENDFOR
     
 - The code inside the loop body (`DO ... ENDFOR`) runs once for each element in the set.
 
-
 ## Equality/Inequality Operators
 
 These binary operators perform a check, returning a Boolean value, to determine if two sets are considered equal or unequal. Set equality in AlgoDraft, following mathematical convention, means that both sets contain exactly the same elements, irrespective of the order in which elements were added.

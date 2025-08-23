@@ -21,6 +21,12 @@ The essence of a tuple is a **linear, heterogeneous, immutable, iterable, and du
 
 They are used to represent a fixed collection of related items where order matters, types may differ, and mutability is sacrificed for **predictability, consistency, and conceptual integrity**.
 
+**Syntax**:
+
+```
+CLASS Tuple IMPLEMENTS IROSequentiable<T> :=
+ENDCLASS
+```
 # Type Annotation
 
 Because Tuples are a fundamental and versatile data structure in AlgoDraft, the language provides several powerful ways to describe their structure. This is done through **type annotation** when you declare a variable, specify a function parameter, or define a function's return type.
