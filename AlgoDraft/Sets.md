@@ -278,27 +278,28 @@ $symDifferenceSet <- $evens SYMMETRIC DIFFERENCE $lowPrimes // {3, 4, 5, 6, 7, 8
 
 In AlgoDraft, you can modify an existing set by **adding** or **removing** elements using **Natural Language Descriptions (NLDs)**.  
 
-| Operation             | Syntax                             | Meaning                                                                                                  |
-| --------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Add an element**    | `DO {{add $element to $set}}`      | Inserts `$element` into `$set`. If the element is already present, no duplicate is created.              |
-| **Add a literal**     | `DO {{add 2 to $set}}`             | Inserts the literal `2` into `$set`.                                                                     |
-| **Remove an element** | `DO {{remove $element from $set}}` | Removes `$element` from `$set` if it exists. If the element is not present, the operation has no effect. |
+| Operation             | Syntax                         | Meaning                                                                                                  |
+| --------------------- | ------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| **Add an element**    | ADD element TO someSet;`       | Inserts `$element` into `$set`. If the element is already present, no duplicate is created.              |
+| **Add a literal**     | `ADD 2 TO someSet;`            | Inserts the literal `2` into `$set`.                                                                     |
+| **Remove an element** | `REMOVE element FROM someSet;` | Removes `$element` from `$set` if it exists. If the element is not present, the operation has no effect. |
 
 **Example**
 
 ```
-$numbers AS Set<Integer> <- {1, 3, 5}
+numbers AS Set<Integer> <- {1, 3, 5};
+toAdd, toRemove AS Integer;
 
 // Adding an element variable...
-$toAdd <- 2
-DO {{add $toAdd to $numbers}}
+toAdd <- 2;
+ADD toAdd to numbers;
 
 // Adding a literal value...
-DO {{add 4 to $numbers}}
+ADD 4 to numbers;
 
 // Removing an element...
-$toRemove <- 3
-DO {{remove $toRemove from $numbers}}
+toRemove <- 3;
+REMOVE toRemove FROM numbers;
 
-NOTIFY {{$numbers elements}} // {1, 2, 4, 5}
+NOTIFY {{@numbers elements}} // {1, 2, 4, 5}
 ```

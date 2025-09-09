@@ -7,11 +7,19 @@ Represents a class to instantiate objects to work with file system items.
 
 ## Existence
 
-This unary postfix operator checks the existence of its file system path operand.
+This unary postfix operator checks the existence of this `FsPath` object:
 
 **Syntax**:
 
 ```AlgoDraft
-<fs_path_val> EXISTED
-<fs_path_val> NOT EXISTED
+OPERATOR (this EXISTED) -> Boolean ENDOPERATOR
+OPERATOR (this NOT EXISTED) -> Boolean ENDOPERATOR
+```
+
+## Getting Folder
+
+This unary prefix operator gets the folder of this `FsPath` object:
+
+```AlgoDraft
+OPERATOR (FOLDER OF this) -> FsPath ENDOPERATOR
 ```

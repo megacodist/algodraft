@@ -162,19 +162,85 @@ ENDCLASS
 
 Signals that `ClassName` is conceptually an object-oriented entity. The NLD specifies essential conceptual methods.
 
-**Example:**
+**Example 1:**
 
 ```
-CONCEPT
-    CLASS UserAuthenticator := {{Manages user authentication against an external system. Conceptual method: Authenticate(IN user, IN pass) -> AuthToken.}}
+// This Singly-Linked Node (`SlNode`) is the building block of a
+// Singly-Linked List (`SlList`).
+CLASS SlNode<T> :=
+	data AS T;
+	next AS SlNode<T> OR NULL;
 
-    CLASS ReportBuilder :=
-        {{An object responsible for constructing a complex report.
-          Conceptual methods: AddSection(IN title AS String), AddParagraph(IN text AS String),
-          GenerateReport() -> ReportDocumentType.
-          Manages internal state representing the report being built.}}
-    ENDCLASS
+	METHOD NEW(data AS T, next AS SlNode<T> OR NULL) :=
+		this.data <- data;
+		this.next <- next;
+	ENDMETHOD
+ENDCLASS
+
+
+CONCEPT
+	// This singly-linked list (`SlList`) class offers universally
+	// understandable, bug-free API to work on singly-directed chain of
+	// nodes.
+	CLASS SlList<T> :=
+		PRIVATE head AS SlNode<T> OR NULL;
+
+        METHOD GetHeadNode() -> SlNode<T> OR NULL;
+        METHOD InsertAfter(node AS SlNode<T>, data AS T) -> SlNode<T>;
+        METHOD InsertAsHead(data AS T) -> SlNode<T>;
+        METHOD DelAfter(node AS SlNode<T>) -> NULL;
+        METHOD DelHead() -> NULL;
+        METHOD Find(data AS T) -> SlNode<T> OR NULL;
+	ENDCLASS
 ENDCONCEPT
+
+
+CONCEPT
+	// This singly-linked list (`SlList`) class offers universally
+	// understandable, bug-free API to work on singly-directed chain of
+	// nodes.
+	CLASS SlList<T> :=
+		PRIVATE head AS SlNode<T> OR NULL;
+
+        METHOD GetHeadNode() -> SlNode<T> OR NULL := {{
+        	Returns the head node. If the list is empty returns `NULL`.
+        	So, this method can be used for checking emptyness of the
+        	list.
+        	}}
+        ENDMETHOD
+        METHOD InsertAfter(
+        		data AS T,
+        		node AS SlNode<T>,
+        		) -> SlNode<T> := {{
+        	Creats a node after `node` with `data` in it.
+        	}}
+        METHOD InsertAsHead(data AS T) -> SlNode<T> := {{
+        	Creates a new siggly-linked node as head with `data` in it. so,
+        	the current head will lie after it.
+        	}}
+        ENDMETHOD
+        METHOD DelAfter(node AS SlNode<T>) -> NULL := {{
+        	Deletes the node after the provided node of `node`. If it is
+        	already the tail (its `next` is `NULL`), it does nothing.
+        	}}
+        ENDMETHOD
+        METHOD DelHead() -> NULL := {{
+        	Deletes the head node.
+        	}}
+        ENDMETHOD
+        METHOD Find(
+        		data AS T,
+        		start AS SlNode<T> OR NULL <- NULL,
+        		) -> SlNode<T> OR NULL := {{
+        	Finds the first occurrence of a node with data as `data` from
+        	the `start` node if it is not `NULL` otherwise starts from the
+        	head.
+        	}}
+        ENDMETHOD
+	ENDCLASS
+ENDCONCEPT
+```
+
 ```
 
 # Declaring Conceptual External Constants

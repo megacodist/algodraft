@@ -45,3 +45,15 @@ OUTPUT $myString(1 .. 4)
 // "amp"
 OUTPUT $myString(1 .. 4]
 ```
+
+# Operations
+
+## Formatting
+
+**Syntax**:
+
+```
+METHOD Format(args AS ANY...) -> NULL :=
+ENDMETHOD
+```
+
