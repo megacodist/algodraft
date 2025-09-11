@@ -58,6 +58,8 @@ AlgoDraft's primary goal is clear communication of logic.
 AlgoDraft must aim at a broad audience or focusing on procedural steps, It would lean towards `$foo AS Integer` because its explicitness prioritizes immediate understanding over symbolic elegance.
 
 AlgoDraft has value-centric philosophy, that is a value is a mathematical value without any computer systems restrictions such as references, addresses, or identity. AlgoDraft does offer typing system but to emphasize what we have at our hands and what we can perform upon it rather than to reminiscent of programming languages.
+
+AlgoDraft is all conceptual: a conceptual language to work with conceptual objects in the conceptual computer. This conceptuality helps not bogged down with limitations. AlgoDraft looks down to any implementation with intrinsic limitation.
 # Benefits
 1.	Pseudocode is a way to think out of the box.
 2.	It enables everyone to not limit your train of thoughts to any programming language or framework.

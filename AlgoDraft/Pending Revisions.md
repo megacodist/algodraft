@@ -242,28 +242,38 @@ Right now, this operator only works on objects as follow:
 
 # IContainer
 
-How about adding a postfix unary operator for checking emptiness?
-
-```AlgoDraft
-CLASS IContainer INHERITS IIterable :=
-	OPERATOR (this IS EMPTY) -> Boolean	ENDOPERATOR
-ENDCLASS
-```
-
-Needless to say that the negative form is `<container> IS NOT EMPTY`.
-
 ## Checking empty
+
+How about adding a postfix unary operator for checking emptiness?
 
 **Syntax**:
 
-```
-OPERATOR this IS EMPTY -> Boolean
-ENDOPERATOR
+```AlgoDraft
+CLASS IContainer<T> INHERITS IIterable<T> :=
+	OPERATOR (this IS EMPTY) -> Boolean;
+ENDCLASS
 ```
 
 **Semantics**:
 
 Checks whether this container is empty or not.
+
+**Negative form**:
+
+Needless to say that the negative form is `<container> IS NOT EMPTY` or `NOT (<container> IS EMPTY)`.
+
+## Copy
+
+How about adding two methods to `IContainer` interface for copying a container?
+
+```
+CLASS IContainer<T> INHERITS IIterable<T> :=
+	OPERATOR SHALLOW COPY this -> (TYPE OF this);
+	OPERATOR DEEP COPY this -> (TYPE OF this);
+ENDCLASS
+```
+
+If `IContainer` interface is not a good place to expose this API, where should I include them? I would like to have shallow and deep copy capabilitites.
 # IIterable Interface
 
 How about making the syntax generic (adding `<T>`)?
