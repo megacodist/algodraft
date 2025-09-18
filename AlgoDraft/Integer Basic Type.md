@@ -1,6 +1,16 @@
 ---
 status: Writing
 ---
+# Constructor
+
+```
+int AS Integer <- Integer(data);
+```
+
+Tries to convert the data to an integer:
+* `String`: `Integer("123")` 
+* `Real`: `Integer(23.36)`
+* `Bits`: `Integer("0b1100010")`
 
 # Binary Representation
 

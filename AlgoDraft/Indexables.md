@@ -36,7 +36,7 @@ This interface represents a contract for ordered collections where elements can 
 ```
 INTERFACE IROIndexable<T> INHERITS IContainer<T> :=
     // Adds read-only indexed access
-    OPERATOR this[index AS Integer] -> T ENDOPERATOR
+    OPERATOR this[index AS Integer] -> T;
     // Inherits: LENGTH OF, IN, ITERATOR OF (from IContainer)
 ENDINTERFACE
 ```
@@ -76,7 +76,7 @@ This interface extends `IROIndexable` by adding the crucial capability to mod
 ```
 INTERFACE IRWIndexable<T> INHERITS IROIndexable<T> :=
     // Adds write access at a specific index
-    OPERATOR this[index AS Integer] <- value AS ANY ENDOPERATOR
+    OPERATOR this[index AS Integer] <- value AS T ENDOPERATOR
     // Inherits: read this[index], LENGTH OF, IN, ITERATOR OF (from IROIndexable & IContainer)
 ENDINTERFACE
 ```
