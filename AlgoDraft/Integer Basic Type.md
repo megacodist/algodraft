@@ -14,12 +14,14 @@ Tries to convert the data to an integer:
 
 # Binary Representation
 
-AlgoDrat recognizes no containing width, positive integers must start with `0` and negatives with `1`.  Negative numbers are shown using two's complement.
+AlgoDrat recognizes no constraining width, positive integers must start with `0` and negatives with `1`.  Negative numbers are shown using two's complement.
 
 | Mathematical number | AlgoDraft Binary Representation |
 | ------------------- | ------------------------------- |
 | 4                   | 0b0100                          |
 | -4                  | 0b100                           |
+| 7                   | 0b0111                          |
+| -7                  | 0b1001                          |
 
 It is possible to repeat the leftmost binary digit any number. If the leftmost digit is repeated more than once, the extra would be unnecessary leading zeros (for positive integers) or ones (for negative integers):
 
@@ -28,7 +30,9 @@ It is possible to repeat the leftmost binary digit any number. If the leftmost d
 | 4                   | 0b0100 = 0b00100 = 0b000100     |
 | -4                  | 0b100 = 0b1100 = 0b11100        |
 
-For addition or subtraction, make their length equal, adding one more leading zero or one, and perform the result, and ignoring the overflow.
+For addition or subtraction, make operands length equal, add one more leading zero or one, and perform the operation, and ignore the overflow if produced. For example:
+
+7 + (-3) = 0b0111 + 0b101 = 0b0111 + 0b1101 = 0b00111 + 11101 = 0b00100 = 0b0100 = 4
 
 # Bitwise Operations
 
