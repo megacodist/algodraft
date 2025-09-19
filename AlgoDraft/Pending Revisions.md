@@ -284,6 +284,21 @@ INTERFACE IIterable<T> :=
 ENDINTERFACE
 ```
 
+# `IROSequentiable`
+
+How about adding concatenation capability along with slicing to sequences?
+
+```
+INTERFACE IROSequentiable<T> INHERITS IROIndexable<T> :=
+    // Adds slicing capability, returning a new instance of the same type as 'this'.
+    OPERATOR this[interval AS Interval] -> IROSequentiable<T>;
+    
+    OPERATOR this + (seq AS IROSequentiable<T>) -> IROSequentiable<T>;
+    
+    // Inherits: read this[index], LENGTH OF, IN, ITERATOR OF (from IROIndexable & IContainer)
+ENDINTERFACE
+```
+
 # `Iterator` Basic Type
 
 How about to an interface named `IIterator<T>` as follow:
