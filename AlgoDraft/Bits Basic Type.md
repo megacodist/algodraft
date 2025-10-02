@@ -1,9 +1,11 @@
 ---
 status: Writing
 ---
-0-based indexable of a fixed-width span of conceptual memory. So, any operation that preserve the width, can mutate the data in place, any operations that change the width, construct and return a new `Bits` object.
+The `Bits` basic type models an imaginary fixed-width span of the conceptual memory. So, the end user is working with bits, so `Bits`.
 
-This type is indexable and indices starts from 0 (LSB) to MSB.
+Each `Bits` object stores bits indexed from `[0 .. len-1)` where index `0` is the LSB (least significant bit), and index `len-1` is the MSB (most significant bit).
+
+The width is fixed. So, any operation which changes width returns a new `Bits` object. The bits inside of this fixed span are mutable. So, operations that does not require new width, changes bits of the object.
 
 **Syntax**:
 
@@ -165,12 +167,18 @@ Turns this bits into its two's complement representation.
 
 ```
 OPERATOR TWOS COMPLEMENT this -> NULL :=
-	indices AS IIterator<Integer> <- ITERATOR OF [0 .. (LENGTH OF this));
+	len AS Integer <- LENGTH OF this;
+	IF len = 0 THEN
+		RETURN; // No need to do anything
+	ENDIF
+	// Skip low bits until first 1
+	indices AS IIterator<Integer> <- ITERATOR OF [0 .. len);
 	FOR EACH idx IN indices DO
 		IF this[idx] = TRUE THEN
 			BREAK;
 		ENDIF
 	ENDFOR
+	// Invert the rest
 	FOR EACH idx IN indices DO
 		this[idx] <- NOT this[idx];
 	ENDFOR
@@ -181,12 +189,34 @@ ENDOPERATOR
 
 Creates a temporary object by MSB-extending the shorter operand with MSB, and then returns an object with bit-by-bit AND. The same goes for `OR` and `XOR`.
 
+```AlgoDraft
+OPERATOR this AND (pther AS Bits) -> Bits :=
+	lenThis AS Integer <- LENGTH OF this;
+	lenOther AS Integer <- LENGTH OF other;
+	len AS Integer <- lenThis;
+	a AS Bits <- this;
+	b AS Bits <- other;
+	IF lenThis > lenOther THEN
+		len <- lenThis;
+		b <- EXTEND other << (lenThis - lenOther) WITH MSB;
+	ELSE IF lenOther > lenThis THEN
+		len <- lenOther;
+		a <- EXTEND this << (lenOther - lenThis) WITH MSB;
+	ENDIF
+	result <- DEEP COPY a;
+	FOR EACH idx IN [0 .. len) DO
+		result[idx] <- a[idx] AND b[idx];
+	ENDFOR
+	return result;
+ENDOPERATOR
+```
+
 ## The Normalized Form
 
 A `Bits` object is in **normalized (single-sign) form** if:
 
 - it is non-empty, and
-    
+
 - either it has length `1`, or its first two MSBs, the two leftmost bits, differ.
 
 ```AlgoDraft
@@ -195,16 +225,15 @@ OPERATOR NORMALIZE this -> Bits :=
 	IF len = 0 THEN
 		RAISE {{no normalized form for the empty}};
 	ELSE IF len = 1 THEN
-		RETURN bits;
-	ELSE IF bits[len - 1] != bits[len - 2] THEN
-		RETURN bits;
+		RETURN this;
 	ELSE
-		lastIdx AS Integer <- len - 1;
-		idx AS Integer <- lastIdx - 1;
-		WHILE (idx >= 0) AND (this[lastIdx] = bits[idx]) DO
+		msbIdx AS Integer <- len - 1;
+		idx AS Integer <- msbIdx - 1;
+		WHILE (idx >= 0) AND (this[msbIdx] = this[idx]) DO
 			idx <- idx - 1;
 		ENDWHILE
-		RETURN this[0 .. (idx + 1)];
+		idx <- idx + 1;
+		RETURN this[0 .. idx];
 	ENDIF
 ENDOPERATOR
 ```
@@ -266,3 +295,225 @@ Rotates are in-place operators.
 
 `<bits_obj>[intval AS Interval]`: Returns a newly-created `Bits` object with the specified indices as provided by the `Interval` object.
 
+
+
+
+```
+
+// Interprets a bitstring as an unsigned integer andd converts it to its
+// equivalent integer.
+// Exceptions:
+//  * `bad bitstring`: the string contains characters other than `"0"`
+//      and `"1"`. 
+FUNCTION str_b2_to_uint(bits AS String) -> Integer :=
+	place, value AS Integer;
+    IF bits IS EMPTY THEN
+        RAISE {{bad argument: empty string is not allowed}}
+    ENDIF
+	value <- 0;
+	FOR EACH idx IN [0 .. LENGTH OF bits) DO
+        value <- value << 1;
+		IF bits[idx] = "1" THEN
+			value <- value OR 1;
+        ELSE IF bits[idx] != "0" THEN
+            RAISE {{bad argument: expected '0' or '1'}};
+		ENDIF
+	ENDFOR
+	RETURN value;
+ENDFUNCTION
+
+
+// It may truncate the result if `len` is less than the needed length.
+FUNCTION uint_to_str_b2(
+        value AS Integer,
+        len AS Integer OR NULL <- NULL,
+        ) -> String :=
+    IF value < 0 THEN
+        RAISE {{bad argument: expected a nonnegative integer}}
+    ENDIF
+    bits AS List<Char> <- NEW List();
+    IF len IS AN Integer THEN
+        IF len <= 0 THEN
+            RAISE {{bad argument: expected positive integer but got
+                @len}}
+        ENDIF
+        FOR EACH i IN [0 .. len) DO
+            IF (value AND 1) = 0 THEN
+                APPEND "0" TO bits;
+            ELSE
+                APPEND "1" TO bits;
+            ENDIF
+            value <- value >> 1;
+        ENDFOR
+    ELSE IF len = NULL THEN
+        WHILE value > 0 DO
+            IF (value AND 1) = 0 THEN
+                APPEND "0" TO bits;
+            ELSE
+                APPEND "1" TO bits;
+            ENDIF
+            value <- value >> 1;
+        ENDWHILE
+        IF bits IS EMPTY THEN
+            APPEND "0" TO bits;
+        ENDIF
+    ELSE
+        RAISE {{bad argument type: expected null or Integer but got 
+            @(TYPE OF len)}}
+    ENDIF
+    DO {{Reverse the elements of @bits}};
+    RETURN {{Create a string from the characters of @bits}};
+ENDFUNCTION
+
+
+// Interprets the provided bitstring as a signed integer and converts it
+// to its equivalent integer.
+// Exceptions:
+//  * `bad bitstring`: the string contains characters other than `"0"`
+//      and `"1"`. 
+FUNCTION str_b2_to_int(bits AS String) -> Integer :=
+    len AS Integer <- LENGTH OF bits;
+    unsigned AS Integer <- str_b2_to_uint(bits);
+    IF bits[0] = "0" THEN
+        RETURN unsigned;
+    ELSE
+        RETURN unsigned - (1 << len);
+    ENDIF
+ENDFUNCTION
+
+
+
+// It may truncate the result if `len` is less than the needed length.
+FUNCTION int_to_str_b2(
+        value AS Integer,
+        len AS Integer OR NULL <- NULL,
+        ) -> String :=
+    isNegative AS Boolean;
+    result AS String; 
+    IF value < 0 THEN
+        isNegative <- TRUE;
+        result <- uint_to_str_b2(-value);
+    ELSE
+        isNegative <- FALSE;
+        result <- uint_to_str_b2(value);
+    ENDIF
+    IF isNegative THEN
+        result <- twos_complement_str(result);
+    ENDIF
+    resLen AS <- LENGTH OF result;
+    IF len = NULL THEN
+        RETURN result;
+    ELSE IF len IS AN Integer THEN
+        IF len > resLen THEN
+            RETURN sign_extend(result, len);
+        ELSE
+            RETURN result[(resLen - len) .. resLen);
+        ENDIF
+    ELSE
+        RAISE {{bad argument type: expected null or Integer but got 
+            @(TYPE OF len)}};
+    ENDIF
+ENDFUNCTION
+
+
+FUNCTION twos_complement_int(bits AS Integer) -> Integer :=
+    RETURN (NOT int) + 1;
+ENDFUNCTION
+
+
+FUNCTION twos_complement_str(bits AS String) -> String :=
+    result AS String;
+    idxIter AS IIterator<Integer>;
+    idx AS Integer;
+    result <- DEEP COPY bits;
+    idxIter <- ITERATOR OF ((LENGTH OF bits) .. 0];
+    FOR EACH idx IN idxIter DO
+        IF bits[idx] = "1" THEN
+            BREAK;
+        ENDIF
+    ENDFOR
+    FOR EACH idx IN idxIter DO
+        result[IDX] <- "0" IF bits[idx] = "1" ELSE "1";
+    ENDFOR
+    RETURN result;
+ENDFUNCTION
+
+
+FUNCTION normalize(bits AS String) -> String :=
+	len AS Integer <- LENGTH OF bits;
+	IF len = 0 THEN
+		RAISE {{bad string: no normalization for the empty string}};
+	ELSE IF len = 1 THEN
+		RETURN bits;
+	ELSE IF bits[0] != bits[1] THEN
+		RETURN bits;
+	ELSE
+		WHILE (len > 1) AND (bits[0] = bits[1]) DO
+			bits <- bits[1 .. len);
+			len <- len - 1;
+		ENDWHILE
+        RETURN bits;
+	ENDIF
+ENDFUNCTION
+
+
+FUNCTION double_sign(bits AS String) -> String :=
+	normalized AS String <- normalize(bits);
+    RETURN normalized[0] + normalized;
+ENDFUNCTION
+
+
+FUNCTION sign_extend(
+        bits AS String,
+        new_length AS Integer,
+        ) -> String :=
+    len AS Integer <- LENGTH OF bits;
+    IF len = 0 THEN
+        RAISE {{bad string: no sign-extension for empty string}};
+    ENDIF
+    extra AS Integer <- new_length - len;
+    IF extra < 0 THEN
+        RAISE {{bad length: @bits is already longer than @new_length}};
+    ELSE IF extra = 0 THEN
+        RETURN bits;
+    ENDIF
+    extension AS String <- DO {{Create a string containing @extra number
+        of @bits[0]}};
+    RETURN extension + bits;
+ENDFUNCTION
+
+
+FUNCTION negate(bits AS String) -> String :=
+    temp AS String;
+    temp <- double_sign(bits);
+    temp <- twos_complement_str(temp);
+    temp <- normalize(temp);
+    RETURN temp;
+ENDFUNCTION
+
+
+FUNCTION add(a AS String, b AS String) -> String :=
+    lenA, lenB, len AS Integer;
+    intA, intB, sum AS Integer;
+    a <- double_sign(a);
+    b <- double_sign(b);
+    lenA <- LENGTH OF a;
+    lenB <- LENGTH OF b;
+    IF lenA > lenB THEN
+        len <- lenA;
+        b <- sign_extend(b, lenA);
+    ELSE
+        len <- lenB;
+        a <- sign_extend(a, lenB);
+    ENDIF
+    intA <- str_b2_to_int(a);
+    intB <- str_b2_to_int(b);
+    sum <- intA + intB;
+    RETURN int_to_str_b2(sum, len);
+ENDFUNCTION
+
+
+FUNCTION subtract(a AS String, b AS String) -> String :=
+    RETURN add(a, negate(b));
+ENDFUNCTION
+```
